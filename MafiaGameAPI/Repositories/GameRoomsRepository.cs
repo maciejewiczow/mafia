@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.Projections;
 using MongoDB.Driver;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 
 namespace MafiaGameAPI.Repositories 
@@ -19,7 +20,19 @@ namespace MafiaGameAPI.Repositories
 		}
 		public async Task<List<GameRoomProjection>> GetRooms() 
 		{
-			throw new NotImplementedException("Not implemented");
+			var project = new BsonDocument
+			{
+				{ "name", 1 }, 
+				{ "isGameStarted", 1 }, 
+				{ "maxPlayers", "$gameOptions.maxPlayers" }, 
+				{ "currentPlayersCount", 
+				new BsonDocument("$size", "$participants") }
+			};
+            var rooms = await _gameRoomsCollection
+                .Find(Builders<GameRoom>.Filter.Empty)
+				.Project<GameRoomProjection>(project)
+                .ToListAsync();
+			return rooms;
 		}
 		public async Task<GameRoom> AddRoomParticipant(String roomId, String userId) 
 		{
@@ -27,7 +40,7 @@ namespace MafiaGameAPI.Repositories
 		}
 		public async Task<GameRoom> CreateRoom(String ownerId, String name) 
 		{
-			var gameRoom = new GameRoom(){Owner = new User(){Name = ownerId}, Name = name};
+			var gameRoom = new GameRoom(name, new User());
 			await _gameRoomsCollection.InsertOneAsync(gameRoom);
 			return gameRoom;
 		}

@@ -10,6 +10,15 @@ namespace MafiaGameAPI.Models
 		public bool IsPublic { get; set; }
 		public bool VisibleVotes { get; set; }
 
+		public GameOptions()
+		{
+			MaxPlayers = 10;
+			PhaseTime = new TimeSpan(0,10,0);
+			MafiosoCount = 3;
+			IsPublic = true;
+			VisibleVotes = true;
+		}
+
 	}
 
 }
