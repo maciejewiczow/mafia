@@ -5,7 +5,10 @@ using MafiaGameAPI.Repositories;
 namespace MafiaGameAPI.Services {
 	public class GameService : IGameService {
 		private IGameRepository _gameRepository;
-
+		public GameService(IGameRepository gameRepository)
+		{
+			_gameRepository = gameRepository;
+		}
 		public GameState StartGame() {
 			throw new NotImplementedException("Not implemented");
 		}

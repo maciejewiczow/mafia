@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using MafiaGameAPI.Services;
+using MafiaGameAPI.Repositories;
 
 namespace MafiaGameAPI
 {
@@ -26,6 +28,13 @@ namespace MafiaGameAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IGameRoomsService, GameRoomsService>();
+            services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IChatRepository, ChatRepository>();
+            services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<IGameRoomsRepository, GameRoomsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

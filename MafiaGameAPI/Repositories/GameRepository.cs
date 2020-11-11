@@ -1,23 +1,31 @@
 using System;
 
-namespace MafiaGameAPI.Repositories {
-	public class GameRepository {
-		public MafiaGameAPI.Models.GameState StartGame(ref String roomId) {
+namespace MafiaGameAPI.Repositories 
+{
+	public class GameRepository : IGameRepository 
+	{
+		public MafiaGameAPI.Models.GameState StartGame(ref String roomId) 
+		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public void ChangePhase(ref String roomId) {
+		public void ChangePhase(ref String roomId) 
+		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.VoteState Vote(ref String roomId, ref String userId, ref String votedUserId) {
+		public MafiaGameAPI.Models.VoteState Vote(ref String roomId, ref String userId, ref String votedUserId) 
+		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameState VotingAction() {
+		public MafiaGameAPI.Models.GameState VotingAction() 
+		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameState GetCurrentState() {
+		public MafiaGameAPI.Models.GameState GetCurrentState() 
+		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public String CheckCurrentGameState() {
+		public String CheckCurrentGameState() 
+		{
 			throw new System.NotImplementedException("Not implemented");
 		}
 
