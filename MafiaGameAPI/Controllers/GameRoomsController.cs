@@ -18,10 +18,9 @@ namespace MafiaGameAPI.Controllers
 			_gameRoomsService = gameRoomsService;
 		}
 		[HttpGet]
-		public List<GameRoomProjection> GetRooms() 
+		public async Task<List<GameRoomProjection>> GetRooms() 
 		{
-			return new List<GameRoomProjection>();
-			//throw new System.NotImplementedException("Not implemented");
+			return await _gameRoomsService.GetRooms();
 		}
 		[HttpPost("create")]
 		public async Task<GameRoom> CreateRoom(String name) 

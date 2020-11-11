@@ -17,11 +17,11 @@ namespace MafiaGameAPI.Repositories
 			ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
 			_gameRoomsCollection = mongoClient.GetDatabase("mafia").GetCollection<GameRoom>("gameRooms");
 		}
-		public List<GameRoomProjection> GetRooms() 
+		public async Task<List<GameRoomProjection>> GetRooms() 
 		{
 			throw new NotImplementedException("Not implemented");
 		}
-		public GameRoom AddRoomParticipant(String roomId, String userId) 
+		public async Task<GameRoom> AddRoomParticipant(String roomId, String userId) 
 		{
 			throw new NotImplementedException("Not implemented");
 		}

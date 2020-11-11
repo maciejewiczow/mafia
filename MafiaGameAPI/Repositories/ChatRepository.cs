@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MafiaGameAPI.Models;
 using MongoDB.Driver;
 
@@ -12,11 +13,11 @@ namespace MafiaGameAPI.Repositories
 		{
 			_messagesCollection = mongoClient.GetDatabase("mafia").GetCollection<Message>("messages");
 		}
-		public List<Message> GetMessages(String groupName) 
+		public async Task<List<Message>> GetMessages(String groupName) 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public void SendMessage(Message message) 
+		public async Task SendMessage(Message message) 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}

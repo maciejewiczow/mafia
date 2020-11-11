@@ -14,11 +14,11 @@ namespace MafiaGameAPI.Services
 		{
 			_gameRoomsRepository = gameRoomsRepository;
 		}
-		public List<GameRoomProjection> GetRooms() 
+		public async Task<List<GameRoomProjection>> GetRooms() 
 		{
-			throw new NotImplementedException("Not implemented");
+			return await _gameRoomsRepository.GetRooms();
 		}
-		public GameRoom JoinRoom(String roomId, String userId) 
+		public async Task<GameRoom> JoinRoom(String roomId, String userId) 
 		{
 			throw new NotImplementedException("Not implemented");
 		}
@@ -26,7 +26,7 @@ namespace MafiaGameAPI.Services
 		{
 			return await _gameRoomsRepository.CreateRoom(userId, "asd");
 		}
-		public GameRoom JoinRoom(String roomId) 
+		public async Task<GameRoom> JoinRoom(String roomId) 
 		{
 			throw new NotImplementedException("Not implemented");
 		}

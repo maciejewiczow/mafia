@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MafiaGameAPI.Models;
 
 namespace MafiaGameAPI.Repositories 
 {
 	public interface IChatRepository 
 	{
-		List<Message> GetMessages(String groupName);
-		void SendMessage(Message message);
+		Task<List<Message>> GetMessages(String groupName);
+		Task SendMessage(Message message);
 
 	}
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Repositories;
@@ -14,11 +15,11 @@ namespace MafiaGameAPI.Services
 			_chatRepository = chatRepository;
 		}
 
-		public List<Message> GetMessages(String groupName) 
+		public async Task<List<Message>> GetMessages(String groupName) 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public void SendMessage(String userId, ChatType type, String content) 
+		public async Task SendMessage(String userId, ChatType type, String content) 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}

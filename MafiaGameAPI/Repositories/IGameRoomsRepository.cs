@@ -8,8 +8,8 @@ namespace MafiaGameAPI.Repositories
 {
 	public interface IGameRoomsRepository 
 	{
-		List<GameRoomProjection> GetRooms();
-		GameRoom AddRoomParticipant(String roomId, String userId);
+		Task<List<GameRoomProjection>> GetRooms();
+		Task<GameRoom> AddRoomParticipant(String roomId, String userId);
 		Task<GameRoom> CreateRoom(String ownerId, String name);
 	}
 }
