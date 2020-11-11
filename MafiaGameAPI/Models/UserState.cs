@@ -1,4 +1,5 @@
 using System;
+using MafiaGameAPI.Enums;
 
 namespace MafiaGameAPI.Models {
 	public class UserState {

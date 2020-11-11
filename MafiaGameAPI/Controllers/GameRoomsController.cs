@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
+using MafiaGameAPI.Models;
+using MafiaGameAPI.Models.Projections;
 
 namespace MafiaGameAPI.Controllers {
 	public class GameRoomsController {
 		private MafiaGameAPI.Services.IGameService _gameRoomsService;
 
-		public List<MafiaGameAPI.Models.Projections.GameRoomProjection> GetRooms() {
+		public List<GameRoomProjection> GetRooms() {
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameRoom CreateRoom(ref String name) {
+		public GameRoom CreateRoom(String name) {
 			throw new System.NotImplementedException("Not implemented");
 		}
 

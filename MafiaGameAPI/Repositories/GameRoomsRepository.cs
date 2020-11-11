@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
+using MafiaGameAPI.Models;
+using MafiaGameAPI.Models.Projections;
 
 namespace MafiaGameAPI.Repositories {
-	public class GameRoomsRepository : IGameRoomsRepository<Message>  {
-		public List<MafiaGameAPI.Models.Projections.GameRoomProjection> GetRooms() {
-			throw new System.NotImplementedException("Not implemented");
+	public class GameRoomsRepository : IGameRoomsRepository  {
+		public List<GameRoomProjection> GetRooms() {
+			throw new NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameRoom AddRoomParticipant(ref String._roomId_:_String userId) {
-			throw new System.NotImplementedException("Not implemented");
+		public GameRoom AddRoomParticipant(String roomId, String userId) {
+			throw new NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameRoom CreateRoom(ref String ownerId, ref String name) {
-			throw new System.NotImplementedException("Not implemented");
+		public GameRoom CreateRoom(String ownerId, String name) {
+			throw new NotImplementedException("Not implemented");
 		}
 
 	}

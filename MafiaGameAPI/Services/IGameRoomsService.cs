@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
+using MafiaGameAPI.Models;
+using MafiaGameAPI.Models.Projections;
 
 namespace MafiaGameAPI.Services {
 	public interface IGameRoomsService {
-		List<MafiaGameAPI.Models.Projections.GameRoomProjection> GetRooms();
-		MafiaGameAPI.Models.GameRoom JoinRoom(ref String roomId);
-		MafiaGameAPI.Models.GameRoom CreateRoom(ref String userId);
-
+		List<GameRoomProjection> GetRooms();
+		GameRoom JoinRoom(String roomId);
+		GameRoom CreateRoom(String userId);
 	}
-
 }

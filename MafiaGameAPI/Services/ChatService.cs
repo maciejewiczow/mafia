@@ -1,13 +1,17 @@
 using System;
+using System.Collections.Generic;
+using MafiaGameAPI.Enums;
+using MafiaGameAPI.Models;
+using MafiaGameAPI.Repositories;
 
 namespace MafiaGameAPI.Services {
-	public class ChatService : IChatService<MafiaGameAPI.Models.Projections.GameRoomProjection>  {
+	public class ChatService : IChatService  {
 		private IChatRepository _chatRepository;
 
-		public List<Message> GetMessages(ref String groupName) {
+		public List<Message> GetMessages(String groupName) {
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public void SendMessage(ref String userId, ref MafiaGameAPI.Enums.ChatType t, ref String content) {
+		public void SendMessage(String userId, ChatType type, String content) {
 			throw new System.NotImplementedException("Not implemented");
 		}
 

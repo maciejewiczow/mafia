@@ -1,31 +1,32 @@
 using System;
+using MafiaGameAPI.Models;
+using MafiaGameAPI.Repositories;
 
 namespace MafiaGameAPI.Services {
-	public class GameService : IGameService<MafiaGameAPI.Models.Projections.GameRoomProjection>  {
-		private MafiaGameAPI.Repositories.IGameRepository _gameRepository;
+	public class GameService : IGameService {
+		private IGameRepository _gameRepository;
 
-		public MafiaGameAPI.Models.GameState StartGame() {
-			throw new System.NotImplementedException("Not implemented");
+		public GameState StartGame() {
+			throw new NotImplementedException("Not implemented");
 		}
-		private void ChangePhase(ref String roomId) {
-			throw new System.NotImplementedException("Not implemented");
+		public void ChangePhase(String roomId) {
+			throw new NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.VoteState Vote(ref String votedUserId) {
-			throw new System.NotImplementedException("Not implemented");
+		public VoteState Vote(String votedUserId) {
+			throw new NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameState VotingAction() {
-			throw new System.NotImplementedException("Not implemented");
+		public GameState VotingAction() {
+			throw new NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameState GetCurrentState() {
-			throw new System.NotImplementedException("Not implemented");
+		public GameState GetCurrentState() {
+			throw new NotImplementedException("Not implemented");
 		}
 		public void RunPhase() {
-			throw new System.NotImplementedException("Not implemented");
+			throw new NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameState StartGame(ref String roomId) {
-			throw new System.NotImplementedException("Not implemented");
+		public GameState StartGame(String roomId) {
+			throw new NotImplementedException("Not implemented");
 		}
-
-	}
+    }
 
 }
