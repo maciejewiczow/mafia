@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Repositories;
 
@@ -9,25 +10,25 @@ namespace MafiaGameAPI.Services {
 		{
 			_gameRepository = gameRepository;
 		}
-		public GameState StartGame() {
+		public async Task<GameState> StartGame() {
 			throw new NotImplementedException("Not implemented");
 		}
-		public void ChangePhase(String roomId) {
+		public async Task ChangePhase(String roomId) {
 			throw new NotImplementedException("Not implemented");
 		}
-		public VoteState Vote(String votedUserId) {
+		public async Task<VoteState> Vote(String votedUserId) {
 			throw new NotImplementedException("Not implemented");
 		}
-		public GameState VotingAction() {
+		public async Task<GameState> VotingAction() {
 			throw new NotImplementedException("Not implemented");
 		}
-		public GameState GetCurrentState() {
+		public async Task<GameState> GetCurrentState() {
 			throw new NotImplementedException("Not implemented");
 		}
-		public void RunPhase() {
+		public async Task RunPhase() {
 			throw new NotImplementedException("Not implemented");
 		}
-		public GameState StartGame(String roomId) {
+		public async Task<GameState> StartGame(String roomId) {
 			throw new NotImplementedException("Not implemented");
 		}
     }

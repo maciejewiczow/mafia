@@ -11,7 +11,6 @@ namespace MafiaGameAPI.Models
 		public List<VoteState> VoteState { get; set; }
 		public String VotingStart { get; set; }
 		public string Id { get; set; }
-
 	}
 
 }

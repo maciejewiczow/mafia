@@ -1,13 +1,17 @@
 using System;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace MafiaGameAPI.Models.Projections 
 {
 	public class GameRoomProjection 
 	{
-		private String Name { get; set; }
-		private bool IsGameStarted { get; set; }
-		private int MaxPlayers { get; set; }
-		private int CurrentPlayersCount { get; set; }
+		[BsonId]
+		public ObjectId Id { get; set; }
+		public String Name { get; set; }
+		public bool IsGameStarted { get; set; }
+		public int MaxPlayers { get; set; }
+		public int CurrentPlayersCount { get; set; }
 
 	}
 

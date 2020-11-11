@@ -1,30 +1,37 @@
 using System;
+using System.Threading.Tasks;
+using MafiaGameAPI.Models;
+using MongoDB.Driver;
 
 namespace MafiaGameAPI.Repositories 
 {
 	public class GameRepository : IGameRepository 
 	{
-		public MafiaGameAPI.Models.GameState StartGame(ref String roomId) 
+		public GameRepository(IMongoClient mongoClient)
+		{
+
+		}
+		public async Task<GameState> StartGame(String roomId) 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public void ChangePhase(ref String roomId) 
+		public async Task ChangePhase(String roomId) 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.VoteState Vote(ref String roomId, ref String userId, ref String votedUserId) 
+		public async Task<VoteState> Vote(String roomId, String userId, String votedUserId) 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameState VotingAction() 
+		public async Task<GameState> VotingAction() 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public MafiaGameAPI.Models.GameState GetCurrentState() 
+		public async Task<GameState> GetCurrentState() 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}
-		public String CheckCurrentGameState() 
+		public async Task<String> CheckCurrentGameState() 
 		{
 			throw new System.NotImplementedException("Not implemented");
 		}

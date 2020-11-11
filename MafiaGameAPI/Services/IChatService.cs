@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
 using MafiaGameAPI.Models;
 
@@ -7,7 +8,7 @@ namespace MafiaGameAPI.Services
  {
 	public interface IChatService 
 	{
-		List<Message> GetMessages(String groupName);
-		void SendMessage(String userId, ChatType type, String content);
+		Task<List<Message>> GetMessages(String groupName);
+		Task SendMessage(String userId, ChatType type, String content);
 	}
 }

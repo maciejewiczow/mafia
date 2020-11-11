@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.Projections;
 using MafiaGameAPI.Services;
@@ -17,15 +18,14 @@ namespace MafiaGameAPI.Controllers
 			_gameRoomsService = gameRoomsService;
 		}
 		[HttpGet]
-		public List<GameRoomProjection> GetRooms() 
+		public async Task<List<GameRoomProjection>> GetRooms() 
 		{
-			return new List<GameRoomProjection>();
-			//throw new System.NotImplementedException("Not implemented");
+			return await _gameRoomsService.GetRooms();
 		}
-		[HttpPost]
-		public GameRoom CreateRoom(String name) 
+		[HttpPost("create")]
+		public async Task<GameRoom> CreateRoom(String name) 
 		{
-			throw new System.NotImplementedException("Not implemented");
+			return await _gameRoomsService.CreateRoom(name);
 		}
 
 	}
