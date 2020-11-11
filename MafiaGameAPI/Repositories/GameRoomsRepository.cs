@@ -22,6 +22,8 @@ namespace MafiaGameAPI.Repositories
 		{
 			var project = new BsonDocument
 			{
+				{ "_id",
+				new BsonDocument("$toString", "$_id") },
 				{ "name", 1 }, 
 				{ "isGameStarted", 1 }, 
 				{ "maxPlayers", "$gameOptions.maxPlayers" }, 
