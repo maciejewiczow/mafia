@@ -25,7 +25,7 @@ namespace MafiaGameAPI.Controllers
 		[HttpPost("create")]
 		public async Task<GameRoom> CreateRoom(String name) 
 		{
-			return await _gameRoomsService.CreateRoom(name);
+			return await _gameRoomsService.CreateRoom(name, "asdguxztg7263geu765gdf");
 		}
 
 	}

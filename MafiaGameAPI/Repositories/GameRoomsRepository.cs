@@ -38,13 +38,18 @@ namespace MafiaGameAPI.Repositories
 		}
 		public async Task<GameRoom> AddRoomParticipant(String roomId, String userId) 
 		{
-			throw new NotImplementedException("Not implemented");
+			var objectRoomId = ObjectId.Parse(roomId);
+			var filter = Builders<GameRoom>
+            	.Filter.Eq(r => r.Id, objectRoomId);
+			var update = Builders<GameRoom>.Update
+        		.Push<String>(e => e.Participants, userId);
+
+			return await _gameRoomsCollection.FindOneAndUpdateAsync(filter, update);
 		}
-		public async Task<GameRoom> CreateRoom(String ownerId, String name) 
+		public async Task<GameRoom> CreateRoom(GameRoom room) 
 		{
-			var gameRoom = new GameRoom(name, new User());
-			await _gameRoomsCollection.InsertOneAsync(gameRoom);
-			return gameRoom;
+			await _gameRoomsCollection.InsertOneAsync(room);
+			return room;
 		}
 
 	}
