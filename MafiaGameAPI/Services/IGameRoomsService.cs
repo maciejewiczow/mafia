@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.Projections;
 
@@ -9,6 +10,6 @@ namespace MafiaGameAPI.Services
 	{
 		List<GameRoomProjection> GetRooms();
 		GameRoom JoinRoom(String roomId);
-		GameRoom CreateRoom(String userId);
+		Task<GameRoom> CreateRoom(String userId);
 	}
 }

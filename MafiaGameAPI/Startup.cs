@@ -12,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using MafiaGameAPI.Services;
 using MafiaGameAPI.Repositories;
+using MongoDB.Driver;
 
 namespace MafiaGameAPI
 {
@@ -35,6 +36,8 @@ namespace MafiaGameAPI
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IGameRoomsRepository, GameRoomsRepository>();
+
+            services.AddScoped<IMongoClient>(m => new MongoClient("mongodb://localhost:27017/?readPreference=primary&ssl=false"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

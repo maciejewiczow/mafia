@@ -1,9 +1,15 @@
 using System;
+using MafiaGameAPI.Models;
+using MongoDB.Driver;
 
 namespace MafiaGameAPI.Repositories 
 {
 	public class GameRepository : IGameRepository 
 	{
+		public GameRepository(IMongoClient mongoClient)
+		{
+
+		}
 		public MafiaGameAPI.Models.GameState StartGame(ref String roomId) 
 		{
 			throw new System.NotImplementedException("Not implemented");
