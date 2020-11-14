@@ -1,7 +1,7 @@
 using System;
 
 namespace MafiaGameAPI.Enums {
-	public enum ChatType {
+	public enum ChatTypeEnum {
 		General,
 		Mafia,
 		Citizen,

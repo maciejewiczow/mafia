@@ -30,21 +30,72 @@ namespace MafiaGameAPI.Repositories
 				{ "currentPlayersCount", 
 				new BsonDocument("$size", "$participants") }
 			};
-            var rooms = await _gameRoomsCollection
-                .Find(Builders<GameRoom>.Filter.Empty)
-				.Project<GameRoomProjection>(project)
-                .ToListAsync();
+
+            List<GameRoomProjection> rooms;
+			try
+			{
+				rooms = await _gameRoomsCollection
+					.Find(Builders<GameRoom>.Filter.Empty)
+					.Project<GameRoomProjection>(project)
+					.ToListAsync();
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+			
 			return rooms;
+		}
+		public async Task<GameRoom> GetRoom(String roomId) 
+		{
+			var objectRoomId = ObjectId.Parse(roomId);
+			var filter = Builders<GameRoom>
+            	.Filter.Where(r => r.Id.Equals(objectRoomId));
+
+            GameRoom room;
+			try
+			{
+				room = await _gameRoomsCollection
+					.Find(filter)
+					.FirstAsync();
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+			
+			return room;
 		}
 		public async Task<GameRoom> AddRoomParticipant(String roomId, String userId) 
 		{
-			throw new NotImplementedException("Not implemented");
+			var objectRoomId = ObjectId.Parse(roomId);
+			var filter = Builders<GameRoom>
+            	.Filter.Eq(r => r.Id, objectRoomId);
+			var update = Builders<GameRoom>.Update
+        		.Push<String>(e => e.Participants, userId);
+
+			GameRoom result;
+			try
+			{
+				result = await _gameRoomsCollection.FindOneAndUpdateAsync(filter, update);
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+			return result;
 		}
-		public async Task<GameRoom> CreateRoom(String ownerId, String name) 
+		public async Task<GameRoom> CreateRoom(GameRoom room) 
 		{
-			var gameRoom = new GameRoom(name, new User());
-			await _gameRoomsCollection.InsertOneAsync(gameRoom);
-			return gameRoom;
+			try
+			{
+				await _gameRoomsCollection.InsertOneAsync(room);
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+			return room;
 		}
 
 	}

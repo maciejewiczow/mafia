@@ -4,8 +4,8 @@ namespace MafiaGameAPI.Models
 {
 	public class VoteState 
 	{
-		public User User { get; set; }
-		public User VotedUser { get; set; }
+		public string UserId { get; set; }
+		public string VotedUserId { get; set; }
 
 	}
 
