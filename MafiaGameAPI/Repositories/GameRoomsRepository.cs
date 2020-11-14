@@ -5,7 +5,6 @@ using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.DTO.Projections;
 using MongoDB.Driver;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
 
 namespace MafiaGameAPI.Repositories
 {
@@ -15,8 +14,6 @@ namespace MafiaGameAPI.Repositories
 
         public GameRoomsRepository(IMongoClient mongoClient)
         {
-            var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
             _gameRoomsCollection = mongoClient.GetDatabase("mafia").GetCollection<GameRoom>("gameRooms");
         }
 

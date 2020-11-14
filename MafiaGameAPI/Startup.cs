@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using MafiaGameAPI.Enums;
+using MongoDB.Bson.Serialization.Conventions;
 
 namespace MafiaGameAPI
 {
@@ -90,6 +91,9 @@ namespace MafiaGameAPI
 
             services.AddScoped<IMongoClient>(m =>
             {
+                var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
+                ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
+
                 var section = Configuration.GetSection("ConnectionStrings:Mongo");
                 var user = section["Username"];
                 var pass = section["Password"];
