@@ -38,6 +38,7 @@ namespace MafiaGameAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("AccessToken:Signature"))),
                         ValidateIssuer = false,
                         ValidateAudience = false,
+                        ValidateLifetime = true,
                         RequireSignedTokens = true,
                     };
                     opts.Audience = "http://localhost:5000";
