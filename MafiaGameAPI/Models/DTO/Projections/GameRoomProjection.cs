@@ -7,7 +7,7 @@ namespace MafiaGameAPI.Models.DTO.Projections
 	public class GameRoomProjection
 	{
 		[BsonId]
-		public ObjectId Id { get; set; }
+		public string Id { get; set; }
 		public String Name { get; set; }
 		public bool IsGameStarted { get; set; }
 		public int MaxPlayers { get; set; }
