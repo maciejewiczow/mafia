@@ -46,6 +46,26 @@ namespace MafiaGameAPI.Repositories
 			
 			return rooms;
 		}
+		public async Task<GameRoom> GetRoom(String roomId) 
+		{
+			var objectRoomId = ObjectId.Parse(roomId);
+			var filter = Builders<GameRoom>
+            	.Filter.Where(r => r.Id.Equals(objectRoomId));
+
+            GameRoom room;
+			try
+			{
+				room = await _gameRoomsCollection
+					.Find(filter)
+					.FirstAsync();
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+			
+			return room;
+		}
 		public async Task<GameRoom> AddRoomParticipant(String roomId, String userId) 
 		{
 			var objectRoomId = ObjectId.Parse(roomId);

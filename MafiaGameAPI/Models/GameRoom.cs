@@ -19,6 +19,7 @@ namespace MafiaGameAPI.Models
 		public String GroupName { get; set; }
 		public List<string> Participants { get; set; }
 		public bool IsGameStarted { get; set; }
+		public bool IsGameEnded { get; set; }
 
 		public GameRoom(string name, string ownerId)
 		{
@@ -29,6 +30,7 @@ namespace MafiaGameAPI.Models
 			Participants = new List<string>();
 			Participants.Add(ownerId);
 			IsGameStarted = false;
+			IsGameEnded = false;
 		}
 	}
 

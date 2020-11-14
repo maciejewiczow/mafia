@@ -60,13 +60,8 @@ namespace MafiaGameAPI.Repositories
 				throw;
 			}
 		}
-		public async Task<VoteState> Vote(String roomId, String userId, String votedUserId) 
+		public async Task<VoteState> Vote(String roomId, VoteState vote) 
 		{
-			var vote = new VoteState()
-			{
-				UserId = userId, 
-				VotedUserId = votedUserId
-			};
 			var objectRoomId = ObjectId.Parse(roomId);
 			var filter = Builders<GameRoom>
             	.Filter.Eq(r => r.Id, objectRoomId);
@@ -83,10 +78,6 @@ namespace MafiaGameAPI.Repositories
 			}
 
 			return vote;
-		}
-		public async Task<GameState> VotingAction() 
-		{
-			throw new System.NotImplementedException("Not implemented");
 		}
 		public async Task<GameState> GetCurrentState(String roomId) 
 		{

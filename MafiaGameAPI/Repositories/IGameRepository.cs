@@ -8,8 +8,7 @@ namespace MafiaGameAPI.Repositories
 	{
 		Task<GameState> StartGame(String roomId, GameState state);
 		Task ChangePhase(String roomId, GameState state);
-		Task<VoteState> Vote(String roomId, String userId, String votedUserId);
-		Task<GameState> VotingAction();
+		Task<VoteState> Vote(String roomId, VoteState vote);
 		Task<GameState> GetCurrentState(String roomId);
 		Task<String> GetCurrentGameStateId(String roomId);
 
