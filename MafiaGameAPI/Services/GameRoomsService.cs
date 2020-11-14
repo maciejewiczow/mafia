@@ -10,27 +10,26 @@ namespace MafiaGameAPI.Services
     public class GameRoomsService : IGameRoomsService
     {
         private IGameRoomsRepository _gameRoomsRepository;
+
         public GameRoomsService(IGameRoomsRepository gameRoomsRepository)
         {
             _gameRoomsRepository = gameRoomsRepository;
         }
+
         public async Task<List<GameRoomProjection>> GetRooms()
         {
             return await _gameRoomsRepository.GetRooms();
         }
+
         public async Task<GameRoom> JoinRoom(String roomId, String userId)
         {
-            throw new NotImplementedException("Not implemented");
-        }
-        public async Task<GameRoom> CreateRoom(String userId)
-        {
-            return await _gameRoomsRepository.CreateRoom(userId, "asd");
-        }
-        public async Task<GameRoom> JoinRoom(String roomId)
-        {
-            throw new NotImplementedException("Not implemented");
+            return await _gameRoomsRepository.AddRoomParticipant(roomId, userId);
         }
 
+        public async Task<GameRoom> CreateRoom(String roomName, String userId)
+        {
+            GameRoom room = new GameRoom(roomName, userId);
+            return await _gameRoomsRepository.CreateRoom(room);
+        }
     }
-
 }

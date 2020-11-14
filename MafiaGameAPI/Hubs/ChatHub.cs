@@ -6,7 +6,7 @@ namespace MafiaGameAPI.Hubs {
 	public class ChatHub {
 		private IChatService _chatService;
 
-		public void SendMessage(ChatType chatType, String content) {
+		public void SendMessage(ChatTypeEnum chatType, String content) {
 			throw new NotImplementedException("Not implemented");
 		}
 		public void OnConnect() {

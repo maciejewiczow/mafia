@@ -7,9 +7,9 @@ namespace MafiaGameAPI.Services
 	public interface IGameService 
 	{
 		Task<GameState> StartGame(String roomId);
-		Task ChangePhase(String roomId);
-		Task<VoteState> Vote(String votedUserId);
-		Task<GameState> VotingAction();
-		Task<GameState> GetCurrentState();
+		Task ChangePhase(String roomId, GameState newState);
+		Task<VoteState> Vote(String roomId, String userId, String votedUserId);
+		Task<GameState> VotingAction(String roomId);
+		Task<GameState> GetCurrentState(String roomId);
 	}
 }

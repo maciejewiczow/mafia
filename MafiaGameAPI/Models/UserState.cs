@@ -5,7 +5,7 @@ namespace MafiaGameAPI.Models
 {
 	public class UserState 
 	{
-		public User User { get; set; }
+		public string UserId { get; set; }
 		public RoleEnum Role { get; set; }
 
 	}
