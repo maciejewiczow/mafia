@@ -81,6 +81,8 @@ namespace MafiaGameAPI
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IGameRoomsService, GameRoomsService>();
             services.AddScoped<IGameService, GameService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IGameRoomsRepository, GameRoomsRepository>();
