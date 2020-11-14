@@ -1,18 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using MafiaGameAPI.Services;
 using MafiaGameAPI.Repositories;
 using MongoDB.Driver;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authorization;
+using MafiaGameAPI.Enums;
 
 namespace MafiaGameAPI
 {
@@ -28,6 +26,56 @@ namespace MafiaGameAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services
+                .AddAuthentication()
+                .AddJwtBearer("AccessToken", opts =>
+                {
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.FromMinutes(5),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("AccessToken:Signature"))),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        RequireSignedTokens = true,
+                    };
+                    opts.Audience = "http://localhost:5000";
+                    opts.RequireHttpsMetadata = false;
+                })
+                .AddJwtBearer("RefreshToken", opts =>
+                {
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.FromMinutes(5),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("RefreshToken:Signature"))),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        RequireSignedTokens = true,
+                    };
+                    opts.Audience = "http://localhost:5000";
+                    opts.RequireHttpsMetadata = false;
+                });
+
+            services.AddAuthorization(opts =>
+            {
+                opts.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .AddAuthenticationSchemes("AccessToken")
+                    .RequireClaim("type", TokenType.AccessToken.ToString())
+                    .Build();
+
+                opts.AddPolicy(
+                    nameof(TokenType.RefreshToken),
+                    new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes("RefreshToken")
+                        .RequireClaim("type", TokenType.RefreshToken.ToString())
+                        .Build()
+                );
+            });
+
             services.AddControllers();
 
             services.AddScoped<IChatService, ChatService>();
@@ -58,16 +106,13 @@ namespace MafiaGameAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
-
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }
 }
