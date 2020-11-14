@@ -11,6 +11,7 @@ namespace MafiaGameAPI.Models
 		[BsonId]
 		public ObjectId Id { get; set; }
 		public List<GameState> GameHistory { get; set; }
+		public String CurrentGameStateId { get; set; }
 		public String Name { get; set; }
 		public String Password { get; set; }
 		public GameOptions GameOptions { get; set; }

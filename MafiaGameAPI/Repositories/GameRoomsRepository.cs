@@ -30,10 +30,20 @@ namespace MafiaGameAPI.Repositories
 				{ "currentPlayersCount", 
 				new BsonDocument("$size", "$participants") }
 			};
-            var rooms = await _gameRoomsCollection
-                .Find(Builders<GameRoom>.Filter.Empty)
-				.Project<GameRoomProjection>(project)
-                .ToListAsync();
+
+            List<GameRoomProjection> rooms;
+			try
+			{
+				rooms = await _gameRoomsCollection
+					.Find(Builders<GameRoom>.Filter.Empty)
+					.Project<GameRoomProjection>(project)
+					.ToListAsync();
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+			
 			return rooms;
 		}
 		public async Task<GameRoom> AddRoomParticipant(String roomId, String userId) 
@@ -44,11 +54,27 @@ namespace MafiaGameAPI.Repositories
 			var update = Builders<GameRoom>.Update
         		.Push<String>(e => e.Participants, userId);
 
-			return await _gameRoomsCollection.FindOneAndUpdateAsync(filter, update);
+			GameRoom result;
+			try
+			{
+				result = await _gameRoomsCollection.FindOneAndUpdateAsync(filter, update);
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+			return result;
 		}
 		public async Task<GameRoom> CreateRoom(GameRoom room) 
 		{
-			await _gameRoomsCollection.InsertOneAsync(room);
+			try
+			{
+				await _gameRoomsCollection.InsertOneAsync(room);
+			}
+			catch(Exception)
+			{
+				throw;
+			}
 			return room;
 		}
 

@@ -15,11 +15,30 @@ namespace MafiaGameAPI.Repositories
 		}
 		public async Task<List<Message>> GetMessages(String groupName) 
 		{
-			throw new System.NotImplementedException("Not implemented");
+			var filter = Builders<Message>.Filter.Eq(m => m.GroupName, groupName);
+			List<Message> messages;
+
+			try
+			{
+				messages = await _messagesCollection.Find(filter).ToListAsync();
+			}
+			catch(Exception)
+			{
+				throw;
+			}
+
+			return messages;
 		}
 		public async Task SendMessage(Message message) 
 		{
-			throw new System.NotImplementedException("Not implemented");
+			try
+			{
+				await _messagesCollection.InsertOneAsync(message);
+			}
+			catch(Exception)
+			{
+				throw;
+			}
 		}
 
 	}

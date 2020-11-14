@@ -6,12 +6,12 @@ namespace MafiaGameAPI.Repositories
 {
 	public interface IGameRepository 
 	{
-		Task<GameState> StartGame(String roomId);
-		Task ChangePhase(String roomId);
+		Task<GameState> StartGame(String roomId, GameState state);
+		Task ChangePhase(String roomId, GameState state);
 		Task<VoteState> Vote(String roomId, String userId, String votedUserId);
 		Task<GameState> VotingAction();
-		Task<GameState> GetCurrentState();
-		Task<String> CheckCurrentGameState();
+		Task<GameState> GetCurrentState(String roomId);
+		Task<String> GetCurrentGameStateId(String roomId);
 
 	}
 
