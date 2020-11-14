@@ -2,14 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
-using MafiaGameAPI.Models.Projections;
+using MafiaGameAPI.Models.DTO.Projections;
 
-namespace MafiaGameAPI.Repositories 
+namespace MafiaGameAPI.Repositories
 {
-	public interface IGameRoomsRepository 
-	{
-		Task<List<GameRoomProjection>> GetRooms();
-		Task<GameRoom> AddRoomParticipant(String roomId, String userId);
-		Task<GameRoom> CreateRoom(String ownerId, String name);
-	}
+    public interface IGameRoomsRepository
+    {
+        Task<List<GameRoomProjection>> GetRooms();
+        Task<GameRoom> AddRoomParticipant(String roomId, String userId);
+        Task<GameRoom> CreateRoom(String ownerId, String name);
+    }
 }

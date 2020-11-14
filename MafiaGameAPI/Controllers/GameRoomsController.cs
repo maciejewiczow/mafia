@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
-using MafiaGameAPI.Models.Projections;
+using MafiaGameAPI.Models.DTO.Projections;
 using MafiaGameAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 

@@ -84,6 +84,8 @@ namespace MafiaGameAPI
             services.AddScoped<IChatRepository, ChatRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IGameRoomsRepository, GameRoomsRepository>();
+            services.AddScoped<IUsersRepository, UsersRepository>();
+
             services.AddScoped<IMongoClient>(m =>
             {
                 var section = Configuration.GetSection("ConnectionStrings:Mongo");
