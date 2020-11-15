@@ -52,7 +52,7 @@ namespace MafiaGameAPI.Services
             };
         }
 
-        public TokenResponse TokenRefreshAsync(String userId)
+        public TokenResponse CreateNewAccessToken(String userId)
         {
             var accessTokenConfig = _configuration.GetSection("AccessToken");
 
@@ -66,7 +66,7 @@ namespace MafiaGameAPI.Services
             return new TokenResponse()
             {
                 Token = accessToken,
-                ExpiresOn = DateTime.UtcNow.Add(TimeSpan.Parse(accessTokenConfig["LifeSpan"])).ToString()
+                ExpiresOn = DateTime.UtcNow.Add(TimeSpan.Parse(accessTokenConfig["LifeSpan"])).ToString("O")
             };
         }
 

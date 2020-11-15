@@ -28,7 +28,7 @@ namespace MafiaGameAPI.Controllers
         [HttpGet("tokenRefresh")]
         public ActionResult<TokenResponse> TokenRefresh()
         {
-            return _authService.TokenRefreshAsync(User.Identity.Name);
+            return _authService.CreateNewAccessToken(User.Identity.Name);
         }
 
         [AllowAnonymous]

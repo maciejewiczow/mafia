@@ -8,6 +8,6 @@ namespace MafiaGameAPI.Services
     public interface IAuthenticationService
     {
         Task<NewUserTokenResponse> CreateUserAndGenerateTokensAsync(CreateUserDTO dto);
-        TokenResponse TokenRefreshAsync(String userId);
+        TokenResponse CreateNewAccessToken(String userId);
     }
 }
