@@ -5,8 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
 using MafiaGameAPI.Helpers;
+using MafiaGameAPI.Hubs;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Repositories;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MafiaGameAPI.Services
 {
@@ -14,10 +16,12 @@ namespace MafiaGameAPI.Services
     {
         private readonly IGameRepository _gameRepository;
         private readonly IGameRoomsRepository _gameRoomsRepository;
-        public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository)
+        private readonly IHubContext<GameHub> _context;
+        public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository, IHubContext<GameHub> context)
         {
             _gameRepository = gameRepository;
             _gameRoomsRepository = gameRoomsRepository;
+            _context = context;
         }
 
         
@@ -26,7 +30,20 @@ namespace MafiaGameAPI.Services
             var currentState = await _gameRepository.GetCurrentState(roomId);
             int mafiosoCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
             int citizenCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Citizen) != 0 && (u.Role & RoleEnum.Ghost) == 0);
-            return mafiosoCount == citizenCount || mafiosoCount == 0;
+
+            if(mafiosoCount == citizenCount)
+            {
+                await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyGameReult", RoleEnum.Mafioso);
+                return true;
+            }
+
+            if(mafiosoCount == 0)
+            {
+                await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyGameReult", RoleEnum.Citizen);
+                return true;
+            }
+
+            return false;
         }
         private async Task<bool> HasVotingFinished(String roomId)
         {
@@ -88,20 +105,22 @@ namespace MafiaGameAPI.Services
                 VoteState = new List<VoteState>(),
                 VotingStart = DateTime.Now
             };
+            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+            // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
+            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, state.Id));
             return await _gameRepository.StartGame(roomId, state);
         }
         public async Task ChangePhase(String roomId, GameState newState)
         {
+            // TODO: Dodaj nową metodę do pobierania samych opcji
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
-            var options = room.GameOptions; //Dodaj nnową metodę do pobierania samych opcji
-            if (await HasGameEnded(roomId))
-            {
-                //jakies zakonczenie gry
-            }
-            else
+            var options = room.GameOptions; 
+            if (!(await HasGameEnded(roomId)))
             {
                 await _gameRepository.ChangePhase(roomId, newState);
-                await RunPhase(roomId, options.PhaseTime, newState.Id);
+
+                // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
+                _ = Task.Run(() => RunPhase(roomId, options.PhaseTime, newState.Id));
             }
         }
         public async Task<VoteState> Vote(String roomId, String userId, String votedUserId)
@@ -134,9 +153,11 @@ namespace MafiaGameAPI.Services
                 VoteState = new List<VoteState>(),
                 VotingStart = DateTime.Now
             };
-            newState.UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
 
+            newState.UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
+            await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyVotingReult", votedUserId);
             await ChangePhase(roomId, newState);
+
             return newState;
         }
         public async Task<GameState> GetCurrentState(String roomId)
