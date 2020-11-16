@@ -10,7 +10,7 @@ namespace MafiaGameAPI.Repositories
     {
         Task<List<GameRoomProjection>> GetRooms();
 
-        Task<GameRoom> GetRoom(String roomId);
+        Task<GameRoom> GetRoomById(String roomId);
 
         Task<GameRoom> AddRoomParticipant(String roomId, String userId);
 

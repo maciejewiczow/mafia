@@ -42,7 +42,7 @@ namespace MafiaGameAPI.Hubs
         {
             var room = await _gameRoomsService.JoinRoom(roomId, Context.User.Identity.Name);
             var groupName = Helper.GenerateGroupName(roomId);
-            var user = _gameRoomsService.GetUser(Context.User.Identity.Name);
+            var user = _gameRoomsService.GetUserById(Context.User.Identity.Name);
             await Groups.AddToGroupAsync(Context.User.Identity.Name, groupName);
             await Clients.Groups(groupName).SendAsync("NotifyGroupMembers", user);
             return room;

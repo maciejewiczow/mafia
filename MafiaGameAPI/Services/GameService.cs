@@ -23,34 +23,34 @@ namespace MafiaGameAPI.Services
         {
             return Guid.NewGuid().ToString("D");
         }
-        private async Task<bool> IsGameEnded(String roomId)
+        private async Task<bool> HasGameEnded(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
             int mafiosoCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
             int citizenCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Citizen) != 0 && (u.Role & RoleEnum.Ghost) == 0);
             return mafiosoCount == citizenCount || mafiosoCount == 0;
         }
-        private async Task<bool> IsItWasLastVote(String roomId)
+        private async Task<bool> HasVotingFinished(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
             int votesCount = currentState.VoteState.Count;
-            int exceptedVoteCount;
+            int requiredVoteCount;
             if (currentState.Phase.Equals(PhaseEnum.Day))
             {
-                exceptedVoteCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Ghost) == 0);
+                requiredVoteCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Ghost) == 0);
             }
             else
             {
-                exceptedVoteCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
+                requiredVoteCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
             }
 
-            return votesCount >= exceptedVoteCount;
+            return votesCount >= requiredVoteCount;
 
         }
         private async Task<List<UserState>> AssignPlayersToRoles(String roomId)
         {
             List<UserState> userStates = new List<UserState>();
-            GameRoom room = await _gameRoomsRepository.GetRoom(roomId);
+            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
             int mafiosoCount = room.GameOptions.MafiosoCount;
             int currentMafiosoCount = 0;
             List<String> users = room.Participants;
@@ -72,6 +72,7 @@ namespace MafiaGameAPI.Services
                 else
                 {
                     userState.Role = RoleEnum.Mafioso;
+                    currentMafiosoCount++;
                 }
                 userStates.Add(userState);
                 usersCount--;
@@ -93,9 +94,9 @@ namespace MafiaGameAPI.Services
         }
         public async Task ChangePhase(String roomId, GameState newState)
         {
-            GameRoom room = await _gameRoomsRepository.GetRoom(roomId);
+            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
             var options = room.GameOptions; //Dodaj nnową metodę do pobierania samych opcji
-            if (await IsGameEnded(roomId))
+            if (await HasGameEnded(roomId))
             {
                 //jakies zakonczenie gry
             }
@@ -114,7 +115,7 @@ namespace MafiaGameAPI.Services
             };
             var voteState = await _gameRepository.Vote(roomId, vote);
 
-            if (await IsItWasLastVote(roomId))
+            if (await HasVotingFinished(roomId))
             {
                 await VotingAction(roomId);
             }

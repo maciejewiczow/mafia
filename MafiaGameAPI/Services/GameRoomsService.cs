@@ -39,7 +39,7 @@ namespace MafiaGameAPI.Services
             return await _usersRepository.GetRoomId(userId);
         }
 
-        public async Task<User> GetUser(string userId)
+        public async Task<User> GetUserById(string userId)
         {
             return await _usersRepository.GetUserById(userId);
         }
