@@ -10,8 +10,8 @@ namespace MafiaGameAPI.Hubs
 {
     public class ChatHub : Hub
     {
-        private IChatService _chatService;
-        private IGameRoomsService _gameRoomsService;
+        private readonly IChatService _chatService;
+        private readonly IGameRoomsService _gameRoomsService;
         public ChatHub(IChatService chatService, IGameRoomsService gameRoomsService)
         {
             _chatService = chatService;

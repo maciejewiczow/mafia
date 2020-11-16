@@ -17,7 +17,7 @@ namespace MafiaGameAPI.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        IAuthenticationService _authService;
+        private readonly IAuthenticationService _authService;
 
         public AuthenticationController(IAuthenticationService service)
         {

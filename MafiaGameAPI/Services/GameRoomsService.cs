@@ -9,8 +9,8 @@ namespace MafiaGameAPI.Services
 {
     public class GameRoomsService : IGameRoomsService
     {
-        private IGameRoomsRepository _gameRoomsRepository;
-        private IUsersRepository _usersRepository;
+        private readonly IGameRoomsRepository _gameRoomsRepository;
+        private readonly IUsersRepository _usersRepository;
 
         public GameRoomsService(IGameRoomsRepository gameRoomsRepository, IUsersRepository usersRepository)
         {

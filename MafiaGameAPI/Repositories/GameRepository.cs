@@ -5,7 +5,6 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using System.Linq;
-using MafiaGameAPI.Enums;
 using MongoDB.Bson.Serialization;
 
 namespace MafiaGameAPI.Repositories

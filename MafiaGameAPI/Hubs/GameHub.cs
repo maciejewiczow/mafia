@@ -10,8 +10,8 @@ namespace MafiaGameAPI.Hubs
 {
     public class GameHub : Hub
     {
-        private IGameService _gameService;
-        private IGameRoomsService _gameRoomsService;
+        private readonly IGameService _gameService;
+        private readonly IGameRoomsService _gameRoomsService;
 
         public GameHub(IGameService gameService, IGameRoomsService gameRoomsService)
         {

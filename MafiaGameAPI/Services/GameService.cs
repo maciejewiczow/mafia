@@ -11,8 +11,8 @@ namespace MafiaGameAPI.Services
 {
     public class GameService : IGameService
     {
-        private IGameRepository _gameRepository;
-        private IGameRoomsRepository _gameRoomsRepository;
+        private readonly IGameRepository _gameRepository;
+        private readonly IGameRoomsRepository _gameRoomsRepository;
         public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository)
         {
             _gameRepository = gameRepository;

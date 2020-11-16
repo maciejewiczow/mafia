@@ -10,7 +10,7 @@ namespace MafiaGameAPI.Services
 {
     public class ChatService : IChatService
     {
-        private IChatRepository _chatRepository;
+        private readonly IChatRepository _chatRepository;
         
         public ChatService(IChatRepository chatRepository)
         {
