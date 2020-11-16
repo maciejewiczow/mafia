@@ -10,10 +10,12 @@ namespace MafiaGameAPI.Services
     public class GameRoomsService : IGameRoomsService
     {
         private IGameRoomsRepository _gameRoomsRepository;
+        private IUsersRepository _usersRepository;
 
-        public GameRoomsService(IGameRoomsRepository gameRoomsRepository)
+        public GameRoomsService(IGameRoomsRepository gameRoomsRepository, IUsersRepository usersRepository)
         {
             _gameRoomsRepository = gameRoomsRepository;
+            _usersRepository = usersRepository;
         }
 
         public async Task<List<GameRoomProjection>> GetRooms()
@@ -30,6 +32,16 @@ namespace MafiaGameAPI.Services
         {
             GameRoom room = new GameRoom(roomName, userId);
             return await _gameRoomsRepository.CreateRoom(room);
+        }
+
+        public async Task<String> GetRoomIdByUserId(string userId)
+        {
+            return await _usersRepository.GetRoomId(userId);
+        }
+
+        public async Task<User> GetUser(string userId)
+        {
+            return await _usersRepository.GetUserById(userId);
         }
     }
 }
