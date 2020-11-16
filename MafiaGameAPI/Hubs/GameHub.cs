@@ -1,26 +1,51 @@
 using System;
+using System.Threading.Tasks;
+using MafiaGameAPI.Helpers;
+using MafiaGameAPI.Models;
+using MafiaGameAPI.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MafiaGameAPI.Hubs
 {
-    public class GameHub
+    public class GameHub : Hub
     {
-        private MafiaGameAPI.Services.IGameService _gameService;
+        private IGameService _gameService;
+        private IGameRoomsService _gameRoomsService;
 
-        public MafiaGameAPI.Models.GameState StartGame()
+        public GameHub(IGameService gameService, IGameRoomsService gameRoomsService)
         {
-            throw new System.NotImplementedException("Not implemented");
+            _gameService = gameService;
+            _gameRoomsService = gameRoomsService;
         }
-        public MafiaGameAPI.Models.GameRoom JoinRoom(ref String roomId)
+
+        [Authorize]
+        public async Task<GameState> StartGame()
         {
-            throw new System.NotImplementedException("Not implemented");
+            var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
+            var state = await _gameService.StartGame(roomId);
+            var groupName = Helper.GenerateGroupName(roomId);
+            await Clients.Groups(groupName).SendAsync("SendGameStateToPlayers", state);
+            return state;
         }
-        public bool Vote(ref String votedUserId)
+
+        [Authorize]
+        public async Task<bool> Vote(String votedUserId)
         {
-            throw new System.NotImplementedException("Not implemented");
+            var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
+            await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
+            return true;
         }
-        public void OnConnect()
+        
+        [Authorize]
+        public async Task<GameRoom> JoinRoom(string roomId)
         {
-            throw new System.NotImplementedException("Not implemented");
+            var room = await _gameRoomsService.JoinRoom(roomId, Context.User.Identity.Name);
+            var groupName = Helper.GenerateGroupName(roomId);
+            var user = _gameRoomsService.GetUser(Context.User.Identity.Name);
+            await Groups.AddToGroupAsync(Context.User.Identity.Name, groupName);
+            await Clients.Groups(groupName).SendAsync("NotifyGroupMembers", user);
+            return room;
         }
 
     }
