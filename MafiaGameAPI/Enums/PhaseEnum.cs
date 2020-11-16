@@ -1,10 +1,12 @@
 using System;
 
-namespace MafiaGameAPI.Enums {
-	public enum PhaseEnum {
-		Night,
-		Day,
+namespace MafiaGameAPI.Enums
+{
+    public enum PhaseEnum
+    {
+        Night,
+        Day,
 
-	}
+    }
 
 }

@@ -2,14 +2,14 @@ using System;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
 
-namespace MafiaGameAPI.Services 
+namespace MafiaGameAPI.Services
 {
-	public interface IGameService 
-	{
-		Task<GameState> StartGame(String roomId);
-		Task ChangePhase(String roomId, GameState newState);
-		Task<VoteState> Vote(String roomId, String userId, String votedUserId);
-		Task<GameState> VotingAction(String roomId);
-		Task<GameState> GetCurrentState(String roomId);
-	}
+    public interface IGameService
+    {
+        Task<GameState> StartGame(String roomId);
+        Task ChangePhase(String roomId, GameState newState);
+        Task<VoteState> Vote(String roomId, String userId, String votedUserId);
+        Task<GameState> VotingAction(String roomId);
+        Task<GameState> GetCurrentState(String roomId);
+    }
 }
