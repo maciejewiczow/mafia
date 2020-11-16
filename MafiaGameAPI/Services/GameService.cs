@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
+using MafiaGameAPI.Helpers;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Repositories;
 
@@ -19,10 +20,7 @@ namespace MafiaGameAPI.Services
             _gameRoomsRepository = gameRoomsRepository;
         }
 
-        private string GenerateGameStateId()
-        {
-            return Guid.NewGuid().ToString("D");
-        }
+        
         private async Task<bool> HasGameEnded(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
@@ -84,7 +82,7 @@ namespace MafiaGameAPI.Services
         {
             GameState state = new GameState()
             {
-                Id = GenerateGameStateId(),
+                Id = Helper.GenerateGameStateId(),
                 UserStates = await AssignPlayersToRoles(roomId),
                 Phase = PhaseEnum.Night,
                 VoteState = new List<VoteState>(),
@@ -130,7 +128,7 @@ namespace MafiaGameAPI.Services
                   .Select(grp => grp.Key).First();
             GameState newState = new GameState()
             {
-                Id = GenerateGameStateId(),
+                Id = Helper.GenerateGameStateId(),
                 UserStates = currentState.UserStates,
                 Phase = currentState.Phase == PhaseEnum.Day ? PhaseEnum.Night : PhaseEnum.Day,
                 VoteState = new List<VoteState>(),

@@ -14,5 +14,10 @@ namespace MafiaGameAPI.Helpers
         {
             return roomId + "GameGroup";
         }
+
+        public static string GenerateGameStateId()
+        {
+            return Guid.NewGuid().ToString("D");
+        }
     }
 }
