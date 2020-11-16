@@ -11,10 +11,12 @@ namespace MafiaGameAPI.Repositories
     public class GameRoomsRepository : IGameRoomsRepository
     {
         private readonly IMongoCollection<GameRoom> _gameRoomsCollection;
+        private readonly IMongoCollection<User> _usersCollection;
 
         public GameRoomsRepository(IMongoClient mongoClient)
         {
             _gameRoomsCollection = mongoClient.GetDatabase("mafia").GetCollection<GameRoom>("gameRooms");
+            _usersCollection = mongoClient.GetDatabase("mafia").GetCollection<User>("users");
         }
 
         public async Task<List<GameRoomProjection>> GetRooms()
@@ -70,15 +72,21 @@ namespace MafiaGameAPI.Repositories
         public async Task<GameRoom> AddRoomParticipant(String roomId, String userId)
         {
             var objectRoomId = ObjectId.Parse(roomId);
-            var filter = Builders<GameRoom>
+            var objectUserId = ObjectId.Parse(userId);
+            var roomFilter = Builders<GameRoom>
                 .Filter.Eq(r => r.Id, objectRoomId);
-            var update = Builders<GameRoom>.Update
+            var userFilter = Builders<User>
+                .Filter.Eq(r => r.Id, objectUserId);
+            var roomUpdate = Builders<GameRoom>.Update
                 .Push<String>(e => e.Participants, userId);
+            var userUpdate = Builders<User>.Update
+                .Set<String>(u => u.RoomId, roomId);
 
             GameRoom result;
             try
             {
-                result = await _gameRoomsCollection.FindOneAndUpdateAsync(filter, update);
+                await _usersCollection.UpdateOneAsync(userFilter, userUpdate);
+                result = await _gameRoomsCollection.FindOneAndUpdateAsync(roomFilter, roomUpdate);
             }
             catch (Exception)
             {

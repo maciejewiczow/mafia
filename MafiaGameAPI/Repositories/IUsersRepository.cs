@@ -9,5 +9,6 @@ namespace MafiaGameAPI.Repositories
     {
         Task<User> GetUserById(String userId);
         Task<User> CreateUser(CreateUserDTO dto);
+        Task<String> GetRoomId(string userId);
     }
 }
