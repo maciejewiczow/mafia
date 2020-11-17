@@ -24,6 +24,7 @@ namespace MafiaGameAPI.Services
 
         public async Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content)
         {
+            // TODO: sprawdź, czy użytkownik ma prawo wysłać wiadomość na chacie na którym próbuje to zrobić (rola itd)
             Message message = new Message()
             {
                 UserId = userId,

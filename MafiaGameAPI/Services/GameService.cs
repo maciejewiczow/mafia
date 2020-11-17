@@ -80,7 +80,7 @@ namespace MafiaGameAPI.Services
             int usersCount = users.Count;
             if (usersCount <= 2 * mafiosoCount)
             {
-                throw new Exception("Too few players");
+                throw new HubException("Too few citizens to start the game");
             }
 
             foreach (var user in users)

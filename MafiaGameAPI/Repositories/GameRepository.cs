@@ -15,8 +15,6 @@ namespace MafiaGameAPI.Repositories
 
         public GameRepository(IMongoClient mongoClient)
         {
-            var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
             _gameRoomsCollection = mongoClient.GetDatabase("mafia").GetCollection<GameRoom>("gameRooms");
         }
 
@@ -149,7 +147,7 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
 
-            throw new System.NotImplementedException("Not implemented");
+            return currentStateId;
         }
     }
 }
