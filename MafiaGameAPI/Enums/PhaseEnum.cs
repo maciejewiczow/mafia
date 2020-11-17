@@ -4,7 +4,5 @@ namespace MafiaGameAPI.Enums
     {
         Night,
         Day,
-
     }
-
 }
