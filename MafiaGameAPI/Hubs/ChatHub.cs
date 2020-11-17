@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace MafiaGameAPI.Hubs
 {
+    [Authorize]
     public class ChatHub : Hub
     {
         private readonly IChatService _chatService;
@@ -19,7 +20,6 @@ namespace MafiaGameAPI.Hubs
             _gameRoomsService = gameRoomsService;
         }
 
-        [Authorize]
         public async Task SendMessage(ChatTypeEnum chatType, String content)
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
@@ -28,7 +28,6 @@ namespace MafiaGameAPI.Hubs
             await Clients.Groups(message.GroupName).SendAsync("ReceiveMessage", message);
         }
 
-        [Authorize]
         public async Task OnConnect()
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);

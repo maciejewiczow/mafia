@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace MafiaGameAPI.Hubs
 {
+    [Authorize]
     public class GameHub : Hub
     {
         private readonly IGameService _gameService;
@@ -19,7 +20,6 @@ namespace MafiaGameAPI.Hubs
             _gameRoomsService = gameRoomsService;
         }
 
-        [Authorize]
         public async Task<GameState> StartGame()
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
@@ -31,16 +31,13 @@ namespace MafiaGameAPI.Hubs
             return state;
         }
 
-        [Authorize]
-        public async Task<bool> Vote(String votedUserId)
+        public async Task Vote(String votedUserId)
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
 
             await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
-            return true;
         }
 
-        [Authorize]
         public async Task<GameRoom> JoinRoom(string roomId)
         {
             var room = await _gameRoomsService.JoinRoom(roomId, Context.User.Identity.Name);
