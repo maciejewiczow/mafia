@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.SignalR;
 namespace MafiaGameAPI.Hubs
 {
     [Authorize]
-    public class GameHub : Hub
+    public class GameHub : Hub<IGameClient>
     {
         private readonly IGameService _gameService;
         private readonly IGameRoomsService _gameRoomsService;
@@ -22,11 +22,12 @@ namespace MafiaGameAPI.Hubs
 
         public async Task<GameState> StartGame()
         {
+            // TODO: Dodać autoryzację roli: admin pokoju
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var state = await _gameService.StartGame(roomId);
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
 
-            await Clients.Groups(groupName).SendAsync("SendGameStateToPlayers", state);
+            await Clients.Groups(groupName).UpdateGameStateAsync(state);
 
             return state;
         }
@@ -35,13 +36,24 @@ namespace MafiaGameAPI.Hubs
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
 
-            await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
+            // TODO: Sprawdzić czy user może głosować i czy można głosować na votedUserId
+            var vote = await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
+
+            await Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).NewVoteAsync(vote);
         }
 
-        public async Task<GameRoom> JoinRoom(string roomId)
+        public async override Task OnConnectedAsync()
         {
-            var room = await _gameRoomsService.JoinRoom(roomId, Context.User.Identity.Name);
-            var user = _gameRoomsService.GetUserById(Context.User.Identity.Name);
+            var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
+
+            if (String.IsNullOrEmpty(user.RoomId))
+                throw new HubException("You need to be join a room before connecting to this hub");
+
+            var groupName = IdentifiersHelper.GenerateRoomGroupName(user.RoomId);
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
+            await Clients.Groups(groupName).GameMemberConnectedAsync(user);
+        }
 
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
 

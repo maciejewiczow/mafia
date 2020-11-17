@@ -16,9 +16,9 @@ namespace MafiaGameAPI.Services
     {
         private readonly IGameRepository _gameRepository;
         private readonly IGameRoomsRepository _gameRoomsRepository;
-        private readonly IHubContext<GameHub> _context;
+        private readonly IHubContext<GameHub, IGameClient> _context;
 
-        public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository, IHubContext<GameHub> context)
+        public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository, IHubContext<GameHub, IGameClient> context)
         {
             _gameRepository = gameRepository;
             _gameRoomsRepository = gameRoomsRepository;
@@ -35,13 +35,13 @@ namespace MafiaGameAPI.Services
 
             if (mafiosoCount == citizenCount)
             {
-                await _context.Clients.Group(groupName).SendAsync("NotifyGameReult", RoleEnum.Mafioso);
+                await _context.Clients.Group(groupName).GameEndedAsync(RoleEnum.Mafioso.ToString());
                 return true;
             }
 
             if (mafiosoCount == 0)
             {
-                await _context.Clients.Group(groupName).SendAsync("NotifyGameReult", RoleEnum.Citizen);
+                await _context.Clients.Group(groupName).GameEndedAsync(RoleEnum.Citizen.ToString());
                 return true;
             }
 
@@ -171,7 +171,7 @@ namespace MafiaGameAPI.Services
 
             newState.UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
 
-            await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).SendAsync("NotifyVotingReult", votedUserId);
+            await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateVotingResultAsync(votedUserId);
             await ChangePhase(roomId, newState);
 
             return newState;
