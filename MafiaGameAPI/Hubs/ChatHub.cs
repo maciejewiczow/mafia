@@ -12,6 +12,7 @@ namespace MafiaGameAPI.Hubs
     {
         private readonly IChatService _chatService;
         private readonly IGameRoomsService _gameRoomsService;
+
         public ChatHub(IChatService chatService, IGameRoomsService gameRoomsService)
         {
             _chatService = chatService;
@@ -25,6 +26,7 @@ namespace MafiaGameAPI.Hubs
             var message = await _chatService.SendMessage(Context.User.Identity.Name, roomId, chatType, content);
             await Clients.Groups(message.GroupName).SendAsync("ReceiveMessage", message);
         }
+
         [Authorize]
         public async Task OnConnect()
         {
@@ -34,7 +36,5 @@ namespace MafiaGameAPI.Hubs
             await Groups.AddToGroupAsync(Context.User.Identity.Name, groupName);
             await Clients.Groups(groupName).SendAsync("NotifyGroupMembers", user);
         }
-
     }
-
 }

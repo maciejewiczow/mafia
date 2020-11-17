@@ -6,7 +6,5 @@ namespace MafiaGameAPI.Models
     {
         public string UserId { get; set; }
         public RoleEnum Role { get; set; }
-
     }
-
 }

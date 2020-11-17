@@ -12,5 +12,4 @@ namespace MafiaGameAPI.Models
         public List<VoteState> VoteState { get; set; }
         public DateTime VotingStart { get; set; }
     }
-
 }

@@ -12,12 +12,14 @@ namespace MafiaGameAPI.Repositories
     public class GameRepository : IGameRepository
     {
         private readonly IMongoCollection<GameRoom> _gameRoomsCollection;
+
         public GameRepository(IMongoClient mongoClient)
         {
             var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
             ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
             _gameRoomsCollection = mongoClient.GetDatabase("mafia").GetCollection<GameRoom>("gameRooms");
         }
+
         public async Task<GameState> StartGame(String roomId, GameState state)
         {
             var objectRoomId = ObjectId.Parse(roomId);
@@ -41,6 +43,7 @@ namespace MafiaGameAPI.Repositories
             }
             return state;
         }
+
         public async Task ChangePhase(String roomId, GameState state)
         {
             var objectRoomId = ObjectId.Parse(roomId);
@@ -59,6 +62,7 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
         }
+
         public async Task<VoteState> Vote(String roomId, VoteState vote)
         {
             var objectRoomId = ObjectId.Parse(roomId);
@@ -78,6 +82,7 @@ namespace MafiaGameAPI.Repositories
 
             return vote;
         }
+
         public async Task<GameState> GetCurrentState(String roomId)
         {
             var currentStateId = await GetCurrentGameStateId(roomId);
@@ -104,6 +109,7 @@ namespace MafiaGameAPI.Repositories
             }
             return currentState;
         }
+
         public async Task<String> GetCurrentGameStateId(String roomId)
         {
             var objectRoomId = ObjectId.Parse(roomId);
@@ -129,7 +135,5 @@ namespace MafiaGameAPI.Repositories
 
             throw new System.NotImplementedException("Not implemented");
         }
-
     }
-
 }

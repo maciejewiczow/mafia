@@ -9,11 +9,8 @@ namespace MafiaGameAPI.Repositories
     public interface IGameRoomsRepository
     {
         Task<List<GameRoomProjection>> GetRooms();
-
         Task<GameRoom> GetRoomById(String roomId);
-
         Task<GameRoom> AddRoomParticipant(String roomId, String userId);
-
         Task<GameRoom> CreateRoom(GameRoom room);
     }
 }

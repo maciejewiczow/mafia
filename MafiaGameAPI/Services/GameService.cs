@@ -17,6 +17,7 @@ namespace MafiaGameAPI.Services
         private readonly IGameRepository _gameRepository;
         private readonly IGameRoomsRepository _gameRoomsRepository;
         private readonly IHubContext<GameHub> _context;
+
         public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository, IHubContext<GameHub> context)
         {
             _gameRepository = gameRepository;
@@ -24,20 +25,19 @@ namespace MafiaGameAPI.Services
             _context = context;
         }
 
-        
         private async Task<bool> HasGameEnded(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
             int mafiosoCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
             int citizenCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Citizen) != 0 && (u.Role & RoleEnum.Ghost) == 0);
 
-            if(mafiosoCount == citizenCount)
+            if (mafiosoCount == citizenCount)
             {
                 await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyGameReult", RoleEnum.Mafioso);
                 return true;
             }
 
-            if(mafiosoCount == 0)
+            if (mafiosoCount == 0)
             {
                 await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyGameReult", RoleEnum.Citizen);
                 return true;
@@ -45,6 +45,7 @@ namespace MafiaGameAPI.Services
 
             return false;
         }
+
         private async Task<bool> HasVotingFinished(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
@@ -62,6 +63,7 @@ namespace MafiaGameAPI.Services
             return votesCount >= requiredVoteCount;
 
         }
+
         private async Task<List<UserState>> AssignPlayersToRoles(String roomId)
         {
             List<UserState> userStates = new List<UserState>();
@@ -95,6 +97,7 @@ namespace MafiaGameAPI.Services
 
             return userStates;
         }
+
         public async Task<GameState> StartGame(String roomId)
         {
             GameState state = new GameState()
@@ -110,11 +113,12 @@ namespace MafiaGameAPI.Services
             _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, state.Id));
             return await _gameRepository.StartGame(roomId, state);
         }
+
         public async Task ChangePhase(String roomId, GameState newState)
         {
             // TODO: Dodaj nową metodę do pobierania samych opcji
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
-            var options = room.GameOptions; 
+            var options = room.GameOptions;
             if (!(await HasGameEnded(roomId)))
             {
                 await _gameRepository.ChangePhase(roomId, newState);
@@ -123,6 +127,7 @@ namespace MafiaGameAPI.Services
                 _ = Task.Run(() => RunPhase(roomId, options.PhaseTime, newState.Id));
             }
         }
+
         public async Task<VoteState> Vote(String roomId, String userId, String votedUserId)
         {
             var vote = new VoteState()
@@ -139,6 +144,7 @@ namespace MafiaGameAPI.Services
             return voteState;
 
         }
+
         public async Task<GameState> VotingAction(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
@@ -160,10 +166,12 @@ namespace MafiaGameAPI.Services
 
             return newState;
         }
+
         public async Task<GameState> GetCurrentState(String roomId)
         {
             return await _gameRepository.GetCurrentState(roomId);
         }
+
         private async Task RunPhase(String roomId, TimeSpan timeSpan, String stateId)
         {
             Thread.Sleep(timeSpan);

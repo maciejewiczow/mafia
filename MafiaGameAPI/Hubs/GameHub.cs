@@ -36,7 +36,7 @@ namespace MafiaGameAPI.Hubs
             await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
             return true;
         }
-        
+
         [Authorize]
         public async Task<GameRoom> JoinRoom(string roomId)
         {
@@ -47,7 +47,5 @@ namespace MafiaGameAPI.Hubs
             await Clients.Groups(groupName).SendAsync("NotifyGroupMembers", user);
             return room;
         }
-
     }
-
 }
