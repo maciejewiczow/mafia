@@ -1,3 +1,13 @@
 {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "razor.disabled": true,
+    "razor.format.enable": false,
+    "csharp.semanticHighlighting.enabled": true,
+    "csharp.referencesCodeLens.enabled": false,
+    "gitlens.currentLine.enabled": true,
+    "files.insertFinalNewline": true,
+    "editor.detectIndentation": false,
+    "editor.tabSize": 4,
+    "trailing-spaces.trimOnSave": true,
+    "files.trimTrailingWhitespace": true,
 }

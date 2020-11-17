@@ -5,7 +5,6 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
 using System.Linq;
-using MafiaGameAPI.Enums;
 using MongoDB.Bson.Serialization;
 
 namespace MafiaGameAPI.Repositories
@@ -13,21 +12,25 @@ namespace MafiaGameAPI.Repositories
     public class GameRepository : IGameRepository
     {
         private readonly IMongoCollection<GameRoom> _gameRoomsCollection;
+
         public GameRepository(IMongoClient mongoClient)
         {
-            var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
-            ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
             _gameRoomsCollection = mongoClient.GetDatabase("mafia").GetCollection<GameRoom>("gameRooms");
         }
+
         public async Task<GameState> StartGame(String roomId, GameState state)
         {
             var objectRoomId = ObjectId.Parse(roomId);
+
             var filter = Builders<GameRoom>
                 .Filter.Eq(r => r.Id, objectRoomId);
+
             var updateGameState = Builders<GameRoom>.Update
                 .Push<GameState>(r => r.GameHistory, state);
+
             var updateIsGameStarted = Builders<GameRoom>.Update
                 .Set<bool>(r => r.IsGameStarted, true);
+
             var updateCurrentGameState = Builders<GameRoom>.Update
                 .Set<String>(r => r.CurrentGameStateId, state.Id);
 
@@ -40,8 +43,10 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
+
             return state;
         }
+
         public async Task ChangePhase(String roomId, GameState state)
         {
             var objectRoomId = ObjectId.Parse(roomId);
@@ -60,13 +65,20 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
         }
+
         public async Task<VoteState> Vote(String roomId, VoteState vote)
         {
             var objectRoomId = ObjectId.Parse(roomId);
+
             var filter = Builders<GameRoom>
                 .Filter.Eq(r => r.Id, objectRoomId);
-            var updateVotes = Builders<GameRoom>.Update
-                .Push<VoteState>(r => r.GameHistory.OrderByDescending(s => s.VotingStart).FirstOrDefault().VoteState, vote);
+
+            var updateVotes = Builders<GameRoom>.Update.Push<VoteState>(
+                r => r.GameHistory
+                        .OrderByDescending(s => s.VotingStart)
+                        .FirstOrDefault().VoteState,
+                vote
+            );
 
             try
             {
@@ -79,21 +91,24 @@ namespace MafiaGameAPI.Repositories
 
             return vote;
         }
+
         public async Task<GameState> GetCurrentState(String roomId)
         {
             var currentStateId = await GetCurrentGameStateId(roomId);
             var objectRoomId = ObjectId.Parse(roomId);
+
             var filter = Builders<GameRoom>
                 .Filter.Where(r => r.Id.Equals(objectRoomId));
-            var project = Builders<GameRoom>.Projection
-                .ElemMatch(r => r.GameHistory, s => s.Id.Equals(currentStateId));
-            GameState currentState;
 
+            var projection = Builders<GameRoom>.Projection
+                .ElemMatch(r => r.GameHistory, s => s.Id.Equals(currentStateId));
+
+            GameState currentState;
             try
             {
                 var bson = await _gameRoomsCollection
                     .Find(filter)
-                    .Project(project)
+                    .Project(projection)
                     .FirstAsync();
 
                 bson = bson.GetElement("gameHistory").Value.AsBsonArray[0].AsBsonDocument;
@@ -103,17 +118,21 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
+
             return currentState;
         }
+
         public async Task<String> GetCurrentGameStateId(String roomId)
         {
             var objectRoomId = ObjectId.Parse(roomId);
+
             var filter = Builders<GameRoom>.Filter.
                 Where(r => r.Id.Equals(objectRoomId));
+
             var project = Builders<GameRoom>.Projection
                 .Include(r => r.CurrentGameStateId).Exclude(r => r.Id);
-            String currentStateId;
 
+            String currentStateId;
             try
             {
                 var result = await _gameRoomsCollection
@@ -128,9 +147,7 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
 
-            throw new System.NotImplementedException("Not implemented");
+            return currentStateId;
         }
-
     }
-
 }

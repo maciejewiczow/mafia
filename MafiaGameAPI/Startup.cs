@@ -1,16 +1,17 @@
 using System;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authorization;
 using MafiaGameAPI.Services;
 using MafiaGameAPI.Repositories;
-using MongoDB.Driver;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
 using MafiaGameAPI.Enums;
+using MafiaGameAPI.Hubs;
+using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Conventions;
 
 namespace MafiaGameAPI
@@ -79,6 +80,7 @@ namespace MafiaGameAPI
             });
 
             services.AddControllers();
+            services.AddSignalR();
 
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IGameRoomsService, GameRoomsService>();
@@ -121,7 +123,12 @@ namespace MafiaGameAPI
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => endpoints.MapControllers());
+            app.UseEndpoints(endpoints => 
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<GameHub>("/gamehub");
+                endpoints.MapHub<ChatHub>("/chathub");
+            });
         }
     }
 }

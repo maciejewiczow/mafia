@@ -9,10 +9,12 @@ namespace MafiaGameAPI.Repositories
     public class ChatRepository : IChatRepository
     {
         private readonly IMongoCollection<Message> _messagesCollection;
+
         public ChatRepository(IMongoClient mongoClient)
         {
             _messagesCollection = mongoClient.GetDatabase("mafia").GetCollection<Message>("messages");
         }
+
         public async Task<List<Message>> GetMessages(String groupName)
         {
             var filter = Builders<Message>.Filter.Eq(m => m.GroupName, groupName);
@@ -29,6 +31,7 @@ namespace MafiaGameAPI.Repositories
 
             return messages;
         }
+
         public async Task SendMessage(Message message)
         {
             try
@@ -40,7 +43,5 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
         }
-
     }
-
 }

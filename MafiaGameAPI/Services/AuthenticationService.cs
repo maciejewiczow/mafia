@@ -14,8 +14,8 @@ namespace MafiaGameAPI.Services
 {
     public class AuthenticationService : IAuthenticationService
     {
-        IUsersRepository _users;
-        IConfiguration _configuration;
+        private readonly IUsersRepository _users;
+        private readonly IConfiguration _configuration;
 
         public AuthenticationService(IUsersRepository repo, IConfiguration config)
         {

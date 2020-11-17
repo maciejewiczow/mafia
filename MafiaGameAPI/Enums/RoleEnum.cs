@@ -8,7 +8,5 @@ namespace MafiaGameAPI.Enums
         Mafioso,
         Ghost,
         Citizen,
-
     }
-
 }

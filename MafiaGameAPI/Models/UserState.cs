@@ -1,4 +1,3 @@
-using System;
 using MafiaGameAPI.Enums;
 
 namespace MafiaGameAPI.Models
@@ -7,7 +6,5 @@ namespace MafiaGameAPI.Models
     {
         public string UserId { get; set; }
         public RoleEnum Role { get; set; }
-
     }
-
 }

@@ -9,7 +9,5 @@ namespace MafiaGameAPI.Repositories
     {
         Task<List<Message>> GetMessages(String groupName);
         Task SendMessage(Message message);
-
     }
-
 }

@@ -33,5 +33,14 @@ namespace MafiaGameAPI.Repositories
                 .Find(Builders<User>.Filter.Eq("_id", userId))
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<String> GetRoomId(string userId)
+        {
+            var user = await _usersCollection
+                .Find(Builders<User>.Filter.Eq("_id", userId))
+                .FirstOrDefaultAsync();
+
+            return user.RoomId;
+        }
     }
 }

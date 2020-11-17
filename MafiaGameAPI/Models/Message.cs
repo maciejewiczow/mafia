@@ -11,7 +11,5 @@ namespace MafiaGameAPI.Models
         public DateTime SentAt { get; set; }
         public String Content { get; set; }
         public String GroupName { get; set; }
-
     }
-
 }
