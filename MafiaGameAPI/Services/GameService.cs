@@ -102,7 +102,7 @@ namespace MafiaGameAPI.Services
         {
             GameState state = new GameState()
             {
-                Id = Helper.GenerateGameStateId(),
+                Id = IdentifiersHelper.CreateGuidString(),
                 UserStates = await AssignPlayersToRoles(roomId),
                 Phase = PhaseEnum.Night,
                 VoteState = new List<VoteState>(),
@@ -153,7 +153,7 @@ namespace MafiaGameAPI.Services
                   .Select(grp => grp.Key).First();
             GameState newState = new GameState()
             {
-                Id = Helper.GenerateGameStateId(),
+                Id = IdentifiersHelper.CreateGuidString(),
                 UserStates = currentState.UserStates,
                 Phase = currentState.Phase == PhaseEnum.Day ? PhaseEnum.Night : PhaseEnum.Day,
                 VoteState = new List<VoteState>(),

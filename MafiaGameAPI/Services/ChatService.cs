@@ -29,7 +29,7 @@ namespace MafiaGameAPI.Services
                 UserId = userId,
                 SentAt = DateTime.Now,
                 Content = content,
-                GroupName = Helper.GenerateGroupName(roomId, chatType)
+                GroupName = IdentifiersHelper.GenerateChatGroupName(roomId, chatType)
             };
             await _chatRepository.SendMessage(message);
             return message;

@@ -31,7 +31,7 @@ namespace MafiaGameAPI.Hubs
         public async Task OnConnect()
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
-            var groupName = Helper.GenerateGroupName(roomId, ChatTypeEnum.General);
+            var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.General);
             var user = _gameRoomsService.GetUserById(Context.User.Identity.Name);
             await Groups.AddToGroupAsync(Context.User.Identity.Name, groupName);
             await Clients.Groups(groupName).SendAsync("NotifyGroupMembers", user);
