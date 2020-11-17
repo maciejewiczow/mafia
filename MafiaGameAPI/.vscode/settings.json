@@ -1,6 +1,5 @@
 {
     "editor.formatOnSave": true,
-    "omnisharp.enableRoslynAnalyzers": true,
     "razor.disabled": true,
     "razor.format.enable": false,
     "csharp.semanticHighlighting.enabled": true,
