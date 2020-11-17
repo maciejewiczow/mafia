@@ -31,15 +31,17 @@ namespace MafiaGameAPI.Services
             int mafiosoCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
             int citizenCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Citizen) != 0 && (u.Role & RoleEnum.Ghost) == 0);
 
+            var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
+
             if (mafiosoCount == citizenCount)
             {
-                await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyGameReult", RoleEnum.Mafioso);
+                await _context.Clients.Group(groupName).SendAsync("NotifyGameReult", RoleEnum.Mafioso);
                 return true;
             }
 
             if (mafiosoCount == 0)
             {
-                await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyGameReult", RoleEnum.Citizen);
+                await _context.Clients.Group(groupName).SendAsync("NotifyGameReult", RoleEnum.Citizen);
                 return true;
             }
 
@@ -49,6 +51,7 @@ namespace MafiaGameAPI.Services
         private async Task<bool> HasVotingFinished(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
+
             int votesCount = currentState.VoteState.Count;
             int requiredVoteCount;
             if (currentState.Phase.Equals(PhaseEnum.Day))
@@ -61,19 +64,20 @@ namespace MafiaGameAPI.Services
             }
 
             return votesCount >= requiredVoteCount;
-
         }
 
         private async Task<List<UserState>> AssignPlayersToRoles(String roomId)
         {
             List<UserState> userStates = new List<UserState>();
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+
             int mafiosoCount = room.GameOptions.MafiosoCount;
             int currentMafiosoCount = 0;
+
             List<String> users = room.Participants;
             Random random = new Random();
-            int usersCount = users.Count;
 
+            int usersCount = users.Count;
             if (usersCount <= 2 * mafiosoCount)
             {
                 throw new Exception("Too few players");
@@ -109,8 +113,10 @@ namespace MafiaGameAPI.Services
                 VotingStart = DateTime.Now
             };
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+
             // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
             _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, state.Id));
+
             return await _gameRepository.StartGame(roomId, state);
         }
 
@@ -118,13 +124,13 @@ namespace MafiaGameAPI.Services
         {
             // TODO: Dodaj nową metodę do pobierania samych opcji
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
-            var options = room.GameOptions;
+
             if (!(await HasGameEnded(roomId)))
             {
                 await _gameRepository.ChangePhase(roomId, newState);
 
                 // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
-                _ = Task.Run(() => RunPhase(roomId, options.PhaseTime, newState.Id));
+                _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, newState.Id));
             }
         }
 
@@ -141,16 +147,19 @@ namespace MafiaGameAPI.Services
             {
                 await VotingAction(roomId);
             }
-            return voteState;
 
+            return voteState;
         }
 
         public async Task<GameState> VotingAction(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
-            List<VoteState> voteStates = currentState.VoteState;
-            var votedUserId = voteStates.GroupBy(i => i.VotedUserId).OrderByDescending(grp => grp.Count())
-                  .Select(grp => grp.Key).First();
+
+            var votedUserId = currentState.VoteState
+                .GroupBy(i => i.VotedUserId)
+                .OrderByDescending(grp => grp.Count())
+                .Select(grp => grp.Key).First();
+
             GameState newState = new GameState()
             {
                 Id = IdentifiersHelper.CreateGuidString(),
@@ -161,7 +170,8 @@ namespace MafiaGameAPI.Services
             };
 
             newState.UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
-            await _context.Clients.Group(Helper.GenerateGroupName(roomId)).SendAsync("NotifyVotingReult", votedUserId);
+
+            await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).SendAsync("NotifyVotingReult", votedUserId);
             await ChangePhase(roomId, newState);
 
             return newState;
@@ -175,7 +185,9 @@ namespace MafiaGameAPI.Services
         private async Task RunPhase(String roomId, TimeSpan timeSpan, String stateId)
         {
             Thread.Sleep(timeSpan);
+
             var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
+
             if (stateId.Equals(currentStateId))
             {
                 await VotingAction(roomId);

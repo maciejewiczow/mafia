@@ -23,13 +23,11 @@ namespace MafiaGameAPI.Repositories
         {
             var project = new BsonDocument
             {
-                { "_id",
-                new BsonDocument("$toString", "$_id") },
+                { "_id", new BsonDocument("$toString", "$_id") },
                 { "name", 1 },
                 { "isGameStarted", 1 },
                 { "maxPlayers", "$gameOptions.maxPlayers" },
-                { "currentPlayersCount",
-                new BsonDocument("$size", "$participants") }
+                { "currentPlayersCount", new BsonDocument("$size", "$participants") }
             };
 
             List<GameRoomProjection> rooms;
@@ -73,12 +71,16 @@ namespace MafiaGameAPI.Repositories
         {
             var objectRoomId = ObjectId.Parse(roomId);
             var objectUserId = ObjectId.Parse(userId);
+
             var roomFilter = Builders<GameRoom>
                 .Filter.Eq(r => r.Id, objectRoomId);
+
             var userFilter = Builders<User>
                 .Filter.Eq(r => r.Id, objectUserId);
+
             var roomUpdate = Builders<GameRoom>.Update
                 .Push<String>(e => e.Participants, userId);
+
             var userUpdate = Builders<User>.Update
                 .Set<String>(u => u.RoomId, roomId);
 
@@ -92,6 +94,7 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
+
             return result;
         }
 
@@ -105,6 +108,7 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
+
             return room;
         }
     }
