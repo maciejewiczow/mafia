@@ -55,12 +55,13 @@ namespace MafiaGameAPI.Hubs
             await Clients.Groups(groupName).GameMemberConnectedAsync(user);
         }
 
-            var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
+        public async override Task OnDisconnectedAsync(Exception e)
+        {
+            var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
 
-            await Groups.AddToGroupAsync(Context.User.Identity.Name, groupName);
-            await Clients.Groups(groupName).SendAsync("NotifyGroupMembers", user);
+            var groupName = IdentifiersHelper.GenerateRoomGroupName(user.RoomId);
 
-            return room;
+            await Clients.Groups(groupName).GameMemberDisconnectedAsync(user);
         }
     }
 }

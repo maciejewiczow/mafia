@@ -42,6 +42,18 @@ namespace MafiaGameAPI.Hubs
 
             await base.OnConnectedAsync();
         }
+
+        public override async Task OnDisconnectedAsync(Exception exception)
+        {
+            var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
+
+            foreach (ChatTypeEnum value in Enum.GetValues(typeof(ChatTypeEnum)))
+            {
+                var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, value);
+                await Clients.Groups(groupName).UserDisconnectedAsync(Context.User.Identity.Name);
+            }
+
+            await base.OnDisconnectedAsync(exception);
         }
     }
 }
