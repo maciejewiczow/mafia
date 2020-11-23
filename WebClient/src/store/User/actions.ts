@@ -1,5 +1,4 @@
 import { ActionCreator } from 'redux';
-import { ThunkAction } from 'redux-thunk';
 import { CreateUserResponse, User } from '../../api';
 import { CreateUserRequest } from '../../api/requests';
 import { RequestActionBundle } from '../utils';

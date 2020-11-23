@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
-import { useResource } from 'react-request-hook';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { RoomsResponse } from '../../api';
+import { getRooms } from '../../store/Rooms/actions';
+import * as selectors from '../../store/Rooms/selectors';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -28,26 +29,32 @@ interface ClassProps {
 }
 
 const RoomList: React.FC<ClassProps> = ({ className }) => {
-    const [{ data, error, isLoading }, getRooms] = useResource(() => ({ url: '/GameRooms' }));
+    const dispatch = useDispatch();
 
-    const rooms = data as RoomsResponse | undefined;
+    const isLoading = useSelector(selectors.areRoomsLoading);
+    const rooms = useSelector(selectors.rooms);
 
+    useEffect(() => {
+        dispatch(getRooms());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    useEffect(getRooms, []);
+    }, []);
+
+    if (isLoading)
+        return <div>Ładowanie pokoi...</div>;
 
     return (
         <Wrapper className={className}>
             <Header>Pokoje</Header>
-            {(isLoading || !rooms) && <div>Ładowanie pokoi...</div>}
-            {error && <Error>Błąd ładowania</Error>}
-            {(rooms && !rooms.length) && <Empty>Brak</Empty>}
-            {rooms && (
-                <List>
-                    {rooms.map(({ id, name, currentPlayersCount, maxPlayers }) => (
-                        <li key={id}>{name}, {currentPlayersCount}/{maxPlayers} graczy</li>
-                    ))}
-                </List>
-            )}
+            {!rooms.length ? (
+                <Empty>Brak aktywnych pokoi</Empty>
+            )
+                : (
+                    <List>
+                        {rooms.map(({ id, name, currentPlayersCount, maxPlayers }) => (
+                            <li key={id}>{name}, {currentPlayersCount}/{maxPlayers} graczy</li>
+                        ))}
+                    </List>
+                )}
         </Wrapper>
     );
 };

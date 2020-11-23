@@ -1,12 +1,8 @@
-import { AxiosResponse } from 'axios';
-import { current } from 'immer';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useRequest, useResource } from 'react-request-hook';
 import styled from 'styled-components';
 import api, { CreateUserResponse, RoomsResponse } from '../../api';
-import { CreateUserRequest } from '../../api/requests';
-import { getAccessToken, setTokens } from '../../api/tokens';
+import { setTokens } from '../../api/tokens';
 import { getCurrentUser } from '../../store/User/actions';
 import * as selectors from '../../store/User/selectors';
 

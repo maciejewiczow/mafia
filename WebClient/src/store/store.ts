@@ -6,10 +6,12 @@ import thunk from 'redux-thunk';
 import api from '../api';
 import { requestActionErrorSuffix, requestActionSuccessSuffix } from './constants';
 import rootReducer from './reducers';
+import { RoomsState } from './Rooms/store';
 import { CurrentUserState } from './User/store';
 
 export interface AppState {
     currentUser: CurrentUserState;
+    rooms: RoomsState;
 }
 
 type AxiosMiddlewareOptions = Partial<{
