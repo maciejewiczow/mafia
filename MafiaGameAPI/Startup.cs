@@ -25,6 +25,8 @@ namespace MafiaGameAPI
 
         public IConfiguration Configuration { get; }
 
+        readonly string FrontendOrigin = "frontend";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -79,6 +81,17 @@ namespace MafiaGameAPI
                 );
             });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(
+                    name: FrontendOrigin,
+                    builder => builder.WithOrigins("http://localhost:3000")
+                            .AllowAnyMethod()
+                            .AllowCredentials()
+                            .AllowAnyHeader()
+                );
+            });
+
             services.AddControllers();
             services.AddSignalR();
 
@@ -119,11 +132,13 @@ namespace MafiaGameAPI
 
             app.UseRouting();
 
+            app.UseCors(FrontendOrigin);
+
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints => 
+            app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<GameHub>("/gamehub");

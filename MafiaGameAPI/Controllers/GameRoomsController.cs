@@ -15,6 +15,7 @@ namespace MafiaGameAPI.Controllers
     public class GameRoomsController : ControllerBase
     {
         private readonly IGameRoomsService _gameRoomsService;
+
         public GameRoomsController(IGameRoomsService gameRoomsService)
         {
             _gameRoomsService = gameRoomsService;
