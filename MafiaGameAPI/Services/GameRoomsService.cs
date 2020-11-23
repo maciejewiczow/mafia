@@ -43,5 +43,10 @@ namespace MafiaGameAPI.Services
         {
             return await _usersRepository.GetUserById(userId);
         }
+
+        public async Task<GameRoom> GetRoomById(String roomId)
+        {
+            return await _gameRoomsRepository.GetRoomById(roomId);
+        }
     }
 }
