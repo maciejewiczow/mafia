@@ -12,13 +12,15 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "only-warn"
+        "only-warn",
+        "react-hooks"
     ],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
-        "plugin:import/warnings"
+        "plugin:import/warnings",
+        "plugin:react-hooks/recommended"
     ],
     "rules": {
         "no-promise-executor-return": "warn",
@@ -37,17 +39,33 @@
                 "exceptAfterSingleLine": true
             }
         ],
-        "indent": [
+        "@typescript-eslint/indent": [
             "warn",
             4
         ],
-        "linebreak-style": ["warn", "windows"],
-        "semi": ["warn", "always"],
-        "quotes": ["warn", "single"],
+        "linebreak-style": [
+            "warn",
+            "windows"
+        ],
+        "semi": [
+            "warn",
+            "always"
+        ],
+        "quotes": [
+            "warn",
+            "single"
+        ],
         "newline-per-chained-call": "off",
         "prefer-destructuring": "warn",
-        "curly": ["warn", "multi", "consistent"],
-        "eqeqeq": ["warn", "smart"],
+        "curly": [
+            "warn",
+            "multi",
+            "consistent"
+        ],
+        "eqeqeq": [
+            "warn",
+            "smart"
+        ],
         "guard-for-in": "warn",
         "no-constructor-return": "warn",
         "no-eval": "error",
@@ -58,16 +76,51 @@
         "no-useless-concat": "warn",
         "no-useless-return": "warn",
         "require-await": "warn",
-        "wrap-iife": ["warn", "inside"],
-        "yoda": ["error", "never", { "exceptRange": true }],
-        "no-shadow": "warn",
-        "array-bracket-newline": ["warn", {"multiline": true}],
-        "object-curly-spacing": ["warn", "always"],
-        "implicit-arrow-linebreak": ["warn", "beside"],
-        "arrow-parens": ["warn", "as-needed"],
-        "arrow-spacing": ["warn", { "before": true, "after": true }],
-        "arrow-body-style": ["warn", "as-needed"],
+        "wrap-iife": [
+            "warn",
+            "inside"
+        ],
+        "yoda": [
+            "error",
+            "never",
+            {
+                "exceptRange": true
+            }
+        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": ["warn"],
+        "array-bracket-newline": [
+            "warn",
+            {
+                "multiline": true
+            }
+        ],
+        "object-curly-spacing": [
+            "warn",
+            "always"
+        ],
+        "implicit-arrow-linebreak": [
+            "warn",
+            "beside"
+        ],
+        "arrow-parens": [
+            "warn",
+            "as-needed"
+        ],
+        "arrow-spacing": [
+            "warn",
+            {
+                "before": true,
+                "after": true
+            }
+        ],
+        "arrow-body-style": [
+            "warn",
+            "as-needed"
+        ],
         "no-confusing-arrow": "warn",
-        "prefer-arrow-callback": "warn"
+        "prefer-arrow-callback": "warn",
+        "react-hooks/rules-of-hooks": "warn",
+        "react-hooks/exhaustive-deps": "warn"
     }
 }
