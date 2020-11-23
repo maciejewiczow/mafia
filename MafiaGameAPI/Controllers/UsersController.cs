@@ -26,10 +26,9 @@ namespace MafiaGameAPI.Controllers
         }
 
         [HttpGet("current")]
-        public async Task<User> getCurrentUser()
+        public async Task<UserProjection> getCurrentUser()
         {
-            var user = await _users.GetUserById(User.Identity.Name);
-            return user;
+            return await _users.GetUserProjectionById(User.Identity.Name);
         }
 
         [Authorize(Policy = nameof(TokenType.RefreshToken))]
