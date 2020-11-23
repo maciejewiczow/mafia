@@ -7,5 +7,10 @@
   <ItemGroup>
     <PackageReference Include="Invio.Extensions.Authentication.JwtBearer" Version="2.0.1" />
     <PackageReference Include="MongoDB.Driver" Version="2.11.4" />
+    <PackageReference Include="TypeGen" Version="2.4.9" />
   </ItemGroup>
+  <!-- TODO: uncomment when type generation starts working
+  <Target Name="PrecompileScript" BeforeTargets="BeforeBuild">
+    <Exec Command="dotnet dotnet-typegen " />
+  </Target> -->
 </Project>

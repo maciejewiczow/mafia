@@ -1,0 +1,38 @@
+{
+    "fileNameConverters": [
+        "PascalCaseToCamelCaseConverter"
+    ],
+    "typeNameConverters": [
+        "PascalCaseToCamelCaseConverter"
+    ],
+    "propertyNameConverters": [
+        "PascalCaseToCamelCaseConverter"
+    ],
+    "enumValueNameConverters": [
+        "PascalCaseToCamelCaseConverter"
+    ],
+    "typeScriptFileExtension": "ts",
+    "tabLength": 4,
+    "explicitPublicAccessor": false,
+    "defaultValuesForTypes": {
+        "number": "-1",
+        "Date | null": "null",
+        "string": "\"\""
+    },
+    "customTypeMappings": {},
+    "typeUnionsForTypes": {
+        "string": [
+            "null",
+            "undefined"
+        ],
+        "Date": [
+            "string"
+        ]
+    },
+    "csNullableTranslation": "null",
+    "enumStringInitializers": true,
+    "generationSpecs": [
+        "ModelsTsGenerator"
+    ],
+    "outputPath": "../WebClient/src/api/generated"
+}
