@@ -1,27 +1,27 @@
-export enum chatTypeEnum {
+export enum ChatTypeEnum {
     General,
     Mafia,
     Citizen,
     Ghost
 }
 
-export enum phaseEnum {
+export enum PhaseEnum {
     Night,
     Day
 }
 
-export enum roleEnum {
+export enum RoleEnum {
     Mafioso,
     Ghost,
     Citizen
 }
 
-export enum tokenType {
+export enum TokenType {
     AccessToken,
     RefreshToken
 }
 
-export interface gameRoomProjection {
+export interface GameRoomProjection {
     id: string;
     name: string;
     isGameStarted: boolean;
@@ -29,28 +29,28 @@ export interface gameRoomProjection {
     currentPlayersCount: number;
 }
 
-export interface userProjection {
+export interface UserProjection {
     id: string;
     name: string;
     roomId: string;
 }
 
-export interface newUserTokenResponse {
+export interface NewUserTokenResponse {
     token: string;
     refreshToken: string;
     expiresOn: string;
 }
 
-export interface tokenResponse {
+export interface TokenResponse {
     token: string;
     expiresOn: string;
 }
 
-export interface createUserDTO {
+export interface CreateUserDTO {
     userName: string;
 }
 
-export interface gameOptions {
+export interface GameOptions {
     maxPlayers: number;
     phaseTime: string;
     mafiosoCount: number;
@@ -58,28 +58,15 @@ export interface gameOptions {
     visibleVotes: boolean;
 }
 
-export interface gameRoom {
-    gameHistory: gameState[];
-    currentGameStateId: string;
-    name: string;
-    password: string;
-    gameOptions: gameOptions;
-    owner: string;
-    groupName: string;
-    participants: string[];
-    isGameStarted: boolean;
-    isGameEnded: boolean;
-}
-
-export interface gameState {
+export interface GameState {
     id: string;
-    userStates: userState[];
-    phase: phaseEnum;
-    voteState: voteState[];
+    userStates: UserState[];
+    phase: PhaseEnum;
+    voteState: VoteState[];
     votingStart: string;
 }
 
-export interface message {
+export interface Message {
     id: string;
     userId: string;
     sentAt: string;
@@ -87,18 +74,20 @@ export interface message {
     groupName: string;
 }
 
-export interface user {
+export interface User {
     id: string;
     name: string;
     roomId: string;
 }
 
-export interface userState {
+export interface UserState {
     userId: string;
-    role: roleEnum;
+    role: RoleEnum;
 }
 
-export interface voteState {
+export interface VoteState {
     userId: string;
     votedUserId: string;
 }
+
+// FIXME: Remove this file from repo when interface generation is fixed

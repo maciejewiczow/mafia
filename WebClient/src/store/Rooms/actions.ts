@@ -1,35 +1,7 @@
 import { AxiosResponse } from 'axios';
-import { getAction } from 'connected-react-router';
-import { ActionCreator } from 'redux';
-import { GameRoom, RoomsResponse } from '../../api';
-import { PickAction, RequestActionBundle, TypedActionCreator } from '../utils';
-
-export enum RoomsActionType {
-    roomsRequest = 'rooms/REQUEST',
-    roomsRequestSuccess = 'rooms/REQUEST_SUCCESS',
-    roomsRequestFailed = 'rooms/REQUEST_FAILED',
-    createRoom = 'createRoom',
-    createRoomRequest = 'createRoom/REQUEST',
-    createRoomRequestSuccess = 'createRoom/REQUEST_SUCCESS',
-    createRoomRequestFailed = 'createRoom/REQUEST_FAIL',
-}
-
-export type RoomsAction = RequestActionBundle<
-    RoomsActionType.roomsRequest,
-    RoomsActionType.roomsRequestSuccess,
-    RoomsActionType.roomsRequestFailed,
-    undefined,
-    RoomsResponse
-> | RequestActionBundle<
-    RoomsActionType.createRoomRequest,
-    RoomsActionType.createRoomRequestSuccess,
-    RoomsActionType.createRoomRequestFailed,
-    undefined,
-    GameRoom
-> | {
-    type: RoomsActionType.createRoom;
-    name: string;
-}
+import { GameRoom } from '../../api';
+import { TypedActionCreator } from '../utils';
+import { RoomsAction, RoomsActionType } from './constants';
 
 export const getRooms: TypedActionCreator<RoomsAction, RoomsActionType.roomsRequest> = () => ({
     type: RoomsActionType.roomsRequest,
@@ -46,9 +18,14 @@ export const createRoom: TypedActionCreator<RoomsAction, RoomsActionType.createR
     name
 });
 
-export const createRoomSuccess: TypedActionCreator<RoomsAction, RoomsActionType.createRoomRequestSuccess> = (
+export const joinRoomSuccess: TypedActionCreator<RoomsAction, RoomsActionType.joinRoomRequestSuccess> = (
     (payload: AxiosResponse<GameRoom>) => ({
-        type: RoomsActionType.createRoomRequestSuccess,
+        type: RoomsActionType.joinRoomRequestSuccess,
         payload
     })
 );
+
+export const joinRoom: TypedActionCreator<RoomsAction, RoomsActionType.joinRoom> = (roomId: string) => ({
+    type: RoomsActionType.joinRoom,
+    roomId
+});

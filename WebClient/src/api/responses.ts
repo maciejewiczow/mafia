@@ -1,3 +1,5 @@
+export * from './generated';
+
 export interface TokenResponse {
     token: string;
     expiresOn: string;
@@ -69,13 +71,15 @@ export interface GameOptions {
 }
 
 export interface GameRoom {
-    id: ObjectId;
     gameHistory: GameState[];
     currentGameStateId: string;
     name: string;
+    password: string;
     gameOptions: GameOptions;
     owner: string;
-    Participants: string[];
+    groupName: string;
+    participants: string[];
+    participantsWithNames: User[];
     isGameStarted: boolean;
     isGameEnded: boolean;
 }

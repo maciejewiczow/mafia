@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { Reducer } from 'redux';
-import { RoomsAction, RoomsActionType } from './actions';
+import { RoomsAction, RoomsActionType } from './constants';
 import { initialRoomsState, RoomsState } from './store';
 
 export const roomsReducer: Reducer<RoomsState, RoomsAction> = (
@@ -24,7 +24,7 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction> = (
                 draft.isLoading = false;
             });
 
-        case RoomsActionType.createRoomRequestSuccess:
+        case RoomsActionType.joinRoomRequestSuccess:
             return produce(state, draft => {
                 draft.currentRoom = action.payload.data;
             });

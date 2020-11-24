@@ -1,7 +1,7 @@
 import { produce } from 'immer';
 import { Reducer } from 'redux';
 
-import { UserActionType, UserAction } from './actions';
+import { UserActionType, UserAction } from './constants';
 import { CurrentUserState, initialCurrentUserState } from './store';
 
 export const userReducer: Reducer<CurrentUserState, UserAction> = (
