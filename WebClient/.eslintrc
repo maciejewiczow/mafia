@@ -7,7 +7,8 @@
             "experimentalObjectRestSpread": true,
             "binaryLiterals": true,
             "objectLiteralShorthandProperties": true,
-            "generators": true
+            "generators": true,
+            "jsx": true
         }
     },
     "plugins": [
@@ -32,6 +33,7 @@
         "@typescript-eslint/no-empty-interface": "off",
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
+        "indent": "off",
         "lines-between-class-members": [
             "warn",
             "always",
@@ -41,7 +43,11 @@
         ],
         "@typescript-eslint/indent": [
             "warn",
-            4
+            4,
+            {
+                "ignoredNodes": ["TSTypeParameterInstantiation"],
+                "SwitchCase": 1
+            }
         ],
         "linebreak-style": [
             "warn",
