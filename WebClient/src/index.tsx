@@ -3,10 +3,8 @@ import ReactDOM from 'react-dom';
 import { createGlobalStyle } from 'styled-components';
 import { Provider } from 'react-redux';
 import reportWebVitals from './reportWebVitals';
-import { RequestProvider } from 'react-request-hook';
 
 import store from './store';
-import api from './api';
 import App from './App';
 
 const GlobalStyles = createGlobalStyle`
@@ -22,15 +20,17 @@ const GlobalStyles = createGlobalStyle`
     *, *::before, *::after {
         box-sizing: border-box;
     }
+
+    input, button {
+        padding: 3px 5px;
+    }
 `;
 
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <RequestProvider value={api}>
-                <GlobalStyles />
-                <App />
-            </RequestProvider>
+            <GlobalStyles />
+            <App />
         </Provider>
     </React.StrictMode>,
     document.getElementById('root')

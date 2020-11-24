@@ -1,31 +1,17 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { HashRouter, Route, Switch } from 'react-router-dom';
-import { getAccessToken } from './api/tokens';
-import { getCurrentUser } from './store/User/actions';
+import { ConnectedRouter } from 'connected-react-router';
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
 
 import * as Views from './views';
+import { history } from './store';
 
-const App: React.FC = () => {
-    const dispatch = useDispatch();
-
-    useEffect(() => {
-        (async () => {
-            if ((await getAccessToken()) !== null) {
-                console.log('Access token present user data request');
-                dispatch(getCurrentUser());
-            }
-        })();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return (
-        <HashRouter>
-            <Switch>
-                <Route path="/" component={Views.LandingView} />
-            </Switch>
-        </HashRouter>
-    );
-};
+const App: React.FC = () => (
+    <ConnectedRouter history={history}>
+        <Switch>
+            <Route path="/room" component={Views.GameRoomView} />
+            <Route path="/" component={Views.LandingView} />
+        </Switch>
+    </ConnectedRouter>
+);
 
 export default App;

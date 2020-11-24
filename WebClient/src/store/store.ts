@@ -1,13 +1,16 @@
-import { AxiosInstance, AxiosResponse } from 'axios';
-import { applyMiddleware, compose, createStore } from 'redux';
+import { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { AnyAction, applyMiddleware, compose, createStore } from 'redux';
 import axiosMiddleware from 'redux-axios-middleware';
-import thunk from 'redux-thunk';
+import { createBrowserHistory } from 'history';
+import { routerMiddleware } from 'connected-react-router';
 
 import api from '../api';
 import { requestActionErrorSuffix, requestActionSuccessSuffix } from './constants';
-import rootReducer from './reducers';
+import createRootReducer from './reducers';
 import { RoomsState } from './Rooms/store';
 import { CurrentUserState } from './User/store';
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './rootSaga';
 
 export interface AppState {
     currentUser: CurrentUserState;
@@ -21,8 +24,8 @@ type AxiosMiddlewareOptions = Partial<{
     onError({ action, next, response }?: any, options?: any): any;
     onComplete(): any;
     returnRejectedPromiseOnError: boolean;
-    isAxiosRequest: boolean;
-    getRequestConfig: AxiosResponse;
+    isAxiosRequest: (action: AnyAction) => boolean;
+    getRequestConfig: (action: AnyAction) => AxiosRequestConfig;
     getClientName: AxiosInstance;
     defaultClientName: string;
     getRequestOptions: any;
@@ -39,13 +42,23 @@ const axios = axiosMiddleware(
     {
         successSuffix: requestActionSuccessSuffix,
         errorSuffix: requestActionErrorSuffix,
+        isAxiosRequest: (action: AnyAction) => !!action.isRequestAction,
     } as AxiosMiddlewareOptions
 );
 
+const sagaMiddleware = createSagaMiddleware();
+
+export const history = createBrowserHistory();
+
 export const store = createStore(
-    rootReducer,
-    composeEnhancers(applyMiddleware(axios, thunk))
+    createRootReducer(history),
+    composeEnhancers(
+        applyMiddleware(
+            routerMiddleware(history),
+            sagaMiddleware,
+            axios,
+        )
+    )
 );
 
-store.subscribe(() => console.log('Store update:', store.getState()));
-
+sagaMiddleware.run(rootSaga);
