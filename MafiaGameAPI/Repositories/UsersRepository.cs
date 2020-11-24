@@ -31,9 +31,10 @@ namespace MafiaGameAPI.Repositories
         public async Task<User> GetUserById(String userId)
         {
             return await _usersCollection
-                .Find(Builders<User>.Filter.Eq("_id", userId))
+                .Find(Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId)))
                 .FirstOrDefaultAsync();
         }
+
         public async Task<UserProjection> GetUserProjectionById(String userId)
         {
             var project = new BsonDocument
