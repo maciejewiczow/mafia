@@ -85,8 +85,7 @@ namespace MafiaGameAPI.Services
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
 
-            var validFor = (ttl != null) ? TimeSpan.Parse(ttl) : TimeSpan.MaxValue;
-            tokenDescriptor.Expires = DateTime.UtcNow.Add(validFor);
+            tokenDescriptor.Expires = (ttl != null) ? DateTime.UtcNow.Add(TimeSpan.Parse(ttl)) : DateTime.MaxValue;
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
