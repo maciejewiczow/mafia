@@ -65,7 +65,7 @@
         "prefer-destructuring": "warn",
         "curly": [
             "warn",
-            "multi",
+            "multi-or-nest",
             "consistent"
         ],
         "eqeqeq": [
@@ -78,6 +78,7 @@
         "no-extend-native": "warn",
         "no-implied-eval": "warn",
         "no-multi-spaces": "warn",
+        "keyword-spacing": ["warn", {"before": true, "after": true}],
         "no-unmodified-loop-condition": "warn",
         "no-useless-concat": "warn",
         "no-useless-return": "warn",
