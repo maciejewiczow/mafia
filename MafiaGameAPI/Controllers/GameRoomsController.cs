@@ -36,7 +36,8 @@ namespace MafiaGameAPI.Controllers
         {
             return await _gameRoomsService.GetRoomById(roomId);
         }
-        [HttpGet("getRoom")]
+
+        [HttpGet("current")]
         public async Task<GameRoom> GetRoomByUserId()
         {
             var roomId = (await _usersRepository.GetUserById(User.Identity.Name)).RoomId;
@@ -49,7 +50,7 @@ namespace MafiaGameAPI.Controllers
             return await _gameRoomsService.CreateRoom(name, User.Identity.Name);
         }
 
-        [HttpPost("join/{id}")]
+        [HttpPost("join/{roomId}")]
         public async Task<GameRoom> JoinRoom([FromRoute] String roomId)
         {
             return await _gameRoomsService.JoinRoom(roomId, User.Identity.Name);

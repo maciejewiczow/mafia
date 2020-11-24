@@ -39,7 +39,7 @@ namespace MafiaGameAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("createUser")]
+        [HttpPost("create")]
         public async Task<ActionResult<NewUserTokenResponse>> CreateUser([Required, FromBody] CreateUserDTO dto)
         {
             return await _authService.CreateUserAndGenerateTokensAsync(dto);
