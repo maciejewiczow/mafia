@@ -88,13 +88,13 @@ namespace MafiaGameAPI.Repositories
             try
             {
                 await _usersCollection.UpdateOneAsync(userFilter, userUpdate);
-                result = await _gameRoomsCollection.FindOneAndUpdateAsync(roomFilter, roomUpdate);
+                await _gameRoomsCollection.FindOneAndUpdateAsync(roomFilter, roomUpdate);
             }
             catch (Exception)
             {
                 throw;
             }
-            result.ParticipantsWithNames = await getParticipantsWithNames(result.Participants);
+            result = await GetRoomById(roomId);
             return result;
         }
 
