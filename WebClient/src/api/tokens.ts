@@ -29,7 +29,7 @@ export const getAccessToken = async (): Promise<string | null> => {
     let resp: AxiosResponse<TokenResponse>;
     try {
         resp = await api.get<TokenResponse>(
-            '/Authentication/tokenRefresh',
+            '/Users/tokenRefresh',
             {
                 headers: {
                     Authorization: `Bearer ${refreshToken}`
@@ -63,7 +63,7 @@ export const setTokens = ({ token, refreshToken, expiresOn }: CreateUserResponse
 };
 
 export const addAuthorizationToken = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
-    if (config.url?.match(/Authentication\//))
+    if (config.url?.match(/Users\/token/))
         return config;
 
     const token = await getAccessToken();
