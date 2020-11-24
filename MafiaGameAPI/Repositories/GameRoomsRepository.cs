@@ -63,7 +63,7 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
-
+            room.ParticipantsWithNames = await getParticipantsWithNames(room.Participants);
             return room;
         }
 
@@ -94,7 +94,7 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
-
+            result.ParticipantsWithNames = await getParticipantsWithNames(result.Participants);
             return result;
         }
 
@@ -108,8 +108,25 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
-
+            room.ParticipantsWithNames = await getParticipantsWithNames(room.Participants);
             return room;
+        }
+
+        // FIXME: prosze zrób to inaczej
+        private async Task<List<User>> getParticipantsWithNames(List<string> users)
+        {
+            List<User> participants = new List<User>();
+            foreach (string item in users)
+            {
+                participants.Add(await GetUserById(item));
+            }
+            return participants;
+        }
+        private async Task<User> GetUserById(String userId)
+        {
+            return await _usersCollection
+                .Find(Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId)))
+                .FirstOrDefaultAsync();
         }
     }
 }
