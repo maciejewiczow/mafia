@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import api, { CreateUserResponse, RoomsResponse } from '../../api';
-import { setTokens } from '../../api/tokens';
-import { getCurrentUser } from '../../store/User/actions';
+import { createUser } from '../../store/User/actions';
 import * as selectors from '../../store/User/selectors';
 
 const Wrapper = styled.div`
     width: 100%;
     background: white;
-    padding: 5px;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-flow: column;
 `;
 
 const NickInput = styled.input`
@@ -33,15 +35,7 @@ const CreateUser: React.FC<ClassProps> = ({ className }) => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
-        try {
-            const token = await api.post<CreateUserResponse>('/Authentication/createUser', { userName });
-            setTokens(token.data);
-
-            dispatch(getCurrentUser());
-        } catch (e) {
-            console.error('User creation failed', e);
-        }
+        dispatch(createUser(userName));
     };
 
     return (
