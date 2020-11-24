@@ -40,6 +40,9 @@ namespace MafiaGameAPI.Hubs
             await Groups.AddToGroupAsync(Context.User.Identity.Name, groupName);
             await Clients.Groups(groupName).UserConnectedAsync(user);
 
+            var messages = await _chatService.GetMessagesByUserId(Context.User.Identity.Name, roomId);
+            await Clients.Caller.MessagesOnConnectedAsync(messages);
+
             await base.OnConnectedAsync();
         }
 

@@ -36,7 +36,6 @@ namespace MafiaGameAPI.Hubs
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
 
-            // TODO: Sprawdzić czy user może głosować i czy można głosować na votedUserId
             var vote = await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
 
             await Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).NewVoteAsync(vote);

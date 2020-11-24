@@ -94,6 +94,7 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
+            // FIXME: popraw
             result = await GetRoomById(roomId);
             return result;
         }

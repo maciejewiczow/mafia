@@ -25,6 +25,49 @@ namespace MafiaGameAPI.Services
             return await _chatRepository.GetMessages(groupName);
         }
 
+        public async Task<List<Message>> GetMessagesByUserId(String userId, String roomId)
+        {
+            List<Message> messages = new List<Message>();
+            var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
+            if(String.IsNullOrEmpty(currentStateId))
+            {
+                messages = await _chatRepository.GetMessages(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.General));
+            }
+            else
+            {
+                var currentState = await _gameRepository.GetCurrentState(roomId);
+                UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
+
+                var generalMessages = await _chatRepository.GetMessages(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.General));
+                foreach (Message m in generalMessages)
+                {
+                    messages.Add(m);
+                }
+                var citizenMessages = await _chatRepository.GetMessages(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.Citizen));
+                foreach (Message m in citizenMessages)
+                {
+                    messages.Add(m);
+                }
+                if((userState.Role & RoleEnum.Ghost) == 0)
+                {
+                    var ghostMessages = await _chatRepository.GetMessages(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.Ghost));
+                    foreach (Message m in ghostMessages)
+                    {
+                        messages.Add(m);
+                    }
+                }
+                if((userState.Role & RoleEnum.Mafioso) == 0)
+                {
+                    var mafiaMessages = await _chatRepository.GetMessages(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.Mafia));
+                    foreach (Message m in mafiaMessages)
+                    {
+                        messages.Add(m);
+                    }
+                }
+            }
+            return messages;
+        }
+
         public async Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content)
         {
             var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
