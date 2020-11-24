@@ -113,19 +113,26 @@ namespace MafiaGameAPI.Repositories
         }
 
         // FIXME: prosze zrób to inaczej
-        private async Task<List<User>> getParticipantsWithNames(List<string> users)
+        private async Task<List<UserProjection>> getParticipantsWithNames(List<string> users)
         {
-            List<User> participants = new List<User>();
+            List<UserProjection> participants = new List<UserProjection>();
             foreach (string item in users)
             {
                 participants.Add(await GetUserById(item));
             }
             return participants;
         }
-        private async Task<User> GetUserById(String userId)
+        private async Task<UserProjection> GetUserById(String userId)
         {
+            var project = new BsonDocument
+            {
+                { "_id", new BsonDocument("$toString", "$_id") },
+                { "name", 1 },
+                { "roomId", 1 },
+            };
             return await _usersCollection
                 .Find(Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId)))
+                .Project<UserProjection>(project)
                 .FirstOrDefaultAsync();
         }
     }
