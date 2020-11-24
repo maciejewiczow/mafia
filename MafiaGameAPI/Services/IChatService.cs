@@ -9,6 +9,7 @@ namespace MafiaGameAPI.Services
     public interface IChatService
     {
         Task<List<Message>> GetMessages(String groupName);
+        Task<List<Message>> GetMessagesByUserId(String userId, String roomId);
         Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content);
     }
 }
