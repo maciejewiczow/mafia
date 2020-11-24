@@ -115,7 +115,7 @@ namespace MafiaGameAPI.Services
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
 
             // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
-            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, state.Id));
+            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id));
 
             return await _gameRepository.StartGame(roomId, state);
         }
@@ -130,7 +130,7 @@ namespace MafiaGameAPI.Services
                 await _gameRepository.ChangePhase(roomId, newState);
 
                 // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
-                _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, newState.Id));
+                _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, newState.Id));
             }
         }
 
