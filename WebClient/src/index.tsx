@@ -8,6 +8,10 @@ import store from './store';
 import App from './App';
 
 const GlobalStyles = createGlobalStyle`
+    body, html, #root {
+        height: 100%;
+    }
+
     body {
         margin: 0;
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
