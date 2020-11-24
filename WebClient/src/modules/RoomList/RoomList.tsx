@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { getRooms } from '../../store/Rooms/actions';
 import * as selectors from '../../store/Rooms/selectors';
+import { currentUser as currentUserSelector } from '../../store/User/selectors';
+import CreateRoom from './CreateRoom';
 
 const Wrapper = styled.div`
     width: 100%;
     background: white;
-    padding: 5px;
+    padding: 8px 24px;
 `;
 
 const Error = styled.div`
@@ -18,10 +20,20 @@ const Empty = styled.div`
     color: #666;
 `;
 
-const Header = styled.h2``;
+const Header = styled.h2`
+    margin-top: 0;
+`;
 
-const List = styled.ul`
+const List = styled.div`
     text-align: left;
+    display: flex;
+    flex-flow: column nowrap;
+`;
+
+const Item = styled.div`
+    width: 100%;
+    padding: 6px 2px;
+    display: flex;
 `;
 
 interface ClassProps {
@@ -31,7 +43,8 @@ interface ClassProps {
 const RoomList: React.FC<ClassProps> = ({ className }) => {
     const dispatch = useDispatch();
 
-    const isLoading = useSelector(selectors.areRoomsLoading);
+    const areRoomsLoading = useSelector(selectors.areRoomsLoading);
+    const isUserLoggedIn = !!useSelector(currentUserSelector);
     const rooms = useSelector(selectors.rooms);
 
     useEffect(() => {
@@ -39,22 +52,24 @@ const RoomList: React.FC<ClassProps> = ({ className }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (isLoading)
-        return <div>Ładowanie pokoi...</div>;
+    if (areRoomsLoading)
+        return <Wrapper className={className}>Ładowanie pokoi...</Wrapper>;
 
     return (
         <Wrapper className={className}>
             <Header>Pokoje</Header>
+            {isUserLoggedIn && <CreateRoom />}
             {!rooms.length ? (
                 <Empty>Brak aktywnych pokoi</Empty>
-            )
-                : (
-                    <List>
-                        {rooms.map(({ id, name, currentPlayersCount, maxPlayers }) => (
-                            <li key={id}>{name}, {currentPlayersCount}/{maxPlayers} graczy</li>
-                        ))}
-                    </List>
-                )}
+            ) : (
+                <List>
+                    {rooms.map(({ id, name, currentPlayersCount, maxPlayers }) => (
+                        <Item key={id}>
+                            {name}, {currentPlayersCount}/{maxPlayers} graczy
+                        </Item>
+                    ))}
+                </List>
+            )}
         </Wrapper>
     );
 };

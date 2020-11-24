@@ -1,8 +1,9 @@
-import { RoomProjection } from '../../api';
+import { GameRoom, RoomProjection } from '../../api';
 
 export interface RoomsState {
     isLoading: boolean;
     roomList: RoomProjection[];
+    currentRoom?: GameRoom;
 }
 
 export const initialRoomsState: RoomsState = {

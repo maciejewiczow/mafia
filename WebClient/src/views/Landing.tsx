@@ -28,8 +28,6 @@ const ContentWrapper = styled.div`
     grid-gap: 8px;
 
     grid-template-areas: 'user rooms';
-
-    min-height: 300px;
 `;
 
 const RoomListArea = styled(RoomList)`
@@ -38,6 +36,7 @@ const RoomListArea = styled(RoomList)`
 
 const UserArea = styled(CreateUser)`
     grid-area: user;
+    height: 250px;
 `;
 
 const LandingView = () => (

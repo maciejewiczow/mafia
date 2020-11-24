@@ -24,6 +24,11 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction> = (
                 draft.isLoading = false;
             });
 
+        case RoomsActionType.createRoomRequestSuccess:
+            return produce(state, draft => {
+                draft.currentRoom = action.payload.data;
+            });
+
         default:
             return state;
     }
