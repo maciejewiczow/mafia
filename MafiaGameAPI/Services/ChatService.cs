@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
@@ -11,10 +12,12 @@ namespace MafiaGameAPI.Services
     public class ChatService : IChatService
     {
         private readonly IChatRepository _chatRepository;
+        private readonly IGameRepository _gameRepository;
 
-        public ChatService(IChatRepository chatRepository)
+        public ChatService(IChatRepository chatRepository, IGameRepository gameRepository)
         {
             _chatRepository = chatRepository;
+            _gameRepository = gameRepository;
         }
 
         public async Task<List<Message>> GetMessages(String groupName)
@@ -24,7 +27,21 @@ namespace MafiaGameAPI.Services
 
         public async Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content)
         {
-            // TODO: sprawdź, czy użytkownik ma prawo wysłać wiadomość na chacie na którym próbuje to zrobić (rola itd)
+            var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
+            var currentState = await _gameRepository.GetCurrentState(roomId);
+            UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
+            
+            if(
+                !String.IsNullOrEmpty(currentStateId) && (
+                ((userState.Role & RoleEnum.Ghost) != 0 && !chatType.Equals(ChatTypeEnum.Ghost)) ||
+                ((userState.Role & RoleEnum.Mafioso) == 0 && chatType.Equals(ChatTypeEnum.Mafia) && !currentState.Phase.Equals(PhaseEnum.Night)) || 
+                ((userState.Role & RoleEnum.Ghost) == 0 && !currentState.Phase.Equals(PhaseEnum.Day)) ||
+                (userState == null)) ||
+                String.IsNullOrEmpty(currentStateId) && !chatType.Equals(ChatTypeEnum.General))
+            {
+                throw new Exception("Message not allowed!");
+            }
+
             Message message = new Message()
             {
                 UserId = userId,
