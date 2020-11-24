@@ -33,7 +33,7 @@ const CreateUser: React.FC<ClassProps> = ({ className }) => {
     const isLoading = useSelector(selectors.isUserLoading);
     const currentUser = useSelector(selectors.currentUser);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         dispatch(createUser(userName));
     };
