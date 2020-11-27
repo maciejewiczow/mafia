@@ -13,7 +13,6 @@ namespace MafiaGameAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUsersRepository _users;
@@ -25,6 +24,7 @@ namespace MafiaGameAPI.Controllers
             _authService = authService;
         }
 
+        [Authorize]
         [HttpGet("current")]
         public async Task<UserProjection> getCurrentUser()
         {
@@ -38,7 +38,6 @@ namespace MafiaGameAPI.Controllers
             return _authService.CreateNewAccessToken(User.Identity.Name);
         }
 
-        [AllowAnonymous]
         [HttpPost("create")]
         public async Task<ActionResult<NewUserTokenResponse>> CreateUser([Required, FromBody] CreateUserDTO dto)
         {

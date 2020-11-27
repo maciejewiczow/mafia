@@ -13,6 +13,8 @@ using MafiaGameAPI.Enums;
 using MafiaGameAPI.Hubs;
 using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Conventions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Threading.Tasks;
 
 namespace MafiaGameAPI
 {
@@ -32,7 +34,7 @@ namespace MafiaGameAPI
         {
             services
                 .AddAuthentication()
-                .AddJwtBearer("AccessToken", opts =>
+                .AddJwtBearer(nameof(TokenType.AccessToken), opts =>
                 {
                     opts.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -46,8 +48,32 @@ namespace MafiaGameAPI
                     };
                     opts.Audience = "http://localhost:5000";
                     opts.RequireHttpsMetadata = false;
+
+                    opts.TokenValidationParameters.IssuerSigningKey.KeyId = "AccessTokenKey";
+
+                    opts.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var path = context.HttpContext.Request.Path;
+
+                            if ((path.StartsWithSegments("/hubs")))
+                            {
+                                context.Token = context.Request.Query["access_token"].ToString();
+                            }
+                            else
+                            {
+                                var header = context.Request.Headers["Authorization"].ToString()?.Split(' ');
+
+                                if (header.Length == 2)
+                                    context.Token = header[1];
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
                 })
-                .AddJwtBearer("RefreshToken", opts =>
+                .AddJwtBearer(nameof(TokenType.RefreshToken), opts =>
                 {
                     opts.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -56,18 +82,20 @@ namespace MafiaGameAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("RefreshToken:Signature"))),
                         ValidateIssuer = false,
                         ValidateAudience = false,
-                        ValidateLifetime = true,
+                        ValidateLifetime = false,
                         RequireSignedTokens = true,
                     };
                     opts.Audience = "http://localhost:5000";
                     opts.RequireHttpsMetadata = false;
+
+                    opts.TokenValidationParameters.IssuerSigningKey.KeyId = "RefreshTokenKey";
                 });
 
             services.AddAuthorization(opts =>
             {
                 opts.DefaultPolicy = new AuthorizationPolicyBuilder()
                     .RequireAuthenticatedUser()
-                    .AddAuthenticationSchemes("AccessToken")
+                    .AddAuthenticationSchemes(nameof(TokenType.AccessToken))
                     .RequireClaim("type", TokenType.AccessToken.ToString())
                     .Build();
 
@@ -75,7 +103,7 @@ namespace MafiaGameAPI
                     nameof(TokenType.RefreshToken),
                     new AuthorizationPolicyBuilder()
                         .RequireAuthenticatedUser()
-                        .AddAuthenticationSchemes("RefreshToken")
+                        .AddAuthenticationSchemes(nameof(TokenType.RefreshToken))
                         .RequireClaim("type", TokenType.RefreshToken.ToString())
                         .Build()
                 );
@@ -141,8 +169,8 @@ namespace MafiaGameAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<GameHub>("/gamehub");
-                endpoints.MapHub<ChatHub>("/chathub");
+                endpoints.MapHub<GameHub>("/hubs/game");
+                endpoints.MapHub<ChatHub>("/hubs/chat");
             });
         }
     }

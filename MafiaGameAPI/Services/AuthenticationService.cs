@@ -81,11 +81,14 @@ namespace MafiaGameAPI.Services
                     new Claim(JwtRegisteredClaimNames.UniqueName, userId),
                     new Claim("type", type.ToString())
                 }),
-                IssuedAt = DateTime.UtcNow,
                 SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature)
             };
 
-            tokenDescriptor.Expires = (ttl != null) ? DateTime.UtcNow.Add(TimeSpan.Parse(ttl)) : DateTime.MaxValue;
+            if (ttl != null)
+            {
+                tokenDescriptor.IssuedAt = DateTime.UtcNow;
+                tokenDescriptor.Expires = DateTime.UtcNow.Add(TimeSpan.Parse(ttl));
+            }
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
