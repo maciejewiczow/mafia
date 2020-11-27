@@ -92,8 +92,8 @@ namespace MafiaGameAPI
                 );
             });
 
-            services.AddControllers();
-            services.AddSignalR();
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddSignalR().AddNewtonsoftJsonProtocol();
 
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IGameRoomsService, GameRoomsService>();
