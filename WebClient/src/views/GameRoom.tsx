@@ -103,8 +103,8 @@ const GameRoom: React.FC = () => {
                                 {!messages?.length ? (
                                     <div>There are no messages in this chat</div>
                                 ) : (
-                                    messages.map(({ userId, content }) => (
-                                        <div>{userId}: {content}</div>
+                                    messages.map(({ userName, userId, content }) => (
+                                        <div>{userName || userId}: {content}</div>
                                     ))
                                 )}
                             </MessagesWrapper>
