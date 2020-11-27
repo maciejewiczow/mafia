@@ -5,6 +5,7 @@ using MafiaGameAPI.Services;
 using MafiaGameAPI.Helpers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using MafiaGameAPI.Models.DTO;
 
 namespace MafiaGameAPI.Hubs
 {
@@ -20,10 +21,10 @@ namespace MafiaGameAPI.Hubs
             _gameRoomsService = gameRoomsService;
         }
 
-        public async Task SendMessage(ChatTypeEnum chatType, String content)
+        public async Task SendMessage(SendMessageDTO messageDTO)
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
-            var message = await _chatService.SendMessage(Context.User.Identity.Name, roomId, chatType, content);
+            var message = await _chatService.SendMessage(Context.User.Identity.Name, roomId, messageDTO.ChatType, messageDTO.Content);
 
             await Clients.Groups(message.GroupName).MessageAsync(message);
         }
@@ -37,7 +38,7 @@ namespace MafiaGameAPI.Hubs
 
             var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.General);
 
-            await Groups.AddToGroupAsync(Context.User.Identity.Name, groupName);
+            await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
             await Clients.Groups(groupName).UserConnectedAsync(user);
 
             var messages = await _chatService.GetMessagesByUserId(Context.User.Identity.Name, roomId);
