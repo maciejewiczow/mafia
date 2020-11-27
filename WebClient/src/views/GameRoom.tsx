@@ -1,7 +1,13 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { AiOutlineSend } from 'react-icons/ai';
+import { ChatTypeEnum } from '../api';
+import { connectToChat, sendMessage } from '../store/Chat/actions';
+import * as chatSelectors from '../store/Chat/selectors';
 import * as roomSelectors from '../store/Rooms/selectors';
+import { Redirect } from 'react-router';
+import { currentUser as currentUserSelector } from '../store/User/selectors';
 
 const Header = styled.header`
     background-color: #282c34;
@@ -38,7 +44,7 @@ const Chat = styled.div`
     background: white;
 `;
 
-const AdminBadge = styled.span`
+const Badge = styled.span`
     color: #777;
     font-size: 12px;
 `;
@@ -52,26 +58,68 @@ const MessageInput = styled.input`
 `;
 
 const GameRoom: React.FC = () => {
+    const dispatch = useDispatch();
+    const [messageContent, setMessageContent] = useState('');
+
     const room = useSelector(roomSelectors.currentRoom);
+    const currentUser = useSelector(currentUserSelector);
+    const messages = useSelector(chatSelectors.chatMessages(ChatTypeEnum.General));
+    const isConnected = useSelector(chatSelectors.isConnectedToChat);
+    const isConnecting = useSelector(chatSelectors.isConnectingToChat);
+
+    useEffect(() => {
+        if (!isConnected && !isConnecting)
+            dispatch(connectToChat());
+    }, [dispatch, isConnected, isConnecting]);
+
+    const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        dispatch(sendMessage(ChatTypeEnum.General, messageContent));
+        setMessageContent('');
+    };
+
+    if (!room)
+        return <Redirect to="/"/>;
 
     return (
         <>
-            <Header>{room?.name}</Header>
+            <Header>{room.name}</Header>
             <ContentWrapper>
                 <Participants>
                     <h3>Uczestnicy gry</h3>
-                    {room?.participantsWithNames.map(user => (
+                    {room.participantsWithNames.map(user => (
                         <Participant key={user.id}>
-                            {user.name} {(user.id === room.owner) && <AdminBadge>(admin)</AdminBadge>}
+                            {user.name} {(user.id === currentUser?.id) && <Badge>(Ty)</Badge> } {(user.id === room.owner) && <Badge>(admin)</Badge>}
                         </Participant>)
                     )}
                 </Participants>
                 <Chat>
                     <h3>Chat</h3>
-                    <MessagesWrapper>
-                        ugabuga
-                    </MessagesWrapper>
-                    <MessageInput type="text" placeholder="Napisz coś..."/>
+                    {isConnecting ? (
+                        <div>Connecting to chat...</div>
+                    ) : (
+                        <>
+                            <MessagesWrapper>
+                                {!messages?.length ? (
+                                    <div>There are no messages in this chat</div>
+                                ) : (
+                                    messages.map(({ userId, content }) => (
+                                        <div>{userId}: {content}</div>
+                                    ))
+                                )}
+                            </MessagesWrapper>
+                            <form onSubmit={handleSendMessage}>
+                                <MessageInput
+                                    type="text"
+                                    placeholder="Napisz coś..."
+                                    value={messageContent}
+                                    onChange={e => setMessageContent(e.target.value)}
+                                    required
+                                />
+                                <button type="submit"><AiOutlineSend/></button>
+                            </form>
+                        </>
+                    )}
                 </Chat>
             </ContentWrapper>
         </>

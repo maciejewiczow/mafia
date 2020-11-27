@@ -1,8 +1,8 @@
 export enum ChatTypeEnum {
-    General,
-    Mafia,
-    Citizen,
-    Ghost
+    General = 'General',
+    Mafia = 'Mafia',
+    Citizen = 'Citizen',
+    Ghost = 'Ghost'
 }
 
 export enum PhaseEnum {

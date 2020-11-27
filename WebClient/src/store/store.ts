@@ -11,10 +11,12 @@ import { RoomsState } from './Rooms/store';
 import { CurrentUserState } from './User/store';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './rootSaga';
+import { ChatsState } from './Chat/store';
 
 export interface AppState {
     currentUser: CurrentUserState;
     rooms: RoomsState;
+    chats: ChatsState;
 }
 
 type AxiosMiddlewareOptions = Partial<{

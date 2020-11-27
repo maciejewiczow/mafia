@@ -4,6 +4,7 @@ import { getAccessToken } from '../api/tokens';
 
 import roomsWatchers, { getCurrentRoomWorker } from './Rooms/sagas';
 import userWatchers from './User/sagas';
+import chatWatchers from './Chat/sagas';
 import { getCurrentUserSuccess } from './User/actions';
 import api, { User } from '../api';
 import { AxiosResponse } from 'axios';
@@ -29,6 +30,7 @@ export default function* rootSaga() {
     yield all([
         ...spawnAll(userWatchers),
         ...spawnAll(roomsWatchers),
+        ...spawnAll(chatWatchers),
         call(initSaga)
     ]);
 }

@@ -10,20 +10,20 @@ interface AccessTokenInStorage {
     exp: number;
 }
 
+
+// FIXME: move this to sagas
 export const getAccessToken = async (): Promise<string | null> => {
-    const value = localStorage.getItem(accessTokenKey);
-
-    if (!value)
-        return null;
-
-    const token: AccessTokenInStorage = JSON.parse(value);
-
-    if (token.exp > Date.now())
-        return token.val;
-
+    const accesTokenString = localStorage.getItem(accessTokenKey);
     const refreshToken = localStorage.getItem(refreshTokenKey);
 
-    if (!refreshTokenKey)
+    if (accesTokenString) {
+        const token: AccessTokenInStorage = JSON.parse(accesTokenString);
+
+        if (token.exp > Date.now())
+            return token.val;
+    }
+
+    if (!refreshToken)
         return null;
 
     let resp: AxiosResponse<TokenResponse>;

@@ -3,6 +3,7 @@ import { Action, ActionCreator } from 'redux';
 
 export type PickAction<A extends Action<string>, T extends A['type']> = Extract<A, { type: T }>
 
+// FIXME: fix action creator arguments typing to not be any
 export type TypedActionCreator<A extends Action<string>, T extends A['type']> = ActionCreator<PickAction<A, T>>;
 
 export interface RequestAction<ActionT = string, RequestT = undefined> extends Action<ActionT> {
@@ -31,3 +32,9 @@ export type RequestActionBundle<
     ResponseSuccessAction<SuccessActionT, ResponseT> |
     ResponseFailedAction<FailedActionT, ResponseT>
 )
+
+export const objectHasOwnProperty = (object: unknown, propName: string | number | symbol) => (
+    ({}).hasOwnProperty.call(object, propName)
+);
+
+export type AsyncRetT<T> = T extends ((...args: any[]) => Promise<infer R>) ? R : never;
