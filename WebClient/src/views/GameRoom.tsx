@@ -1,36 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { } from 'react';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { AiOutlineSend } from 'react-icons/ai';
-import { ChatTypeEnum } from '../api';
-import { connectToChat, sendMessage } from '../store/Chat/actions';
-import * as chatSelectors from '../store/Chat/selectors';
-import * as roomSelectors from '../store/Rooms/selectors';
 import { Redirect } from 'react-router';
+import * as roomSelectors from '../store/Rooms/selectors';
 import { currentUser as currentUserSelector } from '../store/User/selectors';
+import Chat from '../modules/Chat/Chat';
+import { ChatTypeEnum } from '../api';
+import { ViewWrapper } from './ViewWrapper';
 
 const Header = styled.header`
     background-color: #282c34;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
     font-size: calc(15px + 2vmin);
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-around;
     color: white;
     padding: 16px;
-    margin-bottom: 8px;
+
+    grid-area: header;
 `;
 
 const ContentWrapper = styled.div`
+    grid-area: body;
+
     padding: 0 12px;
+    padding-bottom: 8px;
     display: grid;
     grid-template-columns: 1fr 3fr;
+    grid-auto-rows: minmax(min-content, max-content);
     grid-gap: 8px;
 
     grid-template-areas: 'participants chat';
 `;
 
 const Participants = styled.div`
+    padding: 0 12px;
     background: white;
     grid-area: participants;
     display: flex;
@@ -39,50 +44,25 @@ const Participants = styled.div`
 
 const Participant = styled.div``;
 
-const Chat = styled.div`
-    grid-area: chat;
-    background: white;
-`;
-
 const Badge = styled.span`
     color: #777;
     font-size: 12px;
 `;
 
-const MessagesWrapper = styled.div`
-    overflow-y: auto;
-`;
-
-const MessageInput = styled.input`
-    width: 100%;
+const ChatArea = styled(Chat)`
+    padding: 0 12px;
+    padding-bottom: 8px;
 `;
 
 const GameRoom: React.FC = () => {
-    const dispatch = useDispatch();
-    const [messageContent, setMessageContent] = useState('');
-
     const room = useSelector(roomSelectors.currentRoom);
     const currentUser = useSelector(currentUserSelector);
-    const messages = useSelector(chatSelectors.chatMessages(ChatTypeEnum.General));
-    const isConnected = useSelector(chatSelectors.isConnectedToChat);
-    const isConnecting = useSelector(chatSelectors.isConnectingToChat);
-
-    useEffect(() => {
-        if (!isConnected && !isConnecting)
-            dispatch(connectToChat());
-    }, [dispatch, isConnected, isConnecting]);
-
-    const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        dispatch(sendMessage(ChatTypeEnum.General, messageContent));
-        setMessageContent('');
-    };
 
     if (!room)
         return <Redirect to="/"/>;
 
     return (
-        <>
+        <ViewWrapper>
             <Header>{room.name}</Header>
             <ContentWrapper>
                 <Participants>
@@ -93,36 +73,9 @@ const GameRoom: React.FC = () => {
                         </Participant>)
                     )}
                 </Participants>
-                <Chat>
-                    <h3>Chat</h3>
-                    {isConnecting ? (
-                        <div>Connecting to chat...</div>
-                    ) : (
-                        <>
-                            <MessagesWrapper>
-                                {!messages?.length ? (
-                                    <div>There are no messages in this chat</div>
-                                ) : (
-                                    messages.map(({ userName, userId, content }) => (
-                                        <div>{userName || userId}: {content}</div>
-                                    ))
-                                )}
-                            </MessagesWrapper>
-                            <form onSubmit={handleSendMessage}>
-                                <MessageInput
-                                    type="text"
-                                    placeholder="Napisz coś..."
-                                    value={messageContent}
-                                    onChange={e => setMessageContent(e.target.value)}
-                                    required
-                                />
-                                <button type="submit"><AiOutlineSend/></button>
-                            </form>
-                        </>
-                    )}
-                </Chat>
+                <ChatArea chatType={ChatTypeEnum.General} />
             </ContentWrapper>
-        </>
+        </ViewWrapper>
     );
 };
 
