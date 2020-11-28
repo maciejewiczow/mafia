@@ -15,17 +15,21 @@ using MongoDB.Driver;
 using MongoDB.Bson.Serialization.Conventions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace MafiaGameAPI
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
+        private IWebHostEnvironment _env;
 
         readonly string FrontendOrigin = "frontend";
 
@@ -41,13 +45,16 @@ namespace MafiaGameAPI
                         ValidateIssuerSigningKey = true,
                         ClockSkew = TimeSpan.FromMinutes(5),
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("AccessToken:Signature"))),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
                         ValidateLifetime = true,
                         RequireSignedTokens = true,
                     };
-                    opts.Audience = "http://localhost:5000";
-                    opts.RequireHttpsMetadata = false;
+
+                    if (_env.IsDevelopment())
+                    {
+                        opts.RequireHttpsMetadata = false;
+                        opts.TokenValidationParameters.ValidateIssuer = false;
+                        opts.TokenValidationParameters.ValidateAudience = false;
+                    }
 
                     opts.TokenValidationParameters.IssuerSigningKey.KeyId = "AccessTokenKey";
 
@@ -80,13 +87,16 @@ namespace MafiaGameAPI
                         ValidateIssuerSigningKey = true,
                         ClockSkew = TimeSpan.FromMinutes(5),
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("RefreshToken:Signature"))),
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
                         ValidateLifetime = false,
                         RequireSignedTokens = true,
                     };
-                    opts.Audience = "http://localhost:5000";
-                    opts.RequireHttpsMetadata = false;
+
+                    if (_env.IsDevelopment())
+                    {
+                        opts.RequireHttpsMetadata = false;
+                        opts.TokenValidationParameters.ValidateIssuer = false;
+                        opts.TokenValidationParameters.ValidateAudience = false;
+                    }
 
                     opts.TokenValidationParameters.IssuerSigningKey.KeyId = "RefreshTokenKey";
                 });
@@ -109,19 +119,50 @@ namespace MafiaGameAPI
                 );
             });
 
-            services.AddCors(options =>
+            if (_env.IsDevelopment())
             {
-                options.AddPolicy(
-                    name: FrontendOrigin,
-                    builder => builder.WithOrigins("http://localhost:3000")
-                            .AllowAnyMethod()
-                            .AllowCredentials()
-                            .AllowAnyHeader()
-                );
-            });
+                services.AddCors(options =>
+                {
+                    options.AddPolicy(
+                        name: FrontendOrigin,
+                        builder => builder.WithOrigins("http://localhost:3000")
+                                .AllowAnyMethod()
+                                .AllowCredentials()
+                                .AllowAnyHeader()
+                    );
+                });
+            }
 
-            services.AddControllers().AddNewtonsoftJson();
-            services.AddSignalR().AddNewtonsoftJsonProtocol();
+            services.AddControllers()
+                .AddNewtonsoftJson(opts =>
+                {
+                    opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
+
+            var builder = services.AddSignalR()
+                .AddNewtonsoftJsonProtocol(opts =>
+                {
+                    opts.PayloadSerializerSettings.Converters.Add(new StringEnumConverter());
+                    opts.PayloadSerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                });
+
+            if (_env.IsDevelopment())
+            {
+                builder.AddHubOptions<GameHub>(opts =>
+                {
+                    opts.EnableDetailedErrors = true;
+                    opts.ClientTimeoutInterval = TimeSpan.MaxValue;
+                    opts.HandshakeTimeout = TimeSpan.MaxValue;
+                });
+
+                builder.AddHubOptions<ChatHub>(opts =>
+                {
+                    opts.EnableDetailedErrors = true;
+                    opts.ClientTimeoutInterval = TimeSpan.MaxValue;
+                    opts.HandshakeTimeout = TimeSpan.MaxValue;
+                });
+            }
 
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IGameRoomsService, GameRoomsService>();
