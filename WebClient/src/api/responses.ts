@@ -71,6 +71,7 @@ export interface GameOptions {
 }
 
 export interface GameRoom {
+    id: string;
     gameHistory: GameState[];
     currentGameStateId: string;
     name: string;

@@ -71,7 +71,8 @@ export interface Message {
     userId: string;
     sentAt: string;
     content: string;
-    groupName: string;
+    roomId: string;
+    chatType: ChatTypeEnum;
 }
 
 export interface User {

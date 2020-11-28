@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MafiaGameAPI.Enums;
 using MafiaGameAPI.Models;
 using MongoDB.Driver;
 
@@ -15,11 +16,11 @@ namespace MafiaGameAPI.Repositories
             _messagesCollection = mongoClient.GetDatabase("mafia").GetCollection<Message>("messages");
         }
 
-        public async Task<List<Message>> GetMessages(String groupName)
+        public async Task<List<Message>> GetMessages(String roomId, ChatTypeEnum chatType)
         {
-            var filter = Builders<Message>.Filter.Eq(m => m.GroupName, groupName);
-            List<Message> messages;
+            var filter = Builders<Message>.Filter.Where(m => m.RoomId.Equals(roomId) && m.ChatType == chatType);
 
+            List<Message> messages;
             try
             {
                 messages = await _messagesCollection.Find(filter).ToListAsync();

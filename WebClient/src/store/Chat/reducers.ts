@@ -25,11 +25,11 @@ export const chatsReducer: Reducer<ChatsState, ChatAction> = (
         case ChatActionType.recieveMessages:
             return produce(state, draft => {
                 for (const message of action.messages) {
-                    if (objectHasOwnProperty(draft.chats, message.groupName)) {
-                        draft.chats[message.groupName].messages.push(message);
+                    if (objectHasOwnProperty(draft.chats, message.chatType)) {
+                        draft.chats[message.chatType].messages.push(message);
                     }
                     else {
-                        draft.chats[message.groupName] = {
+                        draft.chats[message.chatType] = {
                             messages: [message]
                         };
                     }

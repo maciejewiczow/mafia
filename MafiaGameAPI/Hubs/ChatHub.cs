@@ -26,7 +26,7 @@ namespace MafiaGameAPI.Hubs
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var message = await _chatService.SendMessage(Context.User.Identity.Name, roomId, messageDTO.ChatType, messageDTO.Content);
 
-            await Clients.Groups(message.GroupName).MessageAsync(message);
+            await Clients.Groups(IdentifiersHelper.GenerateChatGroupName(roomId, message.ChatType)).MessageAsync(message);
         }
 
         public override async Task OnConnectedAsync()
@@ -39,9 +39,9 @@ namespace MafiaGameAPI.Hubs
             var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.General);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Groups(groupName).UserConnectedAsync(user);
+            await Clients.OthersInGroup(groupName).UserConnectedAsync(user);
 
-            var messages = await _chatService.GetMessagesByUserId(Context.User.Identity.Name, roomId);
+            var messages = await _chatService.GetMessagesForUser(Context.User.Identity.Name, roomId);
             await Clients.Caller.MessagesOnConnectedAsync(messages);
 
             await base.OnConnectedAsync();
@@ -54,7 +54,7 @@ namespace MafiaGameAPI.Hubs
             foreach (ChatTypeEnum value in Enum.GetValues(typeof(ChatTypeEnum)))
             {
                 var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, value);
-                await Clients.Groups(groupName).UserDisconnectedAsync(Context.User.Identity.Name);
+                await Clients.OthersInGroup(groupName).UserDisconnectedAsync(Context.User.Identity.Name);
             }
 
             await base.OnDisconnectedAsync(exception);
