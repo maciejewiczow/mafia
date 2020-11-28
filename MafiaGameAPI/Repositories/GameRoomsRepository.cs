@@ -84,19 +84,16 @@ namespace MafiaGameAPI.Repositories
             var userUpdate = Builders<User>.Update
                 .Set<String>(u => u.RoomId, roomId);
 
-            GameRoom result;
             try
             {
                 await _usersCollection.UpdateOneAsync(userFilter, userUpdate);
-                await _gameRoomsCollection.FindOneAndUpdateAsync(roomFilter, roomUpdate);
+                await _gameRoomsCollection.UpdateOneAsync(roomFilter, roomUpdate);
             }
             catch (Exception)
             {
                 throw;
             }
-            // FIXME: popraw
-            result = await GetRoomById(roomId);
-            return result;
+            return await GetRoomById(roomId);
         }
 
         public async Task<GameRoom> CreateRoom(GameRoom room)

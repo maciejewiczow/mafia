@@ -29,7 +29,6 @@ namespace MafiaGameAPI.Models
             GameOptions = new GameOptions();
             GameHistory = new List<GameState>();
             Participants = new List<string>();
-            Participants.Add(ownerId);
             IsGameStarted = false;
             IsGameEnded = false;
         }

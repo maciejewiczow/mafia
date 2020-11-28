@@ -1,10 +1,11 @@
 import { produce } from 'immer';
 import { Reducer } from 'redux';
+import { RoomsAction, RoomsActionType } from '../Rooms/constants';
 
 import { UserActionType, UserAction } from './constants';
 import { CurrentUserState, initialCurrentUserState } from './store';
 
-export const userReducer: Reducer<CurrentUserState, UserAction> = (
+export const userReducer: Reducer<CurrentUserState, UserAction | RoomsAction> = (
     state = initialCurrentUserState,
     action
 ) => {
@@ -23,6 +24,12 @@ export const userReducer: Reducer<CurrentUserState, UserAction> = (
             return produce(state, draft => {
                 draft.isLoading = false;
                 draft.user = action.payload.data;
+            });
+
+        case RoomsActionType.joinRoomRequestSuccess:
+            return produce(state, draft => {
+                if (draft.user)
+                    draft.user.roomId = action.payload.data.id;
             });
 
         default:

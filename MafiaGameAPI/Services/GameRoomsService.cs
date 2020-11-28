@@ -30,8 +30,8 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameRoom> CreateRoom(String roomName, String userId)
         {
-            GameRoom room = new GameRoom(roomName, userId);
-            return await _gameRoomsRepository.CreateRoom(room);
+            var room = await _gameRoomsRepository.CreateRoom(new GameRoom(roomName, userId));
+            return await _gameRoomsRepository.AddRoomParticipant(room.Id.ToString(), userId);
         }
 
         public async Task<String> GetRoomIdByUserId(string userId)
@@ -43,6 +43,7 @@ namespace MafiaGameAPI.Services
         {
             return await _usersRepository.GetUserProjectionById(userId);
         }
+
         public async Task<User> GetUserById(string userId)
         {
             return await _usersRepository.GetUserById(userId);
