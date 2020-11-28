@@ -114,8 +114,8 @@ namespace MafiaGameAPI.Services
             };
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
 
-            // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
-            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, state.Id));
+            // FIXME: jak będzie wyjątek to sie wszystko popsuje
+            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id));
 
             return await _gameRepository.StartGame(roomId, state);
         }
@@ -129,13 +129,26 @@ namespace MafiaGameAPI.Services
             {
                 await _gameRepository.ChangePhase(roomId, newState);
 
-                // FIXME: jak będzie wyjątek to sie wszystko rozpieprzy
-                _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseTime, newState.Id));
+                // FIXME: jak będzie wyjątek to sie wszystko popsuje
+                _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, newState.Id));
             }
         }
 
         public async Task<VoteState> Vote(String roomId, String userId, String votedUserId)
         {
+            var currentState = await _gameRepository.GetCurrentState(roomId);
+            UserState votedUserState = currentState.UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
+            UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
+
+            if(
+                ((userState.Role & RoleEnum.Ghost) != 0) ||
+                ((votedUserState.Role & RoleEnum.Ghost) != 0) ||
+                (userState == null) || (votedUserId == null) ||
+                ((votedUserState.Role & RoleEnum.Mafioso) == 0 && currentState.Phase.Equals(PhaseEnum.Night)))
+            {
+                throw new Exception("Not allowed voting!");
+            }
+
             var vote = new VoteState()
             {
                 UserId = userId,

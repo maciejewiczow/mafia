@@ -18,6 +18,7 @@ namespace MafiaGameAPI.Models
         public string Owner { get; set; }
         public String GroupName { get; set; }
         public List<string> Participants { get; set; }
+        public List<UserProjection> ParticipantsWithNames { get; set; }
         public bool IsGameStarted { get; set; }
         public bool IsGameEnded { get; set; }
 

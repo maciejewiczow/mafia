@@ -1,28 +1,41 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './views/App';
-import reportWebVitals from './reportWebVitals';
 import { createGlobalStyle } from 'styled-components';
+import { Provider } from 'react-redux';
+import reportWebVitals from './reportWebVitals';
+
+import store from './store';
+import App from './App';
 
 const GlobalStyles = createGlobalStyle`
-  body {
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-      sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+    body, html, #root {
+        height: 100%;
+    }
 
-  code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-  }
+    body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    input, button {
+        padding: 3px 5px;
+    }
 `;
 
 ReactDOM.render(
     <React.StrictMode>
-        <GlobalStyles />
-        <App />
+        <Provider store={store}>
+            <GlobalStyles />
+            <App />
+        </Provider>
     </React.StrictMode>,
     document.getElementById('root')
 );

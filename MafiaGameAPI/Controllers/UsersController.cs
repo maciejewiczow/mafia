@@ -1,27 +1,34 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using MafiaGameAPI.Models;
-using MafiaGameAPI.Services;
-using MafiaGameAPI.Models.DTO.Responses;
-using Microsoft.AspNetCore.Authorization;
-using MafiaGameAPI.Enums;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
+using MafiaGameAPI.Enums;
+using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.DTO;
+using MafiaGameAPI.Models.DTO.Responses;
+using MafiaGameAPI.Repositories;
+using MafiaGameAPI.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MafiaGameAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AuthenticationController : ControllerBase
+    public class UsersController : ControllerBase
     {
+        private readonly IUsersRepository _users;
         private readonly IAuthenticationService _authService;
 
-        public AuthenticationController(IAuthenticationService service)
+        public UsersController(IUsersRepository usersRepository, IAuthenticationService authService)
         {
-            _authService = service;
+            _users = usersRepository;
+            _authService = authService;
+        }
+
+        [Authorize]
+        [HttpGet("current")]
+        public async Task<UserProjection> getCurrentUser()
+        {
+            return await _users.GetUserProjectionById(User.Identity.Name);
         }
 
         [Authorize(Policy = nameof(TokenType.RefreshToken))]
@@ -31,8 +38,7 @@ namespace MafiaGameAPI.Controllers
             return _authService.CreateNewAccessToken(User.Identity.Name);
         }
 
-        [AllowAnonymous]
-        [HttpPost("createUser")]
+        [HttpPost("create")]
         public async Task<ActionResult<NewUserTokenResponse>> CreateUser([Required, FromBody] CreateUserDTO dto)
         {
             return await _authService.CreateUserAndGenerateTokensAsync(dto);

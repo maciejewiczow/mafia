@@ -12,6 +12,8 @@ namespace MafiaGameAPI.Services
         Task<GameRoom> JoinRoom(String roomId, String userId);
         Task<GameRoom> CreateRoom(String roomName, String userId);
         Task<String> GetRoomIdByUserId(string userId);
+        Task<UserProjection> GetUserProjectionById(string userId);
         Task<User> GetUserById(string userId);
+        Task<GameRoom> GetRoomById(String roomId);
     }
 }
