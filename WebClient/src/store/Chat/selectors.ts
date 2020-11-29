@@ -1,5 +1,6 @@
 import { ChatTypeEnum } from '../../api';
 import { AppState } from '../store';
+import { MessageType } from './store';
 
 // FIXME: add re-select, because this selector causes constant chat rerenders
 export const chatMessages = (chatType: ChatTypeEnum) => (state: AppState) => {
@@ -8,6 +9,9 @@ export const chatMessages = (chatType: ChatTypeEnum) => (state: AppState) => {
 
 
     const messages = state.chats.chats[chatType]?.messages.map(mess => {
+        if (mess.messageType === MessageType.Announcement)
+            return mess;
+
         const authorWithName = state.rooms.currentRoom?.participantsWithNames.find(participant => participant.id === mess.userId);
         return {
             ...mess,

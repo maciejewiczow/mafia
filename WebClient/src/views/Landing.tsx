@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import CreateUser from 'modules/CreateUser/CreateUser';
-import RoomList from 'modules/RoomList/RoomList';
+import { CreateUser, RoomList } from 'modules';
 import { ViewWrapper } from './ViewWrapper';
 
 const Header = styled.header`
