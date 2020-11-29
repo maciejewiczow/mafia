@@ -42,6 +42,10 @@ const DateTag = styled.span`
     color: #494949;
 `;
 
+const NoMessages = styled.div`
+    color: #888;
+`;
+
 const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
     const dispatch = useDispatch();
 
@@ -86,7 +90,7 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
                 <>
                     <MessagesWrapper ref={scrollAreaRef}>
                         {!messages?.length ? (
-                            <div>There are no messages in this chat</div>
+                            <NoMessages>Nikt jeszcze nic nie napisał w tym chacie</NoMessages>
                         ) : (
                             messages.map(({ id, userName, userId, content, sentAt }) => (
                                 <div key={id} title={new Date(sentAt).toLocaleString()}>

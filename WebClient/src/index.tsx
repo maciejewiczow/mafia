@@ -10,6 +10,7 @@ import App from './App';
 const GlobalStyles = createGlobalStyle`
     body, html, #root {
         height: 100%;
+        width: 100%;
     }
 
     body {
