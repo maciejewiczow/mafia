@@ -1,4 +1,5 @@
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { toast } from 'react-toastify';
 import api from '.';
 import { TokenResponse, CreateUserResponse } from './responses';
 
@@ -39,6 +40,7 @@ export const getAccessToken = async (): Promise<string | null> => {
         );
     } catch (e) {
         console.error('Token refresh request failed', e);
+        toast.error(`Błąd tokenów: ${e.message}`);
         return null;
     }
 

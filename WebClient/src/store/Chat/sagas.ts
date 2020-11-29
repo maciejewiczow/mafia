@@ -1,5 +1,5 @@
 import { call, take, fork, takeLatest, apply, put } from 'redux-saga/effects';
-import { ChatAction, ChatActionType } from './constants';
+import { ChatAction, ChatActionType, chatHubClientName } from './constants';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { buffers, END, EventChannel, eventChannel } from 'redux-saga';
 import { Message, User } from 'api';
@@ -11,6 +11,9 @@ import { connetToChatSuccess,
     memberDisconnected,
     messageRecieved,
 } from './actions';
+import { toast } from 'react-toastify';
+
+// TODO: remove code duplication with Game sagas. One set of sagas to handle all hub clients
 
 function* connectToChatWatcher() {
     yield takeLatest(ChatActionType.connectToChat, connectToChatWorker);
@@ -40,6 +43,7 @@ function* connectToChatWorker() {
         yield put(connetToChatSuccess());
     } catch (error) {
         console.error('Chat error:', error);
+        toast.error(`Błąd chatu: ${error.message}`);
     }
 }
 
@@ -63,8 +67,10 @@ const subscribe = (connection: HubConnection) => (
             });
 
             connection.onclose(error => {
-                if (error)
+                if (error) {
                     console.error('Chat connection closed with an error', error);
+                    toast.error('Utracono połączenie z chatem');
+                }
 
                 emit(END);
             });
@@ -86,7 +92,9 @@ function* incomingActionsWatcher(channel: EventChannel<ChatAction>) {
 
 function* invokeActionsWatcher(connection: HubConnection) {
     while (true) {
-        const action: InvokeAction<string, ChatAction> = yield take((act: InvokeAction<any, any> | AnyAction) => act.isInvokeAction);
+        const action: InvokeAction<string, ChatAction> = yield take(
+            (act: InvokeAction<any, any> | AnyAction) => act.isInvokeAction && act.hubClientName === chatHubClientName
+        );
         yield fork(invokeActionsWorker, action, connection);
     }
 }
@@ -100,6 +108,7 @@ function* invokeActionsWorker(action: InvokeAction<string, ChatAction>, connecti
         );
     } catch (e) {
         console.error('Error has ocurred when invoking a hub method', e);
+        toast.error(`Podczas przetwarzania akcji wystąpłił błąd: ${e.message}`);
     }
 }
 

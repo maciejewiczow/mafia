@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { replace } from 'connected-react-router';
+import { toast } from 'react-toastify';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
 import api, { GameRoom } from '../../api';
 import * as userSelectors from '../User/selectors';
@@ -18,6 +19,7 @@ function* createRoomWorker({ name }: PickAction<RoomsAction, RoomsActionType.cre
         yield put(replace('room'));
     } catch (e) {
         console.error('Room creation failed', e);
+        toast.error('Podczas tworzenia pokoju wystąpił błąd');
     }
 }
 
@@ -33,6 +35,7 @@ function* joinRoomWorker(action: PickAction<RoomsAction, RoomsActionType.joinRoo
         yield put(replace('room'));
     } catch (error) {
         console.error('Joining room failed with error: ', error);
+        toast.error(`Podczs dołączania do pokoju wystąpił błąd: ${error.message}`);
     }
 }
 
@@ -48,10 +51,11 @@ export function* getCurrentRoomWorker() {
         yield put(replace('room'));
     } catch (error) {
         console.log('Current room request failed with error: ', error);
+        toast.error(`Błąd rządania: ${error.message}`);
     }
 }
 
 export default {
     createRoomWatcher,
-    joinRoomWatcher
+    joinRoomWatcher,
 };

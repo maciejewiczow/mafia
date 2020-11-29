@@ -1,3 +1,4 @@
+import { toast } from 'react-toastify';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import api from '../../api';
 import { setTokens } from '../../api/tokens';
@@ -17,9 +18,10 @@ function* createUserWorker({ userName }: PickAction<UserAction, UserActionType.c
         yield put(getCurrentUser());
     } catch (e) {
         console.error('User creation failed', e);
+        toast.error(`Błąd rządania: ${e.message}`);
     }
 }
 
 export default {
-    createUserWatcher
+    createUserWatcher,
 };
