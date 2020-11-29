@@ -1,0 +1,46 @@
+{
+	"folders": [
+		{
+			"path": "..\\WebClient"
+		},
+		{
+			"path": "..\\MafiaGameAPI"
+		}
+	],
+    "settings": {
+        "gitlens.currentLine.enabled": true,
+        "typescript.tsdk": "node_modules\\typescript\\lib",
+        "files.insertFinalNewline": true,
+        "files.exclude": {
+            "**/node_modules": true
+        },
+        "todohighlight.keywords": [
+            {
+                "text": "API-FIX:",
+                "backgroundColor": "#f80",
+                "color": "#fff",
+                "overviewRulerColor": "#f80"
+            }
+        ],
+        "todo-tree.general.tags": [
+            "BUG",
+            "HACK",
+            "FIXME",
+            "TODO",
+            "XXX",
+            "API-FIX"
+        ],
+        "todo-tree.highlights.customHighlight": {
+            "API-FIX": {
+                "icon": "server"
+            },
+            "BUG": {
+                "icon": "bug"
+            },
+            "FIXME": {
+                "icon": "flame"
+            }
+        },
+
+    }
+}

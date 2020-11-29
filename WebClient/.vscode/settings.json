@@ -7,11 +7,5 @@
         "javascriptreact",
         "typescript",
         "typescriptreact",
-    ],
-    "gitlens.currentLine.enabled": true,
-    "typescript.tsdk": "node_modules\\typescript\\lib",
-    "files.insertFinalNewline": true,
-    "files.exclude": {
-        "**/node_modules": true
-    },
+    ]
 }
