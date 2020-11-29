@@ -7,7 +7,7 @@ import { initialChatState, ChatsState, MessageType, MessageInStore } from './sto
 
 export const chatsReducer: Reducer<ChatsState, ChatAction> = (
     state = initialChatState,
-    action
+    action,
 ) => {
     switch (action.type) {
         case ChatActionType.connectToChat:
@@ -25,11 +25,13 @@ export const chatsReducer: Reducer<ChatsState, ChatAction> = (
         case ChatActionType.recieveMessages:
             return produce(state, draft => {
                 for (const message of action.messages) {
-                    const insertMe: MessageInStore = { ...message, messageType: MessageType.Default };
+                    const insertMe: MessageInStore = {
+                        ...message,
+                        messageType: MessageType.Default,
+                    };
                     if (objectHasOwnProperty(draft.chats, message.chatType)) {
                         draft.chats[message.chatType].messages.push(insertMe);
-                    }
-                    else {
+                    } else {
                         draft.chats[message.chatType] = {
                             messages: [insertMe],
                         };
@@ -50,8 +52,7 @@ export const chatsReducer: Reducer<ChatsState, ChatAction> = (
 
                 if (objectHasOwnProperty(draft.chats, insertMe.chatType)) {
                     draft.chats[insertMe.chatType].messages.push(insertMe);
-                }
-                else {
+                } else {
                     draft.chats[insertMe.chatType] = {
                         messages: [insertMe],
                     };
@@ -72,8 +73,7 @@ export const chatsReducer: Reducer<ChatsState, ChatAction> = (
 
                 if (objectHasOwnProperty(draft.chats, insertMe.chatType)) {
                     draft.chats[insertMe.chatType].messages.push(insertMe);
-                }
-                else {
+                } else {
                     draft.chats[insertMe.chatType] = {
                         messages: [insertMe],
                     };

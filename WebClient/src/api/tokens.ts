@@ -32,11 +32,7 @@ export const getAccessToken = async (): Promise<string | null> => {
     try {
         resp = await api.get<TokenResponse>(
             '/Users/tokenRefresh',
-            {
-                headers: {
-                    Authorization: `Bearer ${refreshToken}`,
-                },
-            }
+            { headers: { Authorization: `Bearer ${refreshToken}` } },
         );
     } catch (e) {
         console.error('Token refresh request failed', e);
@@ -72,7 +68,7 @@ export const addAuthorizationToken = async (config: AxiosRequestConfig): Promise
     const token = await getAccessToken();
 
     if (token)
-        config.headers['Authorization'] = `Bearer ${token}`;
+        config.headers.Authorization = `Bearer ${token}`;
 
     return config;
 };

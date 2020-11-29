@@ -82,7 +82,6 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
         // scroll is at the bottom
         if (Math.abs((el.scrollHeight - el.scrollTop) - el.clientHeight) < 30)
             el.scrollTop = el.scrollHeight;
-
     }, [messages]);
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
@@ -118,7 +117,7 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
                                         </DefaultMessage>
                                     );
                                 }
-                                else if (message.messageType === MessageType.Announcement) {
+                                if (message.messageType === MessageType.Announcement) {
                                     const { sentAt, id, content } = message;
                                     return (
                                         <AnnouncementMessage key={id} title={new Date(sentAt).toLocaleString()}>

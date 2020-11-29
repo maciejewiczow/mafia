@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import { Redirect } from 'react-router';
 import { Chat } from 'modules';
 import { ChatTypeEnum } from 'api';
-import { ViewWrapper } from './ViewWrapper';
 import { connectToGame, startGame } from 'store/Game/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import * as gameSelectors from 'store/Game/selectors';
+import { ViewWrapper } from './ViewWrapper';
 
 const Header = styled.header`
     background-color: #282c34;
@@ -81,7 +81,7 @@ const GameRoom: React.FC = () => {
     ]);
 
     if (!room)
-        return <Redirect to="/"/>;
+        return <Redirect to="/" />;
 
     const handleStartGameClick = () => {
         dispatch(startGame());
@@ -96,7 +96,7 @@ const GameRoom: React.FC = () => {
                         onClick={handleStartGameClick}
                         disabled={!isConnectedToGame || isConnectingToGame}
                     >
-                        Rozpocznij grę
+                      Rozpocznij grę
                     </StartGameButton>
                 )}
             </Header>
@@ -105,9 +105,13 @@ const GameRoom: React.FC = () => {
                     <h3>Uczestnicy gry</h3>
                     {room.participantsWithNames.map(user => (
                         <Participant key={user.id}>
-                            {user.name} {(user.id === currentUser?.id) && <Badge>(ty)</Badge> } {(user.id === room.owner) && <Badge>(właściel)</Badge>}
-                        </Participant>)
-                    )}
+                            {user.name}
+                            {' '}
+                            {(user.id === currentUser?.id) && <Badge>(ty)</Badge> }
+                            {' '}
+                            {(user.id === room.owner) && <Badge>(właściel)</Badge>}
+                        </Participant>
+                    ))}
                 </Participants>
                 <ChatArea chatType={ChatTypeEnum.General} />
             </ContentWrapper>

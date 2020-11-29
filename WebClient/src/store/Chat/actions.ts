@@ -37,5 +37,3 @@ export const memberDisconnected = (userId: string): PickAction<ChatAction, ChatA
     type: ChatActionType.memberDisconnected,
     userId,
 });
-
-

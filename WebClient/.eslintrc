@@ -9,19 +9,29 @@
             "objectLiteralShorthandProperties": true,
             "generators": true,
             "jsx": true
-        }
+        },
+        "project": "./tsconfig.json"
     },
+    "settings": {
+        "import/resolver": {
+          "node": {
+            "extensions": [".js", ".jsx", ".ts", ".tsx"]
+          }
+        }
+      },
     "plugins": [
         "@typescript-eslint",
         "only-warn",
-        "react-hooks"
+        "react-hooks",
+        "import-newlines"
     ],
     "extends": [
         "eslint:recommended",
         "plugin:@typescript-eslint/eslint-recommended",
         "plugin:@typescript-eslint/recommended",
         "plugin:import/warnings",
-        "plugin:react-hooks/recommended"
+        "plugin:react-hooks/recommended",
+        "airbnb-typescript"
     ],
     "rules": {
         "no-promise-executor-return": "warn",
@@ -34,6 +44,35 @@
         "@typescript-eslint/explicit-module-boundary-types": "off",
         "@typescript-eslint/no-explicit-any": "off",
         "indent": "off",
+        "import/no-unresolved": "off",
+        "react/jsx-indent": "off",
+        "import/prefer-default-export": "off",
+        "import/extensions": "off",
+        "no-console": "off",
+        "max-len": ["warn", 180],
+        "no-use-before-define": "off",
+        "react/jsx-indent-props": "off",
+        "nonblock-statement-body-position": ["warn", "below"],
+        "no-param-reassign": ["warn", { "props": false }],
+        "@typescript-eslint/no-use-before-define": ["warn", {
+            "enums": false,
+            "typedefs": false,
+            "ignoreTypeReferences": false,
+            "functions": false
+        }],
+        "object-curly-newline": ["warn", {
+            "ObjectExpression": { "multiline": true, "consistent": true },
+            "ObjectPattern": { "multiline": true, "consistent": true }
+        }],
+        "object-property-newline": ["warn", { "allowMultiplePropertiesPerLine": false }],
+        "no-restricted-syntax": ["warn", "ForInStatement", "LabeledStatement", "WithStatement"],
+        "react/jsx-one-expression-per-line": "off",
+        "import-newlines/enforce": [
+            "warn",
+            {
+                "max-length": 150
+            }
+        ],
         "lines-between-class-members": [
             "warn",
             "always",
@@ -41,6 +80,10 @@
                 "exceptAfterSingleLine": true
             }
         ],
+        "jsx-a11y/control-has-associated-label": "off",
+        "array-callback-return": "off",
+        "consistent-return": "off",
+        "react/prop-types": "off",
         "@typescript-eslint/indent": [
             "warn",
             4,

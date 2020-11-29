@@ -1,12 +1,11 @@
 import { ChatTypeEnum } from '../../api';
 import { AppState } from '../store';
-import { MessageType } from './store';
+import { AnnouncementMessage, DefaultMessage, MessageInStore, MessageType } from './store';
 
 // FIXME: add re-select, because this selector causes constant chat rerenders
 export const chatMessages = (chatType: ChatTypeEnum) => (state: AppState) => {
     if (!state.currentUser.user?.roomId)
         return undefined;
-
 
     const messages = state.chats.chats[chatType]?.messages.map(mess => {
         if (mess.messageType === MessageType.Announcement)
