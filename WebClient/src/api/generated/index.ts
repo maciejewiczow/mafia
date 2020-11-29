@@ -2,23 +2,23 @@ export enum ChatTypeEnum {
     General = 'General',
     Mafia = 'Mafia',
     Citizen = 'Citizen',
-    Ghost = 'Ghost'
+    Ghost = 'Ghost',
 }
 
 export enum PhaseEnum {
     Night,
-    Day
+    Day,
 }
 
 export enum RoleEnum {
-    Mafioso,
-    Ghost,
-    Citizen
+    Mafioso = 1,
+    Ghost = 2,
+    Citizen = 4,
 }
 
 export enum TokenType {
     AccessToken,
-    RefreshToken
+    RefreshToken,
 }
 
 export interface GameRoomProjection {
@@ -78,7 +78,7 @@ export interface Message {
 export interface User {
     id: string;
     name: string;
-    roomId: string;
+    roomId?: string;
 }
 
 export interface UserState {
