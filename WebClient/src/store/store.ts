@@ -12,11 +12,13 @@ import { RoomsState } from './Rooms/store';
 import { CurrentUserState } from './User/store';
 import rootSaga from './rootSaga';
 import { ChatsState } from './Chat/store';
+import { GameStateInStore } from './Game/store';
 
 export interface AppState {
     currentUser: CurrentUserState;
     rooms: RoomsState;
     chats: ChatsState;
+    game: GameStateInStore;
 }
 
 type AxiosMiddlewareOptions = Partial<{

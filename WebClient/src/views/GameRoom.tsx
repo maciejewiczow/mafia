@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Redirect } from 'react-router';
-import * as roomSelectors from 'store/Rooms/selectors';
-import { currentUser as currentUserSelector } from 'store/User/selectors';
-import Chat from 'modules/Chat/Chat';
+import { Chat } from 'modules';
 import { ChatTypeEnum } from 'api';
 import { ViewWrapper } from './ViewWrapper';
-import { startGame } from 'store/Game/actions';
+import { connectToGame, startGame } from 'store/Game/actions';
+import * as roomSelectors from 'store/Rooms/selectors';
+import * as userSelectors from 'store/User/selectors';
+import * as gameSelectors from 'store/Game/selectors';
 
 const Header = styled.header`
     background-color: #282c34;
@@ -65,13 +66,25 @@ const StartGameButton = styled.button`
 const GameRoom: React.FC = () => {
     const dispatch = useDispatch();
     const room = useSelector(roomSelectors.currentRoom);
-    const currentUser = useSelector(currentUserSelector);
+    const currentUser = useSelector(userSelectors.currentUser);
+    const isConnectedToGame = useSelector(gameSelectors.isConnectedToGame);
+    const isConnectingToGame = useSelector(gameSelectors.isConnectingToGame);
+
+    useEffect(() => {
+        if (!isConnectingToGame && !isConnectedToGame && room)
+            dispatch(connectToGame());
+    }, [
+        dispatch,
+        isConnectedToGame,
+        isConnectingToGame,
+        room,
+    ]);
 
     if (!room)
         return <Redirect to="/"/>;
 
     const handleStartGameClick = () => {
-        dispatch({ type: 'gamestart' });
+        dispatch(startGame());
     };
 
     return (
@@ -79,7 +92,12 @@ const GameRoom: React.FC = () => {
             <Header>
                 {room.name}
                 {(room.owner === currentUser?.id) && (
-                    <StartGameButton onClick={handleStartGameClick}>Rozpocznij grę</StartGameButton>
+                    <StartGameButton
+                        onClick={handleStartGameClick}
+                        disabled={!isConnectedToGame || isConnectingToGame}
+                    >
+                        Rozpocznij grę
+                    </StartGameButton>
                 )}
             </Header>
             <ContentWrapper>
