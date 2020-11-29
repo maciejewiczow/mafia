@@ -7,6 +7,7 @@ import { currentUser as currentUserSelector } from 'store/User/selectors';
 import Chat from 'modules/Chat/Chat';
 import { ChatTypeEnum } from 'api';
 import { ViewWrapper } from './ViewWrapper';
+import { startGame } from 'store/Game/actions';
 
 const Header = styled.header`
     background-color: #282c34;
@@ -14,9 +15,11 @@ const Header = styled.header`
     font-size: calc(15px + 2vmin);
     flex-flow: row nowrap;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
     color: white;
     padding: 16px;
+
+    position: relative;
 
     grid-area: header;
 `;
@@ -54,22 +57,37 @@ const ChatArea = styled(Chat)`
     padding-bottom: 8px;
 `;
 
+const StartGameButton = styled.button`
+    position: absolute;
+    right: 16px;
+`;
+
 const GameRoom: React.FC = () => {
+    const dispatch = useDispatch();
     const room = useSelector(roomSelectors.currentRoom);
     const currentUser = useSelector(currentUserSelector);
 
     if (!room)
         return <Redirect to="/"/>;
 
+    const handleStartGameClick = () => {
+        dispatch({ type: 'gamestart' });
+    };
+
     return (
         <ViewWrapper>
-            <Header>{room.name}</Header>
+            <Header>
+                {room.name}
+                {(room.owner === currentUser?.id) && (
+                    <StartGameButton onClick={handleStartGameClick}>Rozpocznij grę</StartGameButton>
+                )}
+            </Header>
             <ContentWrapper>
                 <Participants>
                     <h3>Uczestnicy gry</h3>
                     {room.participantsWithNames.map(user => (
                         <Participant key={user.id}>
-                            {user.name} {(user.id === currentUser?.id) && <Badge>(Ty)</Badge> } {(user.id === room.owner) && <Badge>(admin)</Badge>}
+                            {user.name} {(user.id === currentUser?.id) && <Badge>(ty)</Badge> } {(user.id === room.owner) && <Badge>(właściel)</Badge>}
                         </Participant>)
                     )}
                 </Participants>
