@@ -20,9 +20,9 @@ namespace MafiaGameAPI.Hubs
             _gameRoomsService = gameRoomsService;
         }
 
+        // TODO: Dodać autoryzację roli: admin pokoju ([Authorize(Role = RoomAdmin)] czy coś w tym stylu)
         public async Task<GameState> StartGame()
         {
-            // TODO: Dodać autoryzację roli: admin pokoju
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var state = await _gameService.StartGame(roomId);
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
@@ -51,7 +51,7 @@ namespace MafiaGameAPI.Hubs
             var groupName = IdentifiersHelper.GenerateRoomGroupName(user.RoomId);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-            await Clients.Groups(groupName).GameMemberConnectedAsync(user);
+            await Clients.OthersInGroup(groupName).GameMemberConnectedAsync(user);
         }
 
         public async override Task OnDisconnectedAsync(Exception e)
@@ -60,7 +60,7 @@ namespace MafiaGameAPI.Hubs
 
             var groupName = IdentifiersHelper.GenerateRoomGroupName(user.RoomId);
 
-            await Clients.Groups(groupName).GameMemberDisconnectedAsync(user);
+            await Clients.OthersInGroup(groupName).GameMemberDisconnectedAsync(user);
         }
     }
 }
