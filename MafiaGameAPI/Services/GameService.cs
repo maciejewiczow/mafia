@@ -140,13 +140,13 @@ namespace MafiaGameAPI.Services
             UserState votedUserState = currentState.UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
             UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
 
-            if(
+            if (
                 ((userState.Role & RoleEnum.Ghost) != 0) ||
                 ((votedUserState.Role & RoleEnum.Ghost) != 0) ||
                 (userState == null) || (votedUserId == null) ||
                 ((votedUserState.Role & RoleEnum.Mafioso) == 0 && currentState.Phase.Equals(PhaseEnum.Night)))
             {
-                throw new Exception("Not allowed voting!");
+                throw new HubException("Not allowed voting!");
             }
 
             var vote = new VoteState()
