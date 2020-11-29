@@ -1,10 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { Action, ActionCreator } from 'redux';
+import { Action } from 'redux';
 
 export type PickAction<A extends Action<string>, T extends A['type']> = Extract<A, { type: T }>
-
-// FIXME: fix action creator arguments typing to not be any
-export type TypedActionCreator<A extends Action<string>, T extends A['type']> = ActionCreator<PickAction<A, T>>;
 
 export interface RequestAction<ActionT = string, RequestT = undefined> extends Action<ActionT> {
     isRequestAction: true;

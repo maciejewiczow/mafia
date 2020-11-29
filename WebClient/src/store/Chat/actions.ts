@@ -1,26 +1,41 @@
-import { ChatTypeEnum, Message } from '../../api';
-import { TypedActionCreator } from '../utils';
-import { ChatAction, ChatActionType } from './constants';
+import { ChatTypeEnum, Message, User } from 'api';
+import { PickAction } from 'store/utils';
+import { ChatAction, ChatActionType, chatHubClientName } from './constants';
 
-export const connectToChat: TypedActionCreator<ChatAction, ChatActionType.connectToChat> = () => ({
-    type: ChatActionType.connectToChat
+export const connectToChat = (): PickAction<ChatAction, ChatActionType.connectToChat> => ({
+    type: ChatActionType.connectToChat,
 });
 
-export const connetToChatSuccess: TypedActionCreator<ChatAction, ChatActionType.connectToChatSuccess> = () => ({
-    type: ChatActionType.connectToChatSuccess
+export const connetToChatSuccess = (): PickAction<ChatAction, ChatActionType.connectToChatSuccess> => ({
+    type: ChatActionType.connectToChatSuccess,
 });
 
-export const sendMessage: TypedActionCreator<ChatAction, ChatActionType.sendMessage> = (chatType: ChatTypeEnum, content: string) => ({
+export const sendMessage = (chatType: ChatTypeEnum, content: string): PickAction<ChatAction, ChatActionType.sendMessage> => ({
     type: ChatActionType.sendMessage,
     isInvokeAction: true,
+    hubClientName: chatHubClientName,
     methodName: 'SendMessage',
     args: {
-        content,
-        chatType
-    }
+        sendMessageDTO: {
+            content,
+            chatType,
+        },
+    },
 });
 
-export const messageRecieved: TypedActionCreator<ChatAction, ChatActionType.recieveMessages> = (messages: Message[]) => ({
+export const messageRecieved = (messages: Message[]): PickAction<ChatAction, ChatActionType.recieveMessages> => ({
     type: ChatActionType.recieveMessages,
-    messages
+    messages,
 });
+
+export const memberConnected = (user: User): PickAction<ChatAction, ChatActionType.memberConnected> => ({
+    type: ChatActionType.memberConnected,
+    user,
+});
+
+export const memberDisconnected = (userId: string): PickAction<ChatAction, ChatActionType.memberDisconnected> => ({
+    type: ChatActionType.memberDisconnected,
+    userId,
+});
+
+
