@@ -5,8 +5,7 @@ import styled from 'styled-components';
 import { ChatTypeEnum } from 'api';
 import { connectToChat, sendMessage } from 'store/Chat/actions';
 import * as chatSelectors from 'store/Chat/selectors';
-import * as userSelectors from 'store/User/selectors';
-import { MessageType } from 'store/Chat/store';
+import Message from './Message';
 
 export interface ChatProps {
     className?: string;
@@ -39,27 +38,13 @@ const MessageForm = styled.form`
     display: flex;
 `;
 
-const DateTag = styled.span`
-    color: #494949;
-`;
-
 const NoMessages = styled.div`
     color: #888;
-`;
-
-const DefaultMessage = styled.div``;
-
-const AnnouncementMessage = styled.div`
-    text-align: center;
-    font-size: 14px;
-    color: #646464;
-    margin: 4px 0;
 `;
 
 const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
     const dispatch = useDispatch();
 
-    const currentUser = useSelector(userSelectors.currentUser);
     const messages = useSelector(chatSelectors.chatMessages(chatType));
     const isConnected = useSelector(chatSelectors.isConnectedToChat);
     const isConnecting = useSelector(chatSelectors.isConnectingToChat);
@@ -101,31 +86,7 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
                         {!messages?.length ? (
                             <NoMessages>Nikt jeszcze nic nie napisał w tym chacie</NoMessages>
                         ) : (
-                            messages.map(message => {
-                                if (message.messageType === MessageType.Default) {
-                                    const { sentAt, userId, id, userName, content } = message;
-                                    return (
-                                        <DefaultMessage key={id} title={new Date(sentAt).toLocaleString()}>
-                                            <DateTag>[{new Date(sentAt).toLocaleTimeString()}] </DateTag>
-                                            {
-                                                (userId === currentUser?.id) ?(
-                                                    <b>{currentUser.name}</b>
-                                                ) : (
-                                                    userName || userId
-                                                )
-                                            }: {content}
-                                        </DefaultMessage>
-                                    );
-                                }
-                                if (message.messageType === MessageType.Announcement) {
-                                    const { sentAt, id, content } = message;
-                                    return (
-                                        <AnnouncementMessage key={id} title={new Date(sentAt).toLocaleString()}>
-                                            {content}
-                                        </AnnouncementMessage>
-                                    );
-                                }
-                            })
+                            messages.map(m => <Message message={m} key={m.id} />)
                         )}
                     </MessagesWrapper>
                     <MessageForm onSubmit={handleSendMessage}>

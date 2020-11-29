@@ -11,14 +11,18 @@ export enum MessageType {
     Announcement,
 }
 
-export type MessageInStore = (Message & {
+export interface DefaultMessage extends Message {
     messageType: MessageType.Default;
-}) | {
+}
+
+export type MessageInStore = DefaultMessage | AnnouncementMessage;
+
+export interface AnnouncementMessage {
     id: string;
     sentAt: string;
     content: string;
-    messageType: MessageType.Announcement;
     chatType: ChatTypeEnum;
+    messageType: MessageType.Announcement;
 }
 
 interface ChatState {
