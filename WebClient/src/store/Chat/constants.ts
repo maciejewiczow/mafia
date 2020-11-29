@@ -5,7 +5,9 @@ export enum ChatActionType {
     connectToChat = 'chat/CONNECT',
     connectToChatSuccess = 'chat/CONNECT_SUCCESS',
     sendMessage = 'chat/MESSAGE_SEND',
-    recieveMessages = 'chat/MESSAGE_RECIEVE'
+    recieveMessages = 'chat/MESSAGE_RECIEVE',
+    memberConnected = 'chat/MEMBER_CONNECTED',
+    memberDisconnected= 'chat/MEMBER_DISCONNECTED',
 }
 
 export interface InvokeAction<T extends string, P> {
@@ -30,4 +32,10 @@ export type ChatAction = {
         content: string;
         };
     }
->
+> | {
+    type: ChatActionType.memberConnected;
+    user: User;
+} | {
+    type: ChatActionType.memberDisconnected;
+    userId: string;
+}

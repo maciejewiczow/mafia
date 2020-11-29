@@ -55,11 +55,11 @@ const subscribe = (connection: HubConnection) => (
             });
 
             connection.on('UserConnectedAsync', (user: User) => {
-                console.log('New user connected to chat: ', user);
+                emit(memberConnected(user));
             });
 
             connection.on('UserDisconnectedAsync', (userId: string) => {
-                console.log(`Chat member ${userId} disconnected`);
+                emit(memberDisconnected(userId));
             });
 
             connection.onclose(error => {
