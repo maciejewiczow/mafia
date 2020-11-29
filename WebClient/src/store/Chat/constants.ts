@@ -10,12 +10,7 @@ export enum ChatActionType {
     memberDisconnected= 'chat/MEMBER_DISCONNECTED',
 }
 
-export interface InvokeAction<T extends string, P> {
-    type: T;
-    isInvokeAction: true;
-    methodName: string;
-    args: P;
-}
+export const chatHubClientName = 'chatClient';
 
 export type ChatAction = {
     type: ChatActionType.connectToChat;
@@ -28,8 +23,8 @@ export type ChatAction = {
     ChatActionType.sendMessage,
     {
         sendMessageDTO: {
-        chatType: ChatTypeEnum;
-        content: string;
+            chatType: ChatTypeEnum;
+            content: string;
         };
     }
 > | {

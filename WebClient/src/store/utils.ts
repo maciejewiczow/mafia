@@ -30,6 +30,14 @@ export type RequestActionBundle<
     ResponseFailedAction<FailedActionT, ResponseT>
 )
 
+export interface InvokeAction<T extends string, P = undefined> {
+    type: T;
+    isInvokeAction: true;
+    hubClientName: string;
+    methodName: string;
+    args?: P;
+}
+
 export const objectHasOwnProperty = (object: unknown, propName: string | number | symbol) => (
     ({}).hasOwnProperty.call(object, propName)
 );
