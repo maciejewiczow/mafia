@@ -2,10 +2,10 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AiOutlineSend } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { ChatTypeEnum } from '../../api';
-import { connectToChat, sendMessage } from '../../store/Chat/actions';
-import * as chatSelectors from '../../store/Chat/selectors';
-import * as userSelectors from '../../store/User/selectors';
+import { ChatTypeEnum } from 'api';
+import { connectToChat, sendMessage } from 'store/Chat/actions';
+import * as chatSelectors from 'store/Chat/selectors';
+import * as userSelectors from 'store/User/selectors';
 
 export interface ChatProps {
     className?: string;

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaArrowRight, FaPlus } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { createRoom } from '../../store/Rooms/actions';
+import { createRoom } from 'store/Rooms/actions';
 
 const Wrapper = styled.div`
     padding: 12px;

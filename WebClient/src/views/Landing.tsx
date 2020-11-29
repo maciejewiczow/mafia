@@ -1,13 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import CreateUser from '../modules/CreateUser/CreateUser';
-import RoomList from '../modules/RoomList/RoomList';
-
-const Wrapper = styled.div`
-    text-align: center;
-    background: #efefef;
-    min-height: 100vh;
-`;
+import CreateUser from 'modules/CreateUser/CreateUser';
+import RoomList from 'modules/RoomList/RoomList';
 
 const Header = styled.header`
     background-color: #282c34;

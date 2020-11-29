@@ -1,11 +1,11 @@
-import React, { } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Redirect } from 'react-router';
-import * as roomSelectors from '../store/Rooms/selectors';
-import { currentUser as currentUserSelector } from '../store/User/selectors';
-import Chat from '../modules/Chat/Chat';
-import { ChatTypeEnum } from '../api';
+import * as roomSelectors from 'store/Rooms/selectors';
+import { currentUser as currentUserSelector } from 'store/User/selectors';
+import Chat from 'modules/Chat/Chat';
+import { ChatTypeEnum } from 'api';
 import { ViewWrapper } from './ViewWrapper';
 
 const Header = styled.header`

@@ -1,7 +1,6 @@
-import { debug } from 'console';
 import { produce } from 'immer';
-import { Action, Reducer } from 'redux';
-import { objectHasOwnProperty } from '../utils';
+import { Reducer } from 'redux';
+import { objectHasOwnProperty } from 'store/utils';
 import { ChatAction, ChatActionType } from './constants';
 import { initialChatState, ChatsState } from './store';
 

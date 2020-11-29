@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { createUser } from '../../store/User/actions';
-import * as selectors from '../../store/User/selectors';
+import { createUser } from 'store/User/actions';
+import * as selectors from 'store/User/selectors';
 
 const Wrapper = styled.div`
     width: 100%;

@@ -1,4 +1,5 @@
-import { ChatTypeEnum, Message } from '../../api';
+import { ChatTypeEnum, Message, User } from 'api';
+import { InvokeAction } from 'store/utils';
 
 export enum ChatActionType {
     connectToChat = 'chat/CONNECT',

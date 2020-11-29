@@ -1,6 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { GameRoom } from '../../api';
-import { TypedActionCreator } from '../utils';
+import { GameRoom } from 'api';
 import { RoomsAction, RoomsActionType } from './constants';
 
 export const getRooms: TypedActionCreator<RoomsAction, RoomsActionType.roomsRequest> = () => ({

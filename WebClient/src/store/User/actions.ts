@@ -1,6 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { User } from '../../api';
-import { TypedActionCreator } from '../utils';
+import { User } from 'api';
 import { UserAction, UserActionType } from './constants';
 
 export const getCurrentUser: TypedActionCreator<UserAction, UserActionType.getCurrentUser> = () => ({

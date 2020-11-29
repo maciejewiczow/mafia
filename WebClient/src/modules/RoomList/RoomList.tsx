@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { getRooms, joinRoom } from '../../store/Rooms/actions';
-import * as selectors from '../../store/Rooms/selectors';
-import { currentUser as currentUserSelector } from '../../store/User/selectors';
+import { getRooms, joinRoom } from 'store/Rooms/actions';
+import * as selectors from 'store/Rooms/selectors';
+import { currentUser as currentUserSelector } from 'store/User/selectors';
 import CreateRoom from './CreateRoom';
 
 const Wrapper = styled.div`
