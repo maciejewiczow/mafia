@@ -25,7 +25,9 @@ export type ChatAction = {
 } | InvokeAction<
     ChatActionType.sendMessage,
     {
+        sendMessageDTO: {
         chatType: ChatTypeEnum;
         content: string;
+        };
     }
 >

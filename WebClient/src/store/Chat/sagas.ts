@@ -86,14 +86,18 @@ function* incomingActionsWatcher(channel: EventChannel<ChatAction>) {
 
 function* invokeActionsWatcher(connection: HubConnection) {
     while (true) {
-        const action: InvokeAction<string, ChatAction> = yield take(ChatActionType.sendMessage);
+        const action: InvokeAction<string, ChatAction> = yield take((act: InvokeAction<any, any> | AnyAction) => act.isInvokeAction);
         yield fork(invokeActionsWorker, action, connection);
     }
 }
 
 function* invokeActionsWorker(action: InvokeAction<string, ChatAction>, connection: HubConnection) {
     try {
-        yield apply(connection, connection.invoke, [action.methodName, action.args]);
+        yield apply(
+            connection,
+            connection.invoke,
+            [action.methodName, ...Object.values(action.args || {})]
+        );
     } catch (e) {
         console.error('Error has ocurred when invoking a hub method', e);
     }
