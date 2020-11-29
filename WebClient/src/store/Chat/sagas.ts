@@ -100,5 +100,5 @@ function* invokeActionsWorker(action: InvokeAction<string, ChatAction>, connecti
 }
 
 export default {
-    connectToChatWatcher
+    connectToChatWatcher,
 };

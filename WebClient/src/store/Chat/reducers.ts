@@ -29,7 +29,7 @@ export const chatsReducer: Reducer<ChatsState, ChatAction> = (
                     }
                     else {
                         draft.chats[message.chatType] = {
-                            messages: [message]
+                            messages: [message],
                         };
                     }
                 }

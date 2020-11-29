@@ -10,7 +10,7 @@ export const chatMessages = (chatType: ChatTypeEnum) => (state: AppState) => {
         const authorWithName = state.rooms.currentRoom?.participantsWithNames.find(participant => participant.id === mess.userId);
         return {
             ...mess,
-            userName: authorWithName?.name
+            userName: authorWithName?.name,
         };
     });
 

@@ -94,6 +94,8 @@
                 "exceptRange": true
             }
         ],
+        "comma-dangle": "off",
+        "@typescript-eslint/comma-dangle": ["warn", "always-multiline"],
         "no-shadow": "off",
         "@typescript-eslint/no-shadow": ["warn"],
         "array-bracket-newline": [

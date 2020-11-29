@@ -23,7 +23,7 @@ export type RequestActionBundle<
     SuccessActionT = string,
     FailedActionT = string,
     RequestT = undefined,
-    ResponseT = undefined
+    ResponseT = undefined,
 > = (
     RequestAction<RequestActionT, RequestT> |
     ResponseSuccessAction<SuccessActionT, ResponseT> |

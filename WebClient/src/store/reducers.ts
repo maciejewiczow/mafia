@@ -11,7 +11,7 @@ const createRootReducer = (history: History) => combineReducers<AppState & {rout
     router: connectRouter(history),
     currentUser: userReducer,
     rooms: roomsReducer,
-    chats: chatsReducer
+    chats: chatsReducer,
 });
 
 export default createRootReducer;
