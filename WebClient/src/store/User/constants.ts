@@ -10,7 +10,7 @@ export enum UserActionType {
     createUser = 'createUser',
     createUserRequest = 'createUser/REQUEST',
     createUserRequestSuccess = 'createUser/REQUEST_SUCCESS',
-    createUserRequestFail = 'createUser/REQUEST_FAIL'
+    createUserRequestFail = 'createUser/REQUEST_FAIL',
 }
 
 export type UserAction = (

@@ -21,16 +21,16 @@ export type ChatAction = {
     messages: Message[];
 } | InvokeAction<
     ChatActionType.sendMessage,
-    {
-        sendMessageDTO: {
+    [
+        {
             chatType: ChatTypeEnum;
             content: string;
-        };
-    }
+        },
+    ]
 > | {
     type: ChatActionType.memberConnected;
     user: User;
 } | {
     type: ChatActionType.memberDisconnected;
     userId: string;
-}
+};

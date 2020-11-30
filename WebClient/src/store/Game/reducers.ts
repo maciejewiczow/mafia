@@ -1,11 +1,12 @@
 import { produce } from 'immer';
 import { Reducer } from 'redux';
+import { RoomsAction, RoomsActionType } from 'store/Rooms/constants';
 import { GameAction, GameActionType } from './constants';
 import { initialGameState, GameStateInStore } from './store';
 
-export const gameReducer: Reducer<GameStateInStore, GameAction> = (
+export const gameReducer: Reducer<GameStateInStore, GameAction | RoomsAction> = (
     state = initialGameState,
-    action
+    action,
 ) => {
     switch (action.type) {
         case GameActionType.connectToGame:
@@ -22,13 +23,8 @@ export const gameReducer: Reducer<GameStateInStore, GameAction> = (
 
         case GameActionType.newVote:
             return produce(state, draft => {
-                state.currentGameState?.voteState.push(action.vote);
+                draft.currentGameState?.voteState.push(action.vote);
             });
-
-            // case GameActionType.gameEnded:
-            //     return produce(state, draft => {
-
-            //     });
 
             // case GameActionType.votingResult:
             //     return produce(state, draft => {
@@ -38,6 +34,16 @@ export const gameReducer: Reducer<GameStateInStore, GameAction> = (
         case GameActionType.stateUpdate:
             return produce(state, draft => {
                 draft.currentGameState = action.state;
+            });
+
+        case RoomsActionType.joinRoomSuccess:
+        case RoomsActionType.getCurrentRoomSuccess:
+        case RoomsActionType.createRoomRequestSuccess:
+            return produce(state, draft => {
+                if (action.payload.data.isGameStarted && action.payload.data.gameHistory.length > 0) {
+                    const [currentState] = action.payload.data.gameHistory;
+                    draft.currentGameState = currentState;
+                }
             });
 
         default:

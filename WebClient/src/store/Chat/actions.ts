@@ -14,13 +14,15 @@ export const sendMessage = (chatType: ChatTypeEnum, content: string): PickAction
     type: ChatActionType.sendMessage,
     isInvokeAction: true,
     hubClientName: chatHubClientName,
+    successActionType: undefined,
+    errorActionType: undefined,
     methodName: 'SendMessage',
-    args: {
-        sendMessageDTO: {
+    args: [
+        {
             content,
             chatType,
         },
-    },
+    ],
 });
 
 export const messageRecieved = (messages: Message[]): PickAction<ChatAction, ChatActionType.recieveMessages> => ({

@@ -132,6 +132,10 @@ namespace MafiaGameAPI.Services
                 // FIXME: jak będzie wyjątek to sie wszystko popsuje
                 _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, newState.Id));
             }
+            else
+            {
+                Console.WriteLine("dupa koniecrgy");
+            }
         }
 
         public async Task<VoteState> Vote(String roomId, String userId, String votedUserId)
@@ -167,12 +171,6 @@ namespace MafiaGameAPI.Services
         public async Task<GameState> VotingAction(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
-
-            var votedUserId = currentState.VoteState
-                .GroupBy(i => i.VotedUserId)
-                .OrderByDescending(grp => grp.Count())
-                .Select(grp => grp.Key).First();
-
             GameState newState = new GameState()
             {
                 Id = IdentifiersHelper.CreateGuidString(),
@@ -182,9 +180,17 @@ namespace MafiaGameAPI.Services
                 VotingStart = DateTime.Now
             };
 
-            newState.UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
+            if (currentState.VoteState.Count != 0)
+            {
+                var votedUserId = currentState.VoteState
+                                .GroupBy(i => i.VotedUserId)
+                                .OrderByDescending(grp => grp.Count())
+                                .Select(grp => grp.Key).First();
+                newState.UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
 
-            await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateVotingResultAsync(votedUserId);
+                await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateVotingResultAsync(votedUserId);
+            }
+
             await ChangePhase(roomId, newState);
 
             return newState;

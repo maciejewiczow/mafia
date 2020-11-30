@@ -7,7 +7,7 @@ import { CurrentUserState, initialCurrentUserState } from './store';
 
 export const userReducer: Reducer<CurrentUserState, UserAction | RoomsAction> = (
     state = initialCurrentUserState,
-    action
+    action,
 ) => {
     switch (action.type) {
         case UserActionType.getCurrentUser:
@@ -26,7 +26,9 @@ export const userReducer: Reducer<CurrentUserState, UserAction | RoomsAction> = 
                 draft.user = action.payload.data;
             });
 
-        case RoomsActionType.joinRoomRequestSuccess:
+        case RoomsActionType.joinRoomSuccess:
+        case RoomsActionType.getCurrentRoomSuccess:
+        case RoomsActionType.createRoomRequestSuccess:
             return produce(state, draft => {
                 if (draft.user)
                     draft.user.roomId = action.payload.data.id;
@@ -36,4 +38,3 @@ export const userReducer: Reducer<CurrentUserState, UserAction | RoomsAction> = 
             return state;
     }
 };
-

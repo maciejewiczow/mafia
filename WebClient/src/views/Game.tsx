@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Redirect } from 'react-router';
 import { Chat } from 'modules';
-import { ChatTypeEnum } from 'api';
-import { connectToGame, startGame } from 'store/Game/actions';
+import { ChatTypeEnum, RoleEnum } from 'api';
+import { connectToGame } from 'store/Game/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import * as gameSelectors from 'store/Game/selectors';
@@ -53,77 +53,77 @@ const Badge = styled.span`
     font-size: 12px;
 `;
 
+const ChatsWrapper = styled.div`
+    display: flex;
+    grid-area: chat;
+    background: transparent;
+`;
+
 const ChatArea = styled(Chat)`
     padding: 0 12px;
     padding-bottom: 8px;
+    margin-right: 8px;
+    flex: 1;
 `;
 
-const StartGameButton = styled.button`
-    position: absolute;
-    right: 16px;
-`;
-
-const GameRoom: React.FC = () => {
+const Game: React.FC = () => {
     const dispatch = useDispatch();
     const room = useSelector(roomSelectors.currentRoom);
-    const isCurrentRoomLoading = useSelector(roomSelectors.isCurrentRoomLoading);
+    const isUserLoading = useSelector(userSelectors.isUserLoading);
     const currentUser = useSelector(userSelectors.currentUser);
+    const currentUserRoles = useSelector(gameSelectors.userRoles(currentUser?.id || ''));
     const isConnectedToGame = useSelector(gameSelectors.isConnectedToGame);
     const isConnectingToGame = useSelector(gameSelectors.isConnectingToGame);
 
     useEffect(() => {
-        if (!isConnectingToGame && !isConnectedToGame && room)
+        if (!isUserLoading && currentUser?.roomId !== null && !isConnectingToGame && !isConnectedToGame)
             dispatch(connectToGame());
     }, [
+        currentUser?.roomId,
         dispatch,
         isConnectedToGame,
         isConnectingToGame,
+        isUserLoading,
         room,
     ]);
 
-    if (!room && !isCurrentRoomLoading)
+    if (!isUserLoading && currentUser?.roomId === null)
         return <Redirect to="/" />;
 
     if (!room)
-        return <div>Loading room...</div>;
+        return <div>Loading current room...</div>;
 
-    if (room.isGameStarted)
-        return <Redirect to="/game" />;
-
-    const handleStartGameClick = () => {
-        dispatch(startGame());
-    };
+    if (!room.isGameStarted) {
+        // FIXME: fix redirect jumping between room and game
+        return <Redirect to="/room" />;
+    }
 
     return (
         <ViewWrapper>
             <Header>
                 {room.name}
-                {(room.owner === currentUser?.id) && (
-                    <StartGameButton
-                        onClick={handleStartGameClick}
-                        disabled={!isConnectedToGame || isConnectingToGame}
-                    >
-                      Rozpocznij grę
-                    </StartGameButton>
-                )}
             </Header>
             <ContentWrapper>
                 <Participants>
                     <h3>Uczestnicy gry</h3>
                     {room.participantsWithNames.map(user => (
+                        // FaUserSecret
+                        // FaGhost
                         <Participant key={user.id}>
                             {user.name}
                             {' '}
                             {(user.id === currentUser?.id) && <Badge>(ty)</Badge> }
-                            {' '}
-                            {(user.id === room.owner) && <Badge>(właściel)</Badge>}
                         </Participant>
                     ))}
                 </Participants>
-                <ChatArea chatType={ChatTypeEnum.General} />
+                <ChatsWrapper>
+                    {(currentUserRoles.includes(RoleEnum.Citizen) || currentUserRoles.includes(RoleEnum.Mafioso)) && <ChatArea chatType={ChatTypeEnum.Citizen} />}
+                    {currentUserRoles.includes(RoleEnum.Mafioso) && <ChatArea chatType={ChatTypeEnum.Mafia} />}
+                    {currentUserRoles.includes(RoleEnum.Ghost) && <ChatArea chatType={ChatTypeEnum.Ghost} />}
+                </ChatsWrapper>
             </ContentWrapper>
         </ViewWrapper>
     );
 };
 
-export default GameRoom;
+export default Game;

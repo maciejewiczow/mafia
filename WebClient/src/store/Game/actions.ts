@@ -10,22 +10,28 @@ export const connectToGameSuccess = (): PickAction<GameAction, GameActionType.co
     type: GameActionType.connectToGameSuccess,
 });
 
-export const vote = (votedUserId: string): PickAction<GameAction, GameActionType.vote> => ({
-    type: GameActionType.vote,
+export const invokeVote = (votedUserId: string): PickAction<GameAction, GameActionType.invokeVote> => ({
+    type: GameActionType.invokeVote,
+    successActionType: undefined,
+    errorActionType: undefined,
     isInvokeAction: true,
     hubClientName: gameHubClientName,
     methodName: 'Vote',
-    args: {
-        votedUserId,
-    },
+    args: [votedUserId],
 });
 
-export const startGame = (): PickAction<GameAction, GameActionType.startGame> => ({
-    type: GameActionType.startGame,
+export const invokeStartGame = (): PickAction<GameAction, GameActionType.invokeStartGame> => ({
+    type: GameActionType.invokeStartGame,
+    successActionType: GameActionType.invokeStartGameSuccess,
+    errorActionType: GameActionType.invokeStartGameFail,
     isInvokeAction: true,
     hubClientName: gameHubClientName,
     methodName: 'StartGame',
     args: undefined,
+});
+
+export const startGame = (): PickAction<GameAction, GameActionType.startGame> => ({
+    type: GameActionType.startGame,
 });
 
 export const gameMemberConnected = (user: User): PickAction<GameAction, GameActionType.gameMemberConnected> => ({

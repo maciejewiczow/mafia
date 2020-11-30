@@ -1,12 +1,14 @@
 import { GameRoom, GameRoomProjection } from 'api';
 
 export interface RoomsState {
-    isLoading: boolean;
+    isRoomListLoading: boolean;
     roomList: GameRoomProjection[];
+    isCurrentRoomLoading: boolean;
     currentRoom?: GameRoom;
 }
 
 export const initialRoomsState: RoomsState = {
-    isLoading: false,
+    isRoomListLoading: false,
+    isCurrentRoomLoading: false,
     roomList: [],
 };

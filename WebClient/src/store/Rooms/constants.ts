@@ -1,5 +1,6 @@
+import { AxiosResponse } from 'axios';
 import { GameRoom, RoomsResponse } from '../../api';
-import { RequestActionBundle } from '../utils';
+import { RequestActionBundle, ResponseSuccessAction } from '../utils';
 
 export enum RoomsActionType {
     roomsRequest = 'rooms/REQUEST',
@@ -7,9 +8,12 @@ export enum RoomsActionType {
     roomsRequestFailed = 'rooms/REQUEST_FAILED',
     createRoom = 'createRoom',
     createRoomRequest = 'createRoom/REQUEST',
-    joinRoomRequestSuccess = 'createRoom/REQUEST_SUCCESS',
+    createRoomRequestSuccess = 'createRoom/REQUEST_SUCCESS',
     createRoomRequestFailed = 'createRoom/REQUEST_FAIL',
     joinRoom = 'joinRoom',
+    joinRoomSuccess = 'joinRoom/SUCCESS',
+    getCurrentRoom = 'getCurrentRoom',
+    getCurrentRoomSuccess = 'getCurrentRoom/SUCCESS',
 }
 
 export type RoomsAction = RequestActionBundle<
@@ -20,7 +24,7 @@ export type RoomsAction = RequestActionBundle<
     RoomsResponse
 > | RequestActionBundle<
     RoomsActionType.createRoomRequest,
-    RoomsActionType.joinRoomRequestSuccess,
+    RoomsActionType.createRoomRequestSuccess,
     RoomsActionType.createRoomRequestFailed,
     undefined,
     GameRoom
@@ -30,4 +34,12 @@ export type RoomsAction = RequestActionBundle<
 } | {
     type: RoomsActionType.joinRoom;
     roomId: string;
-}
+} | {
+    type: RoomsActionType.getCurrentRoom;
+} | ResponseSuccessAction<
+    RoomsActionType.joinRoomSuccess,
+    GameRoom
+> | ResponseSuccessAction<
+    RoomsActionType.getCurrentRoomSuccess,
+    GameRoom
+>;

@@ -6,27 +6,36 @@ import { initialRoomsState, RoomsState } from './store';
 
 export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
     state = initialRoomsState,
-    action
+    action,
 ) => {
     switch (action.type) {
         case RoomsActionType.roomsRequest:
             return produce(state, draft => {
-                draft.isLoading = true;
+                draft.isRoomListLoading = true;
             });
 
         case RoomsActionType.roomsRequestSuccess:
             return produce(state, draft => {
-                draft.isLoading = false;
+                draft.isRoomListLoading = false;
                 draft.roomList = action.payload.data;
             });
 
         case RoomsActionType.roomsRequestFailed:
             return produce(state, draft => {
-                draft.isLoading = false;
+                draft.isRoomListLoading = false;
             });
 
-        case RoomsActionType.joinRoomRequestSuccess:
+        case RoomsActionType.joinRoom:
+        case RoomsActionType.getCurrentRoom:
             return produce(state, draft => {
+                draft.isCurrentRoomLoading = true;
+            });
+
+        case RoomsActionType.joinRoomSuccess:
+        case RoomsActionType.getCurrentRoomSuccess:
+        case RoomsActionType.createRoomRequestSuccess:
+            return produce(state, draft => {
+                draft.isCurrentRoomLoading = false;
                 draft.currentRoom = action.payload.data;
             });
 
@@ -43,6 +52,24 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
 
                 draft.currentRoom.participants = draft.currentRoom.participants.filter(id => id !== action.user.id);
                 draft.currentRoom.participantsWithNames = draft.currentRoom.participantsWithNames.filter(user => user.id !== action.user.id);
+            });
+
+        case GameActionType.invokeStartGameSuccess:
+            return produce(state, draft => {
+                if (!draft.currentRoom)
+                    return;
+
+                draft.currentRoom.isGameStarted = true;
+                draft.currentRoom.currentGameStateId = action.result.id;
+            });
+
+        case GameActionType.gameEnded:
+            return produce(state, draft => {
+                if (!draft.currentRoom)
+                    return;
+
+                draft.currentRoom.isGameEnded = true;
+                draft.currentRoom.isGameStarted = false;
             });
 
         default:

@@ -11,9 +11,9 @@ export enum PhaseEnum {
 }
 
 export enum RoleEnum {
-    Mafioso = 1,
-    Ghost = 2,
-    Citizen = 4,
+    Mafioso = 'Mafioso',
+    Ghost = 'Ghost',
+    Citizen = 'Citizen',
 }
 
 export enum TokenType {
@@ -83,7 +83,7 @@ export interface User {
 
 export interface UserState {
     userId: string;
-    role: RoleEnum;
+    role: string;
 }
 
 export interface VoteState {

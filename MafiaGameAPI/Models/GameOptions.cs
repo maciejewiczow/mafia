@@ -13,8 +13,8 @@ namespace MafiaGameAPI.Models
         public GameOptions()
         {
             MaxPlayers = 10;
-            PhaseDuration = new TimeSpan(0, 10, 0);
-            MafiosoCount = 3;
+            PhaseDuration = new TimeSpan(0, 0, 20);
+            MafiosoCount = 1;
             IsPublic = true;
             AreVotesVisible = true;
         }

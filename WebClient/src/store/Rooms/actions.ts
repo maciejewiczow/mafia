@@ -18,12 +18,22 @@ export const createRoom = (name: string): PickAction<RoomsAction, RoomsActionTyp
     name,
 });
 
-export const joinRoomSuccess = (
-    (payload: AxiosResponse<GameRoom>): PickAction<RoomsAction, RoomsActionType.joinRoomRequestSuccess> => ({
-        type: RoomsActionType.joinRoomRequestSuccess,
+export const getCurrentRoomSuccess = (payload: AxiosResponse<GameRoom>): PickAction<RoomsAction, RoomsActionType.getCurrentRoomSuccess> => ({
+    type: RoomsActionType.getCurrentRoomSuccess,
+    payload,
+});
+
+export const createRoomSuccess = (
+    (payload: AxiosResponse<GameRoom>): PickAction<RoomsAction, RoomsActionType.createRoomRequestSuccess> => ({
+        type: RoomsActionType.createRoomRequestSuccess,
         payload,
     })
 );
+
+export const joinRoomSuccess = (payload: AxiosResponse<GameRoom>): PickAction<RoomsAction, RoomsActionType.joinRoomSuccess> => ({
+    type: RoomsActionType.joinRoomSuccess,
+    payload,
+});
 
 export const joinRoom = (roomId: string): PickAction<RoomsAction, RoomsActionType.joinRoom> => ({
     type: RoomsActionType.joinRoom,

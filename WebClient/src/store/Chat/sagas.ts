@@ -10,7 +10,7 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signal
 import { buffers, END, EventChannel, eventChannel } from 'redux-saga';
 import { Message, User } from 'api';
 import { getAccessToken } from 'api/tokens';
-import { InvokeAction } from 'store/utils';
+import { InvokeAction, InvokeActionError, InvokeActionSuccess } from 'store/utils';
 import { AnyAction } from 'redux';
 import { toast } from 'react-toastify';
 import { connetToChatSuccess, memberConnected, memberDisconnected, messageRecieved } from './actions';
@@ -95,23 +95,34 @@ function* incomingActionsWatcher(channel: EventChannel<ChatAction>) {
 
 function* invokeActionsWatcher(connection: HubConnection) {
     while (true) {
-        const action: InvokeAction<string, ChatAction> = yield take(
+        const action: InvokeAction<string, any[], string, string> = yield take(
             (act: InvokeAction<any, any> | AnyAction) => act.isInvokeAction && act.hubClientName === chatHubClientName,
         );
         yield fork(invokeActionsWorker, action, connection);
     }
 }
 
-function* invokeActionsWorker(action: InvokeAction<string, ChatAction>, connection: HubConnection) {
+function* invokeActionsWorker(action: InvokeAction<string, any[], string, string>, connection: HubConnection) {
     try {
-        yield apply(
-            connection,
-            connection.invoke,
-            [action.methodName, ...Object.values(action.args || {})],
-        );
-    } catch (e) {
-        console.error('Error has ocurred when invoking a hub method', e);
-        toast.error(`Podczas przetwarzania akcji wystąpłił błąd: ${e.message}`);
+        const result = yield apply(connection, connection.invoke, [action.methodName, ...(action.args || [])]);
+
+        if (action.successActionType) {
+            const sucessAction: InvokeActionSuccess<string, any> = {
+                type: action.successActionType,
+                result,
+            };
+            yield put(sucessAction);
+        }
+    } catch (error) {
+        if (action.errorActionType) {
+            const sucessAction: InvokeActionError<string> = {
+                type: action.errorActionType,
+                error,
+            };
+            yield put(sucessAction);
+        }
+        console.error('Error has ocurred when invoking a hub method', error);
+        toast.error(`Błąd podczas przewarzania akcji: ${error.message}`);
     }
 }
 

@@ -36,8 +36,9 @@ namespace MafiaGameAPI.Repositories
 
             try
             {
-                await _gameRoomsCollection.FindOneAndUpdateAsync(filter, updateIsGameStarted);
-                await _gameRoomsCollection.FindOneAndUpdateAsync(filter, updateGameState);
+                await _gameRoomsCollection.UpdateOneAsync(filter, updateIsGameStarted);
+                await _gameRoomsCollection.UpdateOneAsync(filter, updateGameState);
+                await _gameRoomsCollection.UpdateOneAsync(filter, updateCurrentGameState);
             }
             catch (Exception)
             {

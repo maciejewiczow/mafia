@@ -41,12 +41,12 @@ namespace MafiaGameAPI.Services
             messages.AddRange(await _chatRepository.GetMessages(roomId, ChatTypeEnum.General));
             messages.AddRange(await _chatRepository.GetMessages(roomId, ChatTypeEnum.Citizen));
 
-            if ((userState.Role & RoleEnum.Ghost) == 0)
+            if ((userState.Role & RoleEnum.Ghost) != 0)
             {
                 messages.AddRange(await _chatRepository.GetMessages(roomId, ChatTypeEnum.Ghost));
             }
 
-            if ((userState.Role & RoleEnum.Mafioso) == 0)
+            if ((userState.Role & RoleEnum.Mafioso) != 0)
             {
                 messages.AddRange(await _chatRepository.GetMessages(roomId, ChatTypeEnum.Mafia));
             }
@@ -56,20 +56,20 @@ namespace MafiaGameAPI.Services
 
         public async Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content)
         {
-            var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
-            var currentState = await _gameRepository.GetCurrentState(roomId);
-            UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
+            // var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
+            // var currentState = await _gameRepository.GetCurrentState(roomId);
+            // UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
 
-            if(
-                !String.IsNullOrEmpty(currentStateId) && (
-                ((userState.Role & RoleEnum.Ghost) != 0 && !chatType.Equals(ChatTypeEnum.Ghost)) ||
-                ((userState.Role & RoleEnum.Mafioso) == 0 && chatType.Equals(ChatTypeEnum.Mafia) && !currentState.Phase.Equals(PhaseEnum.Night)) || 
-                ((userState.Role & RoleEnum.Ghost) == 0 && !currentState.Phase.Equals(PhaseEnum.Day)) ||
-                (userState == null)) ||
-                String.IsNullOrEmpty(currentStateId) && !chatType.Equals(ChatTypeEnum.General))
-            {
-                throw new Exception("Message not allowed!");
-            }
+            // if(
+            //     !String.IsNullOrEmpty(currentStateId) && (
+            //     ((userState.Role & RoleEnum.Ghost) != 0 && !chatType.Equals(ChatTypeEnum.Ghost)) ||
+            //     ((userState.Role & RoleEnum.Mafioso) == 0 && chatType.Equals(ChatTypeEnum.Mafia) && !currentState.Phase.Equals(PhaseEnum.Night)) ||
+            //     ((userState.Role & RoleEnum.Ghost) == 0 && !currentState.Phase.Equals(PhaseEnum.Day)) ||
+            //     (userState == null)) ||
+            //     String.IsNullOrEmpty(currentStateId) && !chatType.Equals(ChatTypeEnum.General))
+            // {
+            //     throw new HubException("Message not allowed!");
+            // }
 
             Message message = new Message()
             {

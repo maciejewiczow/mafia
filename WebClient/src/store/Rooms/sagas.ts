@@ -5,7 +5,7 @@ import { call, put, select, takeLatest } from 'redux-saga/effects';
 import api, { GameRoom } from '../../api';
 import * as userSelectors from '../User/selectors';
 import { PickAction } from '../utils';
-import { joinRoomSuccess } from './actions';
+import { createRoomSuccess, getCurrentRoomSuccess, joinRoomSuccess } from './actions';
 import { RoomsActionType, RoomsAction } from './constants';
 
 function* createRoomWatcher() {
@@ -15,7 +15,8 @@ function* createRoomWatcher() {
 function* createRoomWorker({ name }: PickAction<RoomsAction, RoomsActionType.createRoom>) {
     try {
         const result: AxiosResponse<GameRoom> = yield call(api.post, `/GameRooms/create?name=${encodeURIComponent(name)}`);
-        yield put(joinRoomSuccess(result));
+
+        yield put(createRoomSuccess(result));
         yield put(replace('room'));
     } catch (e) {
         console.error('Room creation failed', e);
@@ -45,9 +46,10 @@ export function* getCurrentRoomWorker() {
         return;
 
     try {
+        put({ type: RoomsActionType.getCurrentRoom });
         const room: AxiosResponse<GameRoom> = yield call(api.get, '/GameRooms/current');
 
-        yield put(joinRoomSuccess(room));
+        yield put(getCurrentRoomSuccess(room));
         yield put(replace('room'));
     } catch (error) {
         console.log('Current room request failed with error: ', error);

@@ -1,5 +1,5 @@
 import { GameState, User, VoteState } from 'api';
-import { InvokeAction } from 'store/utils';
+import { InvokeAction, InvokeActionBundle } from 'store/utils';
 
 export enum GameActionType {
     connectToGame = 'game/CONNECT',
@@ -8,6 +8,10 @@ export enum GameActionType {
     // invoke actions
     vote = 'game/VOTE',
     startGame = 'game/START',
+    invokeVote = 'game/INVOKE_VOTE',
+    invokeStartGame = 'game/INVOKE_START',
+    invokeStartGameSuccess = 'game/INVOKE_START_SUCCESS',
+    invokeStartGameFail = 'game/INVOKE_START_FAIL',
 
     // server actions
     gameMemberConnected = 'game/MEMBER_CONNECTED',
@@ -24,13 +28,23 @@ export type GameAction = {
     type: GameActionType.connectToGame;
 } | {
     type: GameActionType.connectToGameSuccess;
+} | {
+    type: GameActionType.startGame;
+} | {
+    type: GameActionType.vote;
 } | InvokeAction<
-    GameActionType.vote,
-    {
-        votedUserId: string;
-    }
+    GameActionType.invokeVote,
+    [
+        string, // votedUserId
+    ]
 > | (
-    InvokeAction<GameActionType.startGame>
+    InvokeActionBundle<
+        GameActionType.invokeStartGame,
+        GameActionType.invokeStartGameSuccess,
+        GameActionType.invokeStartGameFail,
+        undefined,
+        GameState
+    >
 )| {
     type: GameActionType.newVote;
     vote: VoteState;
@@ -49,4 +63,4 @@ export type GameAction = {
 } | {
     type: GameActionType.votingResult;
     votedUserId: string;
-}
+};
