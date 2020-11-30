@@ -55,11 +55,13 @@ namespace MafiaGameAPI.Repositories
                 .Filter.Eq(r => r.Id, objectRoomId);
             var update = Builders<GameRoom>.Update
                 .Push<GameState>(r => r.GameHistory, state);
+            var updateGameState = Builders<GameRoom>.Update
+                .Set<String>(r => r.CurrentGameStateId, state.Id);
 
-            GameRoom result;
             try
             {
-                result = await _gameRoomsCollection.FindOneAndUpdateAsync(filter, update);
+                await _gameRoomsCollection.UpdateOneAsync(filter, update);
+                await _gameRoomsCollection.UpdateOneAsync(filter, updateGameState);
             }
             catch (Exception)
             {
