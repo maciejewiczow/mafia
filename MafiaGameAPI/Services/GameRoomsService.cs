@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
+using MafiaGameAPI.Helpers;
 using MafiaGameAPI.Models.DTO.Projections;
 using MafiaGameAPI.Repositories;
 
@@ -30,8 +31,13 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameRoom> CreateRoom(String roomName, String userId)
         {
-            var room = await _gameRoomsRepository.CreateRoom(new GameRoom(roomName, userId));
-            return await _gameRoomsRepository.AddRoomParticipant(room.Id.ToString(), userId);
+            IOptionsBuilder builder = new OptionsBuilder();
+            builder.BuildDefaultOptions();
+            GameRoom room = new GameRoom(roomName, userId)
+            {
+                GameOptions = builder.GetResult()
+            };
+            return await _gameRoomsRepository.CreateRoom(room);
         }
 
         public async Task<String> GetRoomIdByUserId(string userId)
