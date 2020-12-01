@@ -203,5 +203,35 @@ namespace MafiaGameAPI.Repositories
                 .Project<UserProjection>(project)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task SetGameEnded(String roomId)
+        {
+            var objectRoomId = ObjectId.Parse(roomId);
+
+            var filter = Builders<GameRoom>
+                .Filter.Eq(r => r.Id, objectRoomId);
+
+            var updateIsGameEnded = Builders<GameRoom>.Update
+                .Set<bool>(r => r.IsGameEnded, true);
+            
+            try
+            {
+                var room = await _gameRoomsCollection.FindOneAndUpdateAsync(filter, updateIsGameEnded);
+                foreach(string userId in room.Participants)
+                {
+                    var objectUserId = ObjectId.Parse(userId);
+                    var userFilter = Builders<User>
+                        .Filter.Eq(r => r.Id, objectUserId);
+                    var userUpdate = Builders<User>.Update
+                        .Set<String>(u => u.RoomId, null);
+                    await _usersCollection.UpdateOneAsync(userFilter, userUpdate);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
     }
 }

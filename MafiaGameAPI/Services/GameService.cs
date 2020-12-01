@@ -134,7 +134,7 @@ namespace MafiaGameAPI.Services
             }
             else
             {
-                Console.WriteLine("koniec gry");
+                await _gameRepository.SetGameEnded(roomId);
             }
         }
 
