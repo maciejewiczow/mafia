@@ -33,11 +33,12 @@ namespace MafiaGameAPI.Services
         {
             IOptionsBuilder builder = new OptionsBuilder();
             builder.BuildDefaultOptions();
-            GameRoom room = new GameRoom(roomName, userId)
-            {
-                GameOptions = builder.GetResult()
-            };
-            return await _gameRoomsRepository.CreateRoom(room);
+            GameRoom room = new GameRoom(roomName, userId);
+
+            room.GameOptions = builder.GetResult();
+
+            room = await _gameRoomsRepository.CreateRoom(room);
+            return await _gameRoomsRepository.AddRoomParticipant(room.Id.ToString(), userId);
         }
 
         public async Task<String> GetRoomIdByUserId(string userId)
