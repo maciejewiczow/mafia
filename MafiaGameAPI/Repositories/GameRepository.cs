@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
+using MafiaGameAPI.Enums;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
@@ -204,7 +205,7 @@ namespace MafiaGameAPI.Repositories
                 .FirstOrDefaultAsync();
         }
 
-        public async Task SetGameEnded(String roomId)
+        public async Task SetGameEnded(String roomId, RoleEnum winnerRole)
         {
             var objectRoomId = ObjectId.Parse(roomId);
 
@@ -213,6 +214,9 @@ namespace MafiaGameAPI.Repositories
 
             var updateIsGameEnded = Builders<GameRoom>.Update
                 .Set<bool>(r => r.IsGameEnded, true);
+
+            var updateWinnerRole = Builders<GameRoom>.Update
+                .Set<RoleEnum>(r => r.WinnerRole, winnerRole);
             
             try
             {

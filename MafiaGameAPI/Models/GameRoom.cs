@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-
+using MafiaGameAPI.Enums;
 
 namespace MafiaGameAPI.Models
 {
@@ -21,6 +21,7 @@ namespace MafiaGameAPI.Models
         public List<UserProjection> ParticipantsWithNames { get; set; }
         public bool IsGameStarted { get; set; }
         public bool IsGameEnded { get; set; }
+        public RoleEnum WinnerRole { get; set; }
 
         public GameRoom(string name, string ownerId)
         {

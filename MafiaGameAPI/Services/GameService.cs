@@ -35,12 +35,14 @@ namespace MafiaGameAPI.Services
 
             if (mafiosoCount == citizenCount)
             {
+                await _gameRepository.SetGameEnded(roomId, RoleEnum.Mafioso);
                 await _context.Clients.Group(groupName).GameEndedAsync(RoleEnum.Mafioso.ToString());
                 return true;
             }
 
             if (mafiosoCount == 0)
             {
+                await _gameRepository.SetGameEnded(roomId, RoleEnum.Citizen);
                 await _context.Clients.Group(groupName).GameEndedAsync(RoleEnum.Citizen.ToString());
                 return true;
             }
@@ -124,17 +126,12 @@ namespace MafiaGameAPI.Services
         {
             // TODO: Dodaj nową metodę do pobierania samych opcji
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+            await _gameRepository.ChangePhase(roomId, newState);
 
             if (!(await HasGameEnded(roomId)))
             {
-                await _gameRepository.ChangePhase(roomId, newState);
-
                 // FIXME: jak będzie wyjątek to sie wszystko popsuje
                 _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, newState.Id));
-            }
-            else
-            {
-                await _gameRepository.SetGameEnded(roomId);
             }
         }
 

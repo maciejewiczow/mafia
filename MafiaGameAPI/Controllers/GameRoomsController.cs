@@ -57,8 +57,9 @@ namespace MafiaGameAPI.Controllers
         }
 
         [HttpPut("options/{roomId}")]
-        public async Task<GameOptions> UpdateOptionsUpdateOptions([FromRoute] String roomId, int maxPlayers, int minutes, int mafiosoCount, bool isPublic, bool areVotesVisible)
+        public async Task<GameOptions> UpdateOptions([FromRoute] String roomId, int maxPlayers, int minutes, int mafiosoCount, bool isPublic, bool areVotesVisible)
         {
+            // TODO: weryfikacja czy user może zmieniać opcje gry (najlepiej, żeby mógł tylko owner)
             return await _gameRoomsService.UpdateOptions(roomId, maxPlayers, minutes, mafiosoCount, isPublic, areVotesVisible);
         }
     }
