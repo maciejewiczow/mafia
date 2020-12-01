@@ -15,23 +15,23 @@ namespace MafiaGameAPI.Helpers
             _gameOptions.AreVotesVisible = true;
         }
 
-        public void SetMaxPlayers (int maxPlayers)
+        public void SetMaxPlayers(int maxPlayers)
         {
-            if(maxPlayers < 3) throw new Exception("Too few players");
+            if (maxPlayers < 3) throw new Exception("Too few players");
             _gameOptions.MaxPlayers = maxPlayers;
         }
 
-        public void SetPhaseDuration (int minutes)
+        public void SetPhaseDuration(int minutes)
         {
-            if(minutes < 1) throw new Exception("Too few minutes");
-            if(minutes > 60) throw new Exception("Too many minutes");
+            if (minutes < 1) throw new Exception("Too few minutes");
+            if (minutes > 60) throw new Exception("Too many minutes");
             _gameOptions.PhaseDuration = new TimeSpan(0, minutes, 0);
         }
 
         public void SetMafiosoCount(int mafiosoCount)
         {
-            if(mafiosoCount < 1) throw new Exception("Too few mafiosos");
-            if(mafiosoCount > _gameOptions.MaxPlayers / 2) throw new Exception("Too many mafiosos");
+            if (mafiosoCount < 1) throw new Exception("Too few mafiosos");
+            if (mafiosoCount > _gameOptions.MaxPlayers / 2) throw new Exception("Too many mafiosos");
             _gameOptions.MafiosoCount = mafiosoCount;
         }
 
@@ -39,12 +39,12 @@ namespace MafiaGameAPI.Helpers
         {
             _gameOptions.IsPublic = isPublic;
         }
-        
+
         public void SetAreVotesVisible(bool areVotesVisible)
         {
             _gameOptions.AreVotesVisible = areVotesVisible;
         }
-        
+
         public GameOptions GetResult()
         {
             return _gameOptions;
