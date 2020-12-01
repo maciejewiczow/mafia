@@ -55,5 +55,11 @@ namespace MafiaGameAPI.Controllers
         {
             return await _gameRoomsService.JoinRoom(roomId, User.Identity.Name);
         }
+
+        [HttpPut("options/{roomId}")]
+        public async Task<GameOptions> UpdateOptionsUpdateOptions([FromRoute] String roomId, int maxPlayers, int minutes, int mafiosoCount, bool isPublic, bool areVotesVisible)
+        {
+            return await _gameRoomsService.UpdateOptions(roomId, maxPlayers, minutes, mafiosoCount, isPublic, areVotesVisible);
+        }
     }
 }

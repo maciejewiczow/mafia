@@ -133,5 +133,25 @@ namespace MafiaGameAPI.Repositories
                 .Project<UserProjection>(project)
                 .FirstOrDefaultAsync();
         }
+
+        public async Task<GameOptions> SetOptions(String roomId, GameOptions options)
+        {
+            var objectRoomId = ObjectId.Parse(roomId);
+
+            var roomFilter = Builders<GameRoom>
+                .Filter.Eq(r => r.Id, objectRoomId);
+
+            var roomUpdate = Builders<GameRoom>.Update
+                .Set<GameOptions>(e => e.GameOptions, options);
+            try
+            {
+                await _gameRoomsCollection.UpdateOneAsync(roomFilter, roomUpdate);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return options;
+        }
     }
 }
