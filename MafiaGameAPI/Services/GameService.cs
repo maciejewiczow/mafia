@@ -106,15 +106,17 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameState> StartGame(String roomId)
         {
+            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+            var votingStartDate = DateTime.Now;
             GameState state = new GameState()
             {
                 Id = IdentifiersHelper.CreateGuidString(),
                 UserStates = await AssignPlayersToRoles(roomId),
                 Phase = PhaseEnum.Night,
                 VoteState = new List<VoteState>(),
-                VotingStart = DateTime.Now
+                VotingStart = votingStartDate,
+                VotingEnd = votingStartDate.Add(room.GameOptions.PhaseDuration)
             };
-            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
 
             // FIXME: jak będzie wyjątek to sie wszystko popsuje
             _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id));
@@ -168,13 +170,16 @@ namespace MafiaGameAPI.Services
         public async Task<GameState> VotingAction(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
+            var room = await _gameRoomsRepository.GetRoomById(roomId);
+            var votingStartDate = DateTime.Now;
             GameState newState = new GameState()
             {
                 Id = IdentifiersHelper.CreateGuidString(),
                 UserStates = currentState.UserStates,
                 Phase = currentState.Phase == PhaseEnum.Day ? PhaseEnum.Night : PhaseEnum.Day,
                 VoteState = new List<VoteState>(),
-                VotingStart = DateTime.Now
+                VotingStart = votingStartDate,
+                VotingEnd = votingStartDate.Add(room.GameOptions.PhaseDuration)
             };
 
             if (currentState.VoteState.Count != 0)
