@@ -20,6 +20,7 @@ export enum GameActionType {
     gameEnded = 'game/ENDED',
     votingResult = 'game/VOTING_RESULT',
     stateUpdate = 'game/GAME_STATE_UPDATE',
+    gameStarted = 'game/GAME_STARTED',
 }
 
 export const gameHubClientName = 'gameHubClient';
@@ -30,8 +31,6 @@ export type GameAction = {
     type: GameActionType.connectToGameSuccess;
 } | {
     type: GameActionType.startGame;
-} | {
-    type: GameActionType.vote;
 } | InvokeAction<
     GameActionType.invokeVote,
     [
@@ -63,4 +62,6 @@ export type GameAction = {
 } | {
     type: GameActionType.votingResult;
     votedUserId: string;
+} | {
+    type: GameActionType.gameStarted;
 };

@@ -10,10 +10,20 @@ function* startGameWatcher() {
 
 function* startGameWorker() {
     yield put(invokeStartGame());
-    yield take(GameActionType.stateUpdate);
+    yield take(GameActionType.invokeStartGameSuccess);
+    yield put(replace('/game'));
+}
+
+function* gameStartedWatcher() {
+    yield takeLatest(GameActionType.gameStarted, gameStartedWorker);
+}
+
+// API-FIX: send game state from hub in gameStarted event to prevent route jumping
+function* gameStartedWorker() {
     yield put(replace('/game'));
 }
 
 export default {
     startGameWatcher,
+    gameStartedWatcher,
 };

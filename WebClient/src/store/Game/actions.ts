@@ -30,6 +30,10 @@ export const invokeStartGame = (): PickAction<GameAction, GameActionType.invokeS
     args: undefined,
 });
 
+export const gameStarted = (): PickAction<GameAction, GameActionType.gameStarted> => ({
+    type: GameActionType.gameStarted,
+});
+
 export const startGame = (): PickAction<GameAction, GameActionType.startGame> => ({
     type: GameActionType.startGame,
 });

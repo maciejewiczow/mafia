@@ -19,6 +19,7 @@ import {
     gameEnded,
     gameMemberConnected,
     gameMemberDisconnected,
+    gameStarted,
     newVote,
     stateUpdate,
     votingResult,
@@ -33,6 +34,7 @@ const subscribe = (connection: HubConnection) => (
             connection.on('NewVoteAsync', (v: VoteState) => emit(newVote(v)));
             connection.on('GameEndedAsync', (roleName: string) => emit(gameEnded(roleName)));
             connection.on('UpdateVotingResultAsync', (userId: string) => emit(votingResult(userId)));
+            connection.on('GameStartedAsync', () => emit(gameStarted()));
 
             connection.onclose(error => {
                 if (error) {
