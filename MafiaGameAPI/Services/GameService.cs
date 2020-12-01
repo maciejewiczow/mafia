@@ -134,7 +134,7 @@ namespace MafiaGameAPI.Services
             }
             else
             {
-                Console.WriteLine("dupa koniecrgy");
+                Console.WriteLine("koniec gry");
             }
         }
 
@@ -148,7 +148,7 @@ namespace MafiaGameAPI.Services
                 ((userState.Role & RoleEnum.Ghost) != 0) ||
                 ((votedUserState.Role & RoleEnum.Ghost) != 0) ||
                 (userState == null) || (votedUserId == null) ||
-                ((votedUserState.Role & RoleEnum.Mafioso) != 0 && currentState.Phase.Equals(PhaseEnum.Night)))
+                ((userState.Role & RoleEnum.Mafioso) == 0 && currentState.Phase.Equals(PhaseEnum.Night)))
             {
                 throw new HubException("Not allowed voting!");
             }

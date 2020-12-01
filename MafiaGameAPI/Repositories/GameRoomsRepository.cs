@@ -63,7 +63,7 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
-            room.ParticipantsWithNames = await getParticipantsWithNames(room.Participants);
+            room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }
 
@@ -106,12 +106,12 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
-            room.ParticipantsWithNames = await getParticipantsWithNames(room.Participants);
+            room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }
 
         // FIXME: prosze zrób to inaczej
-        private async Task<List<UserProjection>> getParticipantsWithNames(List<string> users)
+        private async Task<List<UserProjection>> GetParticipantsWithNames(List<string> users)
         {
             List<UserProjection> participants = new List<UserProjection>();
             foreach (string item in users)
