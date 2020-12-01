@@ -27,6 +27,7 @@ namespace MafiaGameAPI.Hubs
             var state = await _gameService.StartGame(roomId);
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
 
+            await Clients.OthersInGroup(groupName).GameStartedAsync();
             await Clients.Groups(groupName).UpdateGameStateAsync(state);
 
             return state;
@@ -46,7 +47,7 @@ namespace MafiaGameAPI.Hubs
             var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
 
             if (String.IsNullOrEmpty(user.RoomId))
-                throw new HubException("You need to be join a room before connecting to this hub");
+                throw new HubException("You need to be in a room before connecting to this hub");
 
             var groupName = IdentifiersHelper.GenerateRoomGroupName(user.RoomId);
 
