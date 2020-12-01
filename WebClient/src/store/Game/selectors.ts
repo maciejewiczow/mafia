@@ -10,6 +10,11 @@ export const userRoles = (userId: string) => (state: AppState) => {
     return role.split(',').map(r => r.trim());
 };
 
-// export const participantsWithRoles = (state: AppState) => {
+export const participantsWithNamesAndRoles = (state: AppState) => (
+    state.rooms.currentRoom?.participantsWithNames.map(participant => ({
+        ...participant,
+        roles: userRoles(participant.id)(state),
+    }))
+);
 
-// }
+export const currentGameState = (state: AppState) => state.game.currentGameState;
