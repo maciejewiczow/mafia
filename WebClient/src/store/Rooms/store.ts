@@ -4,7 +4,7 @@ export interface RoomsState {
     isRoomListLoading: boolean;
     roomList: GameRoomProjection[];
     isCurrentRoomLoading: boolean;
-    currentRoom?: GameRoom;
+    currentRoom?: GameRoom & { winnerRole?: string };
 }
 
 export const initialRoomsState: RoomsState = {

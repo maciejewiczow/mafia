@@ -79,6 +79,7 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
 
                 draft.currentRoom.isGameEnded = true;
                 draft.currentRoom.isGameStarted = false;
+                draft.currentRoom.winnerRole = action.winnerRoleName;
             });
 
         default:

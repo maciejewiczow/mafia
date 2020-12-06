@@ -9,6 +9,8 @@ import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import * as gameSelectors from 'store/Game/selectors';
 import { FaGhost, FaUserSecret } from 'react-icons/fa';
+import { getCurrentUser } from 'store/User/actions';
+import { replace } from 'connected-react-router';
 import { ViewWrapper } from './ViewWrapper';
 
 const Header = styled.header`
@@ -65,12 +67,38 @@ const ChatArea = styled(Chat)`
     padding-bottom: 8px;
     margin-right: 8px;
     flex: 1;
+    &:last-child {
+        margin-right: 0;
+    }
 `;
 
 const Phase = styled.div`
     position: absolute;
     right: 16px;
 `;
+
+const WinnerOverlay = styled.div`
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: rgba(21.8%, 21.8%, 21.8%, 0.7);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
+    flex-flow: column nowrap;
+    backdrop-filter: blur(2px);
+`;
+
+const GoBack = styled.button`
+    font-size: 17px;
+    margin-top: 24px;
+`;
+
+// TODO: Clear state after the game is finished
 
 const Game: React.FC = () => {
     const dispatch = useDispatch();
@@ -114,6 +142,12 @@ const Game: React.FC = () => {
         dispatch(invokeVote(userId));
     };
 
+    const handleGoBackClick = () => {
+        // FIXME: ogarnąć update stanu po końcu gry lepiej
+        dispatch(getCurrentUser());
+        dispatch(replace('/'));
+    };
+
     return (
         <ViewWrapper>
             <Header>
@@ -149,6 +183,13 @@ const Game: React.FC = () => {
                     {currentUserRoles.includes(RoleEnum.Ghost) && <ChatArea chatType={ChatTypeEnum.Ghost} />}
                 </ChatsWrapper>
             </ContentWrapper>
+            {(room.isGameEnded) && (
+                <WinnerOverlay>
+                    Koniec gry!
+                    {room.winnerRole && <span>Wygrany: {room.winnerRole}</span>}
+                    <GoBack type="button" onClick={handleGoBackClick}>Powrót do ekranu głównego</GoBack>
+                </WinnerOverlay>
+            )}
         </ViewWrapper>
     );
 };
