@@ -6,8 +6,8 @@ export enum ChatTypeEnum {
 }
 
 export enum PhaseEnum {
-    Night,
-    Day,
+    Night = 'Night',
+    Day = 'Day',
 }
 
 export enum RoleEnum {
@@ -52,7 +52,7 @@ export interface CreateUserDTO {
 
 export interface GameOptions {
     maxPlayers: number;
-    phaseTime: string;
+    phaseDuration: string;
     mafiosoCount: number;
     isPublic: boolean;
     visibleVotes: boolean;
@@ -64,6 +64,7 @@ export interface GameState {
     phase: PhaseEnum;
     voteState: VoteState[];
     votingStart: string;
+    votingEnd: string;
 }
 
 export interface Message {
