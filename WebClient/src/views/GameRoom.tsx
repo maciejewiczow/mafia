@@ -87,7 +87,7 @@ const GameRoom: React.FC = () => {
     if (!room)
         return <div>Loading room...</div>;
 
-    if (room.isGameStarted)
+    if (room.isGameStarted && !room.isGameEnded)
         return <Redirect to="/game" />;
 
     const handleStartGameClick = () => {
@@ -98,7 +98,7 @@ const GameRoom: React.FC = () => {
         <ViewWrapper>
             <Header>
                 {room.name}
-                {(room.owner === currentUser?.id) && (
+                {(room.owner === currentUser?.id && !room.isGameEnded) && (
                     <StartGameButton
                         onClick={handleStartGameClick}
                         disabled={!isConnectedToGame || isConnectingToGame}
@@ -114,7 +114,7 @@ const GameRoom: React.FC = () => {
                         <Participant key={user.id}>
                             {user.name}
                             {' '}
-                            {(user.id === currentUser?.id) && <Badge>(ty)</Badge> }
+                            {(user.id === currentUser?.id) && <Badge>(ty)</Badge>}
                             {' '}
                             {(user.id === room.owner) && <Badge>(właściel)</Badge>}
                         </Participant>

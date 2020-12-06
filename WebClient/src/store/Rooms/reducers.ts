@@ -63,6 +63,15 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
                 draft.currentRoom.currentGameStateId = action.result.id;
             });
 
+        case GameActionType.gameStarted:
+            return produce(state, draft => {
+                if (!draft.currentRoom)
+                    return;
+
+                draft.currentRoom.isGameStarted = true;
+                draft.currentRoom.isGameEnded = false;
+            });
+
         case GameActionType.gameEnded:
             return produce(state, draft => {
                 if (!draft.currentRoom)

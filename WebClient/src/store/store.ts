@@ -2,7 +2,7 @@ import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { AnyAction, applyMiddleware, compose, createStore } from 'redux';
 import axiosMiddleware from 'redux-axios-middleware';
 import { createBrowserHistory } from 'history';
-import { routerMiddleware } from 'connected-react-router';
+import { routerMiddleware, RouterState } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 
 import api from 'api';
@@ -15,6 +15,7 @@ import { ChatsState } from './Chat/store';
 import { GameStateInStore } from './Game/store';
 
 export interface AppState {
+    router: RouterState;
     currentUser: CurrentUserState;
     rooms: RoomsState;
     chats: ChatsState;
@@ -47,7 +48,7 @@ const axios = axiosMiddleware(
         successSuffix: requestActionSuccessSuffix,
         errorSuffix: requestActionErrorSuffix,
         isAxiosRequest: (action: AnyAction) => !!action.isRequestAction,
-    } as AxiosMiddlewareOptions
+    } as AxiosMiddlewareOptions,
 );
 
 const sagaMiddleware = createSagaMiddleware();
@@ -61,8 +62,8 @@ export const store = createStore(
             routerMiddleware(history),
             sagaMiddleware,
             axios,
-        )
-    )
+        ),
+    ),
 );
 
 sagaMiddleware.run(rootSaga);

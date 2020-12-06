@@ -80,6 +80,7 @@ const Game: React.FC = () => {
     const currentUserRoles = useSelector(gameSelectors.userRoles(currentUser?.id || ''));
     const isConnectedToGame = useSelector(gameSelectors.isConnectedToGame);
     const isConnectingToGame = useSelector(gameSelectors.isConnectingToGame);
+    const isCurrentRoomLoading = useSelector(roomSelectors.isCurrentRoomLoading);
     const participantsWithNamesAndRoles = useSelector(gameSelectors.participantsWithNamesAndRoles);
     const currentGameState = useSelector(gameSelectors.currentGameState);
 
@@ -101,10 +102,8 @@ const Game: React.FC = () => {
     if (!room)
         return <div>Loading current room...</div>;
 
-    if (!room.isGameStarted) {
-        // FIXME: fix redirect jumping between room and game
+    if (!isCurrentRoomLoading && !room.isGameStarted && !room.isGameEnded)
         return <Redirect to="/room" />;
-    }
 
     if (!currentGameState)
         return <div>To się nie powinno zdazyc</div>;

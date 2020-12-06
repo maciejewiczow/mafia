@@ -18,8 +18,8 @@ function* gameStartedWatcher() {
     yield takeLatest(GameActionType.gameStarted, gameStartedWorker);
 }
 
-// API-FIX: send game state from hub in gameStarted event to prevent route jumping
 function* gameStartedWorker() {
+    yield take(GameActionType.stateUpdate);
     yield put(replace('/game'));
 }
 
