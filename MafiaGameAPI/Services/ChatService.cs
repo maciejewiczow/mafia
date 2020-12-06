@@ -56,6 +56,7 @@ namespace MafiaGameAPI.Services
 
         public async Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content)
         {
+            // FIXME: fix this so that message sending is possible with this code uncommented
             // var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
             // var currentState = await _gameRepository.GetCurrentState(roomId);
             // UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
