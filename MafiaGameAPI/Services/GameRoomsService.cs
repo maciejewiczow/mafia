@@ -31,10 +31,10 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameRoom> CreateRoom(String roomName, String userId)
         {
-            IOptionsBuilder builder = new OptionsBuilder();
+            IGameOptionsBuilder builder = new GameOptionsBuilder();
             GameRoom room = new GameRoom(roomName, userId);
 
-            room.GameOptions = builder.BuildDefaultOptions().Build();
+            room.GameOptions = builder.WithDefaultOptions().Build();
 
             room = await _gameRoomsRepository.CreateRoom(room);
             return await _gameRoomsRepository.AddRoomParticipant(room.Id.ToString(), userId);
@@ -62,15 +62,15 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameOptions> UpdateOptions(String roomId, int maxPlayers, int minutes, int mafiosoCount, bool isPublic, bool areVotesVisible)
         {
-            IOptionsBuilder builder = new OptionsBuilder();
+            IGameOptionsBuilder builder = new GameOptionsBuilder();
             var options = builder
-                    .NewOptions()
                     .SetMaxPlayers(maxPlayers)
                     .SetPhaseDuration(minutes)
                     .SetMafiosoCount(mafiosoCount)
                     .SetIsPublic(isPublic)
                     .SetAreVotesVisible(areVotesVisible)
                     .Build();
+
             return await _gameRoomsRepository.SetOptions(roomId, options);
         }
     }

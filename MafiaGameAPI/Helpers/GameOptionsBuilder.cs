@@ -3,10 +3,16 @@ using MafiaGameAPI.Models;
 
 namespace MafiaGameAPI.Helpers
 {
-    public class OptionsBuilder : IOptionsBuilder
+    public class GameOptionsBuilder : IGameOptionsBuilder
     {
-        private GameOptions _gameOptions = new GameOptions();
-        public IOptionsBuilder BuildDefaultOptions()
+        private GameOptions _gameOptions;
+
+        public GameOptionsBuilder()
+        {
+            _gameOptions = new GameOptions();
+        }
+
+        public IGameOptionsBuilder WithDefaultOptions()
         {
             _gameOptions.MaxPlayers = 10;
             _gameOptions.PhaseDuration = new TimeSpan(0, 10, 0);
@@ -16,14 +22,14 @@ namespace MafiaGameAPI.Helpers
             return this;
         }
 
-        public IOptionsBuilder SetMaxPlayers(int maxPlayers)
+        public IGameOptionsBuilder SetMaxPlayers(int maxPlayers)
         {
             if (maxPlayers < 3) throw new Exception("Too few players");
             _gameOptions.MaxPlayers = maxPlayers;
             return this;
         }
 
-        public IOptionsBuilder SetPhaseDuration(int minutes)
+        public IGameOptionsBuilder SetPhaseDuration(int minutes)
         {
             if (minutes < 1) throw new Exception("Too few minutes");
             if (minutes > 60) throw new Exception("Too many minutes");
@@ -31,7 +37,7 @@ namespace MafiaGameAPI.Helpers
             return this;
         }
 
-        public IOptionsBuilder SetMafiosoCount(int mafiosoCount)
+        public IGameOptionsBuilder SetMafiosoCount(int mafiosoCount)
         {
             if (mafiosoCount < 1) throw new Exception("Too few mafiosos");
             if (mafiosoCount > _gameOptions.MaxPlayers / 2) throw new Exception("Too many mafiosos");
@@ -39,13 +45,13 @@ namespace MafiaGameAPI.Helpers
             return this;
         }
 
-        public IOptionsBuilder SetIsPublic(bool isPublic)
+        public IGameOptionsBuilder SetIsPublic(bool isPublic)
         {
             _gameOptions.IsPublic = isPublic;
             return this;
         }
 
-        public IOptionsBuilder SetAreVotesVisible(bool areVotesVisible)
+        public IGameOptionsBuilder SetAreVotesVisible(bool areVotesVisible)
         {
             _gameOptions.AreVotesVisible = areVotesVisible;
             return this;
@@ -54,12 +60,6 @@ namespace MafiaGameAPI.Helpers
         public GameOptions Build()
         {
             return _gameOptions;
-        }
-
-        public IOptionsBuilder NewOptions()
-        {
-            _gameOptions = new GameOptions();
-            return this;
         }
     }
 }
