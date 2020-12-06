@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import { Redirect } from 'react-router';
+import dayjs from 'dayjs';
 import { Chat } from 'modules';
 import { ChatTypeEnum, PhaseEnum, RoleEnum } from 'api';
 import { connectToGame, invokeVote } from 'store/Game/actions';
@@ -9,6 +10,8 @@ import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import * as gameSelectors from 'store/Game/selectors';
 import { FaGhost, FaUserSecret } from 'react-icons/fa';
+import { IoIosCloudyNight, IoIosSunny } from 'react-icons/io';
+import { useCountdown } from 'utils/hooks/useCountdown';
 import { getCurrentUser } from 'store/User/actions';
 import { replace } from 'connected-react-router';
 import { ViewWrapper } from './ViewWrapper';
@@ -98,6 +101,11 @@ const GoBack = styled.button`
     margin-top: 24px;
 `;
 
+const PhaseCounter = styled.div`
+    position: absolute;
+    left: 16px;
+`;
+
 // TODO: Clear state after the game is finished
 
 const Game: React.FC = () => {
@@ -123,6 +131,8 @@ const Game: React.FC = () => {
         isUserLoading,
         room,
     ]);
+
+    const remaining = useCountdown(currentGameState?.votingEnd || '');
 
     if (!isUserLoading && currentUser?.roomId === null)
         return <Redirect to="/" />;
@@ -151,19 +161,27 @@ const Game: React.FC = () => {
     return (
         <ViewWrapper>
             <Header>
-                {room.name} <Phase>{phase}</Phase>
+                {currentGameState.votingEnd && <PhaseCounter title="Czas do końca głsowoania">{dayjs(remaining).format('mm:ss')}</PhaseCounter>}
+                {room.name}
+                <Phase>{phase} {(phase === PhaseEnum.Day) ? <IoIosSunny /> : <IoIosCloudyNight />}</Phase>
             </Header>
             <ContentWrapper>
                 <Participants>
                     <h3>Uczestnicy gry</h3>
                     {participantsWithNamesAndRoles?.map(user => {
-                        const shouldShowVoteButton = /* (
-                            (
-                                (phase === PhaseEnum.Night && currentUserRoles.includes(RoleEnum.Mafioso) && !user.roles.includes(RoleEnum.Mafioso))
-                                || phase === PhaseEnum.Day
-                            ) && !currentUserRoles.includes(RoleEnum.Ghost) && !user.roles.includes(RoleEnum.Ghost)
-                        ); */
-                        true;
+                        let shouldShowVoteButton = false;
+
+                        // TODO: dodać do api metodę w stylu isVoteValid
+                        if (phase === PhaseEnum.Night)
+                            shouldShowVoteButton = currentUserRoles.includes(RoleEnum.Mafioso) && !user.roles.includes(RoleEnum.Mafioso);
+                        else if (phase === PhaseEnum.Day)
+                            shouldShowVoteButton = true;
+
+                        shouldShowVoteButton = shouldShowVoteButton && !currentUserRoles.includes(RoleEnum.Ghost) && !user.roles.includes(RoleEnum.Ghost);
+
+                        if (currentUser?.id === user.id)
+                            shouldShowVoteButton = false;
+
                         return (
                             <Participant key={user.id}>
                                 {user.name}
