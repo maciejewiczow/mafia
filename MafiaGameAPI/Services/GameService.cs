@@ -132,6 +132,8 @@ namespace MafiaGameAPI.Services
 
             if (!(await HasGameEnded(roomId)))
             {
+                await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateGameStateAsync(newState);
+
                 // FIXME: jak będzie wyjątek to sie wszystko popsuje
                 _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, newState.Id));
             }
