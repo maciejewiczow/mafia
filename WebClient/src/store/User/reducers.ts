@@ -1,12 +1,13 @@
 import { produce } from 'immer';
 import { Reducer } from 'redux';
+import { RoomsAction, RoomsActionType } from '../Rooms/constants';
 
 import { UserActionType, UserAction } from './constants';
 import { CurrentUserState, initialCurrentUserState } from './store';
 
-export const userReducer: Reducer<CurrentUserState, UserAction> = (
+export const userReducer: Reducer<CurrentUserState, UserAction | RoomsAction> = (
     state = initialCurrentUserState,
-    action
+    action,
 ) => {
     switch (action.type) {
         case UserActionType.getCurrentUser:
@@ -25,8 +26,15 @@ export const userReducer: Reducer<CurrentUserState, UserAction> = (
                 draft.user = action.payload.data;
             });
 
+        case RoomsActionType.joinRoomSuccess:
+        case RoomsActionType.getCurrentRoomSuccess:
+        case RoomsActionType.createRoomRequestSuccess:
+            return produce(state, draft => {
+                if (draft.user)
+                    draft.user.roomId = action.payload.data.id;
+            });
+
         default:
             return state;
     }
 };
-

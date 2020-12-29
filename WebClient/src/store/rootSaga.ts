@@ -1,13 +1,14 @@
 import { Saga } from 'redux-saga';
 import { all, call, put, spawn } from 'redux-saga/effects';
-import { getAccessToken } from '../api/tokens';
+import { AxiosResponse } from 'axios';
+import api, { User } from 'api';
+import { getAccessToken } from 'api/tokens';
+import { getCurrentUserSuccess } from './User/actions';
 
 import roomsWatchers, { getCurrentRoomWorker } from './Rooms/sagas';
 import userWatchers from './User/sagas';
 import chatWatchers from './Chat/sagas';
-import { getCurrentUserSuccess } from './User/actions';
-import api, { User } from '../api';
-import { AxiosResponse } from 'axios';
+import gameWatchers from './Game/sagas';
 
 const spawnAll = (sagasExport: {[key: string]: Saga}) => Object.values(sagasExport).map(saga => spawn(saga));
 
@@ -31,7 +32,7 @@ export default function* rootSaga() {
         ...spawnAll(userWatchers),
         ...spawnAll(roomsWatchers),
         ...spawnAll(chatWatchers),
-        call(initSaga)
+        ...spawnAll(gameWatchers),
+        call(initSaga),
     ]);
 }
-

@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import { getRooms, joinRoom } from '../../store/Rooms/actions';
-import * as selectors from '../../store/Rooms/selectors';
-import { currentUser as currentUserSelector } from '../../store/User/selectors';
+import { getRooms, joinRoom } from 'store/Rooms/actions';
+import * as selectors from 'store/Rooms/selectors';
+import { currentUser as currentUserSelector } from 'store/User/selectors';
 import CreateRoom from './CreateRoom';
 
 const Wrapper = styled.div`
@@ -48,8 +48,7 @@ const RoomList: React.FC<ClassProps> = ({ className }) => {
 
     useEffect(() => {
         dispatch(getRooms());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [dispatch]);
 
     const handleJoinClick = (id: string) => (e: React.MouseEvent) => {
         e.preventDefault();
@@ -67,11 +66,17 @@ const RoomList: React.FC<ClassProps> = ({ className }) => {
                 <Empty>Brak aktywnych pokoi</Empty>
             ) : (
                 <List>
-                    {rooms.map(({ id, name, currentPlayersCount, maxPlayers }) => (
+                    {rooms.map(({ id, name, currentPlayersCount, maxPlayers, isGameStarted }) => (
                         <Item key={id}>
                             <span>{name} </span>
                             <span>{currentPlayersCount}/{maxPlayers} graczy</span>
-                            {isUserLoggedIn && <a href="" onClick={handleJoinClick(id)}>Dołącz</a>}
+                            {isUserLoggedIn && (
+                                <>
+                                    {(currentPlayersCount < maxPlayers && !isGameStarted) && <a href="" onClick={handleJoinClick(id)}>Dołącz</a>}
+                                    {(currentPlayersCount >= maxPlayers) && <span>Pokój jest pełny</span>}
+                                    {isGameStarted && <span>Gra już się rozpoczęła</span>}
+                                </>
+                            )}
                         </Item>
                     ))}
                 </List>

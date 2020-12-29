@@ -63,7 +63,7 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
-            room.ParticipantsWithNames = await getParticipantsWithNames(room.Participants);
+            room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }
 
@@ -84,19 +84,16 @@ namespace MafiaGameAPI.Repositories
             var userUpdate = Builders<User>.Update
                 .Set<String>(u => u.RoomId, roomId);
 
-            GameRoom result;
             try
             {
                 await _usersCollection.UpdateOneAsync(userFilter, userUpdate);
-                await _gameRoomsCollection.FindOneAndUpdateAsync(roomFilter, roomUpdate);
+                await _gameRoomsCollection.UpdateOneAsync(roomFilter, roomUpdate);
             }
             catch (Exception)
             {
                 throw;
             }
-            // FIXME: popraw
-            result = await GetRoomById(roomId);
-            return result;
+            return await GetRoomById(roomId);
         }
 
         public async Task<GameRoom> CreateRoom(GameRoom room)
@@ -109,12 +106,12 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
-            room.ParticipantsWithNames = await getParticipantsWithNames(room.Participants);
+            room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }
 
         // FIXME: prosze zrób to inaczej
-        private async Task<List<UserProjection>> getParticipantsWithNames(List<string> users)
+        private async Task<List<UserProjection>> GetParticipantsWithNames(List<string> users)
         {
             List<UserProjection> participants = new List<UserProjection>();
             foreach (string item in users)
@@ -135,6 +132,26 @@ namespace MafiaGameAPI.Repositories
                 .Find(Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId)))
                 .Project<UserProjection>(project)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<GameOptions> SetOptions(String roomId, GameOptions options)
+        {
+            var objectRoomId = ObjectId.Parse(roomId);
+
+            var roomFilter = Builders<GameRoom>
+                .Filter.Eq(r => r.Id, objectRoomId);
+
+            var roomUpdate = Builders<GameRoom>.Update
+                .Set<GameOptions>(e => e.GameOptions, options);
+            try
+            {
+                await _gameRoomsCollection.UpdateOneAsync(roomFilter, roomUpdate);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return options;
         }
     }
 }

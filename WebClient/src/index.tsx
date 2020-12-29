@@ -2,14 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { createGlobalStyle } from 'styled-components';
 import { Provider } from 'react-redux';
+import { Slide, ToastContainer } from 'react-toastify';
 import reportWebVitals from './reportWebVitals';
 
 import store from './store';
 import App from './App';
 
+import 'react-toastify/dist/ReactToastify.css';
+
 const GlobalStyles = createGlobalStyle`
     body, html, #root {
         height: 100%;
+        width: 100%;
     }
 
     body {
@@ -36,8 +40,22 @@ ReactDOM.render(
             <GlobalStyles />
             <App />
         </Provider>
+        <ToastContainer
+            position="bottom-center"
+            autoClose={4000}
+            limit={5}
+            rtl={false}
+            transition={Slide}
+            style={{ width: '40vw' }}
+            hideProgressBar
+            newestOnTop
+            closeOnClick
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+        />
     </React.StrictMode>,
-    document.getElementById('root')
+    document.getElementById('root'),
 );
 
 // If you want to start measuring performance in your app, pass a function

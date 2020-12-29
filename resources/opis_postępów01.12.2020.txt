@@ -1,0 +1,3 @@
+Oddaliśmy implementację projektu, wraz z implementacją wzorca kreacyjnego - budowniczego. 
+Załączam zrzuty ekranów przedstawiające działanie zaimplementowanej aplikacji oraz zaktualizowane diagramy UML.
+Kod projektu (łącznie z diagramami) dostępny jest na githubie: https://github.com/maciejewiczow/mafia

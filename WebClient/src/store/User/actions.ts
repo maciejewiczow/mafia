@@ -1,24 +1,24 @@
 import { AxiosResponse } from 'axios';
-import { User } from '../../api';
-import { TypedActionCreator } from '../utils';
+import { User } from 'api';
+import { PickAction } from 'store/utils';
 import { UserAction, UserActionType } from './constants';
 
-export const getCurrentUser: TypedActionCreator<UserAction, UserActionType.getCurrentUser> = () => ({
+export const getCurrentUser = (): PickAction<UserAction, UserActionType.getCurrentUser> => ({
     type: UserActionType.getCurrentUser,
     isRequestAction: true,
     payload: {
         request: {
             url: '/Users/current',
-        }
-    }
+        },
+    },
 });
 
-export const getCurrentUserSuccess: TypedActionCreator<UserAction, UserActionType.getCurrentUserSuccess> = (payload: AxiosResponse<User>) => ({
+export const getCurrentUserSuccess = (payload: AxiosResponse<User>): PickAction<UserAction, UserActionType.getCurrentUserSuccess> => ({
     type: UserActionType.getCurrentUserSuccess,
-    payload
+    payload,
 });
 
-export const createUser: TypedActionCreator<UserAction, UserActionType.createUser> = (userName: string) => ({
+export const createUser = (userName: string): PickAction<UserAction, UserActionType.createUser> => ({
     type: UserActionType.createUser,
-    userName
+    userName,
 });

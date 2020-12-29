@@ -1,10 +1,7 @@
 import { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
-import { Action, ActionCreator } from 'redux';
+import { Action } from 'redux';
 
-export type PickAction<A extends Action<string>, T extends A['type']> = Extract<A, { type: T }>
-
-// FIXME: fix action creator arguments typing to not be any
-export type TypedActionCreator<A extends Action<string>, T extends A['type']> = ActionCreator<PickAction<A, T>>;
+export type PickAction<A extends Action<string>, T extends A['type']> = Extract<A, { type: T }>;
 
 export interface RequestAction<ActionT = string, RequestT = undefined> extends Action<ActionT> {
     isRequestAction: true;
@@ -26,12 +23,49 @@ export type RequestActionBundle<
     SuccessActionT = string,
     FailedActionT = string,
     RequestT = undefined,
-    ResponseT = undefined
+    ResponseT = undefined,
 > = (
     RequestAction<RequestActionT, RequestT> |
     ResponseSuccessAction<SuccessActionT, ResponseT> |
     ResponseFailedAction<FailedActionT, ResponseT>
-)
+);
+
+export type InvokeActionBundle<
+    InvokeActionT extends string,
+    SuccessActionT extends string,
+    FailedActionT extends string,
+    P extends (any[]|undefined) = undefined,
+    RetT = undefined,
+> = (
+    InvokeAction<InvokeActionT, P, SuccessActionT, FailedActionT> |
+    InvokeActionSuccess<SuccessActionT, RetT> |
+    InvokeActionError<FailedActionT>
+);
+
+export interface InvokeAction<
+    TAction extends string,
+    P extends (any[]|undefined) = undefined,
+    TActionSuccess extends (string | undefined) = undefined,
+    TActionError extends (string | undefined) = undefined,
+> {
+    type: TAction;
+    successActionType: TActionSuccess;
+    errorActionType: TActionError;
+    isInvokeAction: true;
+    hubClientName: string;
+    methodName: string;
+    args?: P;
+}
+
+export interface InvokeActionSuccess<T extends string, TRet = undefined> {
+    type: T;
+    result: TRet;
+}
+
+export interface InvokeActionError<T extends string> {
+    type: T;
+    error: Error;
+}
 
 export const objectHasOwnProperty = (object: unknown, propName: string | number | symbol) => (
     ({}).hasOwnProperty.call(object, propName)

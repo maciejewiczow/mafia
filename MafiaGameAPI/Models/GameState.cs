@@ -14,5 +14,6 @@ namespace MafiaGameAPI.Models
         public PhaseEnum Phase { get; set; }
         public List<VoteState> VoteState { get; set; }
         public DateTime VotingStart { get; set; }
+        public DateTime VotingEnd { get; set; }
     }
 }

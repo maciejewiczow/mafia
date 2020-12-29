@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
+using MafiaGameAPI.Helpers;
 using MafiaGameAPI.Models.DTO.Projections;
 using MafiaGameAPI.Repositories;
 
@@ -30,8 +31,13 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameRoom> CreateRoom(String roomName, String userId)
         {
+            IGameOptionsBuilder builder = new GameOptionsBuilder();
             GameRoom room = new GameRoom(roomName, userId);
-            return await _gameRoomsRepository.CreateRoom(room);
+
+            room.GameOptions = builder.WithDefaultOptions().Build();
+
+            room = await _gameRoomsRepository.CreateRoom(room);
+            return await _gameRoomsRepository.AddRoomParticipant(room.Id.ToString(), userId);
         }
 
         public async Task<String> GetRoomIdByUserId(string userId)
@@ -43,6 +49,7 @@ namespace MafiaGameAPI.Services
         {
             return await _usersRepository.GetUserProjectionById(userId);
         }
+
         public async Task<User> GetUserById(string userId)
         {
             return await _usersRepository.GetUserById(userId);
@@ -51,6 +58,20 @@ namespace MafiaGameAPI.Services
         public async Task<GameRoom> GetRoomById(String roomId)
         {
             return await _gameRoomsRepository.GetRoomById(roomId);
+        }
+
+        public async Task<GameOptions> UpdateOptions(String roomId, int maxPlayers, int minutes, int mafiosoCount, bool isPublic, bool areVotesVisible)
+        {
+            IGameOptionsBuilder builder = new GameOptionsBuilder();
+            var options = builder
+                    .SetMaxPlayers(maxPlayers)
+                    .SetPhaseDuration(minutes)
+                    .SetMafiosoCount(mafiosoCount)
+                    .SetIsPublic(isPublic)
+                    .SetAreVotesVisible(areVotesVisible)
+                    .Build();
+
+            return await _gameRoomsRepository.SetOptions(roomId, options);
         }
     }
 }

@@ -3,7 +3,7 @@ import { addAuthorizationToken } from './tokens';
 
 const api = axios.create({
     baseURL: 'http://localhost:5000/api',
-    responseType: 'json'
+    responseType: 'json',
 });
 
 api.interceptors.request.use(addAuthorizationToken);

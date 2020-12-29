@@ -2,23 +2,23 @@ export enum ChatTypeEnum {
     General = 'General',
     Mafia = 'Mafia',
     Citizen = 'Citizen',
-    Ghost = 'Ghost'
+    Ghost = 'Ghost',
 }
 
 export enum PhaseEnum {
-    Night,
-    Day
+    Night = 'Night',
+    Day = 'Day',
 }
 
 export enum RoleEnum {
-    Mafioso,
-    Ghost,
-    Citizen
+    Mafioso = 'Mafioso',
+    Ghost = 'Ghost',
+    Citizen = 'Citizen',
 }
 
 export enum TokenType {
     AccessToken,
-    RefreshToken
+    RefreshToken,
 }
 
 export interface GameRoomProjection {
@@ -52,7 +52,7 @@ export interface CreateUserDTO {
 
 export interface GameOptions {
     maxPlayers: number;
-    phaseTime: string;
+    phaseDuration: string;
     mafiosoCount: number;
     isPublic: boolean;
     visibleVotes: boolean;
@@ -64,6 +64,7 @@ export interface GameState {
     phase: PhaseEnum;
     voteState: VoteState[];
     votingStart: string;
+    votingEnd: string;
 }
 
 export interface Message {
@@ -71,18 +72,19 @@ export interface Message {
     userId: string;
     sentAt: string;
     content: string;
-    groupName: string;
+    roomId: string;
+    chatType: ChatTypeEnum;
 }
 
 export interface User {
     id: string;
     name: string;
-    roomId: string;
+    roomId?: string;
 }
 
 export interface UserState {
     userId: string;
-    role: RoleEnum;
+    role: string;
 }
 
 export interface VoteState {
