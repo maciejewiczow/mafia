@@ -106,7 +106,7 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameState> StartGame(String roomId)
         {
-            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+            GameOptions options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
             var votingStartDate = DateTime.Now;
             GameState state = new GameState()
             {
@@ -115,19 +115,18 @@ namespace MafiaGameAPI.Services
                 Phase = PhaseEnum.Night,
                 VoteState = new List<VoteState>(),
                 VotingStart = votingStartDate,
-                VotingEnd = votingStartDate.Add(room.GameOptions.PhaseDuration)
+                VotingEnd = votingStartDate.Add(options.PhaseDuration)
             };
 
             // FIXME: jak będzie wyjątek to sie wszystko popsuje
-            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id));
+            _ = Task.Run(() => RunPhase(roomId, options.PhaseDuration, state.Id));
 
             return await _gameRepository.StartGame(roomId, state);
         }
 
         public async Task ChangePhase(String roomId, GameState newState)
         {
-            // TODO: Dodaj nową metodę do pobierania samych opcji
-            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+            GameOptions options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
             await _gameRepository.ChangePhase(roomId, newState);
 
             if (!(await HasGameEnded(roomId)))
@@ -135,7 +134,7 @@ namespace MafiaGameAPI.Services
                 await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateGameStateAsync(newState);
 
                 // FIXME: jak będzie wyjątek to sie wszystko popsuje
-                _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, newState.Id));
+                _ = Task.Run(() => RunPhase(roomId, options.PhaseDuration, newState.Id));
             }
         }
 
@@ -172,7 +171,7 @@ namespace MafiaGameAPI.Services
         public async Task<GameState> VotingAction(String roomId)
         {
             var currentState = await _gameRepository.GetCurrentState(roomId);
-            var room = await _gameRoomsRepository.GetRoomById(roomId);
+            var options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
             var votingStartDate = DateTime.Now;
             GameState newState = new GameState()
             {
@@ -181,7 +180,7 @@ namespace MafiaGameAPI.Services
                 Phase = currentState.Phase == PhaseEnum.Day ? PhaseEnum.Night : PhaseEnum.Day,
                 VoteState = new List<VoteState>(),
                 VotingStart = votingStartDate,
-                VotingEnd = votingStartDate.Add(room.GameOptions.PhaseDuration)
+                VotingEnd = votingStartDate.Add(options.PhaseDuration)
             };
 
             if (currentState.VoteState.Count != 0)

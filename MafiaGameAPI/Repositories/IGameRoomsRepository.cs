@@ -13,5 +13,6 @@ namespace MafiaGameAPI.Repositories
         Task<GameRoom> AddRoomParticipant(String roomId, String userId);
         Task<GameRoom> CreateRoom(GameRoom room);
         Task<GameOptions> SetOptions(String roomId, GameOptions options);
+        GameOptions GetOptionsByRoomId(String roomId);
     }
 }

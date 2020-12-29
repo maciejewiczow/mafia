@@ -178,5 +178,25 @@ namespace MafiaGameAPI.Repositories
             }
             return options;
         }
+        public GameOptions GetOptionsByRoomId(String roomId)
+        {
+            var objectRoomId = ObjectId.Parse(roomId);
+
+            var match = new BsonDocument("$match",
+                new BsonDocument("_id",
+                new BsonDocument("$eq", objectRoomId)));
+            var replaceRoot = new BsonDocument("$replaceRoot",
+                new BsonDocument("newRoot", "$gameOptions"));
+            var pipeline = new[] { match, replaceRoot };
+
+            try
+            {
+                return _gameRoomsCollection.Aggregate<GameOptions>(pipeline).First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }
