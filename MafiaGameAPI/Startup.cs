@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using MafiaGameAPI.Helpers;
 
 namespace MafiaGameAPI
 {
@@ -173,6 +174,8 @@ namespace MafiaGameAPI
             services.AddScoped<IGameRepository, GameRepository>();
             services.AddScoped<IGameRoomsRepository, GameRoomsRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
+
+            services.AddScoped<IValidationHelper, ValidationHelper>();
 
             services.AddScoped<IMongoClient>(m =>
             {

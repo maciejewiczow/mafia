@@ -6,6 +6,7 @@ using MafiaGameAPI.Enums;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Repositories;
 using MafiaGameAPI.Helpers;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MafiaGameAPI.Services
 {
@@ -13,11 +14,13 @@ namespace MafiaGameAPI.Services
     {
         private readonly IChatRepository _chatRepository;
         private readonly IGameRepository _gameRepository;
+        private readonly IValidationHelper _validationHelper;
 
-        public ChatService(IChatRepository chatRepository, IGameRepository gameRepository)
+        public ChatService(IChatRepository chatRepository, IGameRepository gameRepository, IValidationHelper validationHelper)
         {
             _chatRepository = chatRepository;
             _gameRepository = gameRepository;
+            _validationHelper = validationHelper;
         }
 
         public async Task<List<Message>> GetMessages(String roomId, ChatTypeEnum chatType)
@@ -56,21 +59,10 @@ namespace MafiaGameAPI.Services
 
         public async Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content)
         {
-            // FIXME: fix this so that message sending is possible with this code uncommented
-            // var currentStateId = await _gameRepository.GetCurrentGameStateId(roomId);
-            // var currentState = await _gameRepository.GetCurrentState(roomId);
-            // UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
-
-            // if(
-            //     !String.IsNullOrEmpty(currentStateId) && (
-            //     ((userState.Role & RoleEnum.Ghost) != 0 && !chatType.Equals(ChatTypeEnum.Ghost)) ||
-            //     ((userState.Role & RoleEnum.Mafioso) == 0 && chatType.Equals(ChatTypeEnum.Mafia) && !currentState.Phase.Equals(PhaseEnum.Night)) ||
-            //     ((userState.Role & RoleEnum.Ghost) == 0 && !currentState.Phase.Equals(PhaseEnum.Day)) ||
-            //     (userState == null)) ||
-            //     String.IsNullOrEmpty(currentStateId) && !chatType.Equals(ChatTypeEnum.General))
-            // {
-            //     throw new HubException("Message not allowed!");
-            // }
+            if(!await _validationHelper.IsMessageValid(userId, roomId, chatType, content))
+            {
+                throw new HubException("Message not allowed!");
+            }
 
             Message message = new Message()
             {

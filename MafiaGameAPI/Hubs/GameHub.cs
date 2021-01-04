@@ -24,7 +24,7 @@ namespace MafiaGameAPI.Hubs
         public async Task<GameState> StartGame()
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
-            var state = await _gameService.StartGame(roomId);
+            var state = await _gameService.StartGame(roomId, Context.User.Identity.Name);
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
 
             await Clients.OthersInGroup(groupName).GameStartedAsync();

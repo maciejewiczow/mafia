@@ -17,12 +17,15 @@ namespace MafiaGameAPI.Services
         private readonly IGameRepository _gameRepository;
         private readonly IGameRoomsRepository _gameRoomsRepository;
         private readonly IHubContext<GameHub, IGameClient> _context;
+        private readonly IValidationHelper _validationHelper;
 
-        public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository, IHubContext<GameHub, IGameClient> context)
+        public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository,
+                IHubContext<GameHub, IGameClient> context, IValidationHelper validationHelper)
         {
             _gameRepository = gameRepository;
             _gameRoomsRepository = gameRoomsRepository;
             _context = context;
+            _validationHelper = validationHelper;
         }
 
         private async Task<bool> HasGameEnded(String roomId)
@@ -104,8 +107,12 @@ namespace MafiaGameAPI.Services
             return userStates;
         }
 
-        public async Task<GameState> StartGame(String roomId)
+        public async Task<GameState> StartGame(String roomId, String userId)
         {
+            if (!await _validationHelper.IsUserAutorizedToStartGame(roomId, userId))
+            {
+                throw new HubException("User not authorized to start game!");
+            }
             GameOptions options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
             var votingStartDate = DateTime.Now;
             GameState state = new GameState()
@@ -140,15 +147,7 @@ namespace MafiaGameAPI.Services
 
         public async Task<VoteState> Vote(String roomId, String userId, String votedUserId)
         {
-            var currentState = await _gameRepository.GetCurrentState(roomId);
-            UserState votedUserState = currentState.UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
-            UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
-
-            if (
-                ((userState.Role & RoleEnum.Ghost) != 0) ||
-                ((votedUserState.Role & RoleEnum.Ghost) != 0) ||
-                (userState == null) || (votedUserId == null) ||
-                ((userState.Role & RoleEnum.Mafioso) == 0 && currentState.Phase.Equals(PhaseEnum.Night)))
+            if (!await _validationHelper.IsVoteValid(roomId, userId, votedUserId))
             {
                 throw new HubException("Not allowed voting!");
             }
