@@ -31,7 +31,6 @@ namespace MafiaGameAPI.Helpers
 
             if (!await _gameRoomsRepository.IsUserInRoom(userId, roomId)) return false;
 
-
             if (chatType.Equals(ChatTypeEnum.General))
             {
                 if (!await _gameRoomsRepository.HasGameStarted(roomId)) return true;

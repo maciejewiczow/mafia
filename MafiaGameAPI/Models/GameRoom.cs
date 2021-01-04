@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 using MafiaGameAPI.Enums;
+using MafiaGameAPI.Models.UserGameStates;
 
 namespace MafiaGameAPI.Models
 {
@@ -10,28 +11,24 @@ namespace MafiaGameAPI.Models
     {
         [BsonId]
         public ObjectId Id { get; set; }
-        public List<GameState> GameHistory { get; set; }
-        public String CurrentGameStateId { get; set; }
+        public GameState CurrentGameState { get; set; }
         public String Name { get; set; }
         public String Password { get; set; }
         public GameOptions GameOptions { get; set; }
         public string Owner { get; set; }
-        public String GroupName { get; set; }
         public List<string> Participants { get; set; }
-        public List<UserProjection> ParticipantsWithNames { get; set; }
-        public bool IsGameStarted { get; set; }
-        public bool IsGameEnded { get; set; }
         public RoleEnum WinnerRole { get; set; }
+
+        [BsonIgnore]
+        public List<UserProjection> ParticipantsWithNames { get; set; }
 
         public GameRoom(string name, string ownerId)
         {
             Name = name;
             Owner = ownerId;
             GameOptions = new GameOptions();
-            GameHistory = new List<GameState>();
+            CurrentGameState = new GameNotStartedState(this);
             Participants = new List<string>();
-            IsGameStarted = false;
-            IsGameEnded = false;
         }
     }
 

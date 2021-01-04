@@ -204,7 +204,10 @@ namespace MafiaGameAPI
 
             app.UseRouting();
 
-            app.UseCors(FrontendOrigin);
+            if (env.IsDevelopment())
+            {
+                app.UseCors(FrontendOrigin);
+            }
 
             app.UseAuthentication();
 

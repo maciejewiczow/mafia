@@ -7,6 +7,7 @@ using MafiaGameAPI.Enums;
 using MafiaGameAPI.Helpers;
 using MafiaGameAPI.Hubs;
 using MafiaGameAPI.Models;
+using MafiaGameAPI.Models.UserGameStates;
 using MafiaGameAPI.Repositories;
 using Microsoft.AspNetCore.SignalR;
 
@@ -113,20 +114,19 @@ namespace MafiaGameAPI.Services
             {
                 throw new HubException("User not authorized to start game!");
             }
-            GameOptions options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
+            var room = await _gameRoomsRepository.GetRoomById(roomId);
             var votingStartDate = DateTime.Now;
-            GameState state = new GameState()
+            GameState state = new GameNightState(room)
             {
                 Id = IdentifiersHelper.CreateGuidString(),
                 UserStates = await AssignPlayersToRoles(roomId),
-                Phase = PhaseEnum.Night,
                 VoteState = new List<VoteState>(),
                 VotingStart = votingStartDate,
-                VotingEnd = votingStartDate.Add(options.PhaseDuration)
+                VotingEnd = votingStartDate.Add(room.GameOptions.PhaseDuration)
             };
 
             // FIXME: jak będzie wyjątek to sie wszystko popsuje
-            _ = Task.Run(() => RunPhase(roomId, options.PhaseDuration, state.Id));
+            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id));
 
             return await _gameRepository.StartGame(roomId, state);
         }
