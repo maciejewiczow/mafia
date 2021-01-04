@@ -2,21 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
-using MongoDB.Bson.Serialization.Attributes;
 
 namespace MafiaGameAPI.Models.UserGameStates
 {
     public class GameDayState : GameState
     {
-        [BsonIgnore]
-        private readonly GameRoom _context;
-
         public GameDayState(GameRoom room)
         {
             _context = room;
         }
 
-        public override Task<bool> CanSendMessage(ChatTypeEnum chatType)
+        //Dodałem taki konstruktor, żeby mogo nie mia problemu z tworzeniem instancji
+        public GameDayState()
+        {
+        }
+
+        public override Task<bool> CanSendMessage(string userId, ChatTypeEnum chatType)
         {
             throw new NotImplementedException();
         }
@@ -26,12 +27,17 @@ namespace MafiaGameAPI.Models.UserGameStates
             throw new NotImplementedException();
         }
 
-        public override Task<IList<string>> GetUserChatGroups()
+        public override Task<IList<ChatTypeEnum>> GetUserChatGroups(string userId)
         {
             throw new NotImplementedException();
         }
 
         public override Task<bool> IsVoteValid(string votingUserId, string votedUserId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool HasVotingFinished()
         {
             throw new NotImplementedException();
         }

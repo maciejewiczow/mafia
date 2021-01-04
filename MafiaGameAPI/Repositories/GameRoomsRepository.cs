@@ -64,6 +64,7 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
             //room.ParticipantsWithNames = GetParticipantsWithNames(room.Id);
+            room.CurrentGameState.SetContext(room);
             room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }
@@ -247,26 +248,6 @@ namespace MafiaGameAPI.Repositories
                     .Project<List<String>>(project)
                     .FirstOrDefaultAsync();
                 return participants.Contains(userId);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-        public async Task<bool> HasGameStarted(String roomId)
-        {
-            var objectRoomId = ObjectId.Parse(roomId);
-            var filter = Builders<GameRoom>
-                .Filter.Where(r => r.Id.Equals(objectRoomId));
-            var project = new ProjectionDefinitionBuilder<GameRoom>().Expression(r => r.IsGameStarted);
-
-            try
-            {
-                return await _gameRoomsCollection
-                    .Find(filter)
-                    .Project<bool>(project)
-                    .FirstOrDefaultAsync();
             }
             catch (Exception)
             {

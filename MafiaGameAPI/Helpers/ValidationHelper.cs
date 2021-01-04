@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
 using MafiaGameAPI.Models;
@@ -25,54 +24,16 @@ namespace MafiaGameAPI.Helpers
             else return false;
         }
 
-        public async Task<bool> IsMessageValid(string userId, string roomId, ChatTypeEnum chatType, string content)
+        public async Task<bool> IsMessageValid(string userId, GameRoom room, ChatTypeEnum chatType, string content)
         {
             if (content.Length > 50) return false;
 
-            if (!await _gameRoomsRepository.IsUserInRoom(userId, roomId)) return false;
-
-            if (chatType.Equals(ChatTypeEnum.General))
-            {
-                if (!await _gameRoomsRepository.HasGameStarted(roomId)) return true;
-                else return false;
-            }
-            //TODO:Dodać wzorzec projektowy
-            var currentState = await _gameRepository.GetCurrentState(roomId);
-            UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
-
-            if ((userState.Role & RoleEnum.Ghost) != 0
-                && (chatType.Equals(ChatTypeEnum.Ghost))) return true;
-
-            if (chatType.Equals(ChatTypeEnum.Citizen)
-                && (userState.Role & RoleEnum.Ghost) == 0
-                && currentState.Phase.Equals(PhaseEnum.Day)) return true;
-
-            if (chatType.Equals(ChatTypeEnum.Mafia)
-                && (userState.Role & RoleEnum.Ghost) == 0
-                && (userState.Role & RoleEnum.Mafioso) != 0
-                && currentState.Phase.Equals(PhaseEnum.Night)) return true;
-
-            return false;
+            return await room.CurrentGameState.CanSendMessage(userId, chatType);
         }
 
-        public async Task<bool> IsVoteValid(string roomId, string userId, string votedUserId)
+        public async Task<bool> IsVoteValid(string userId, GameRoom room, string votedUserId)
         {
-            if (!await _gameRoomsRepository.HasGameStarted(roomId)
-                || !await _gameRoomsRepository.IsUserInRoom(userId, roomId)) return false;
-            //TODO:Dodać wzorzec projektowy
-            //var currentState = await _gameRepository.GetCurrentState(roomId);
-            //UserState votedUserState = currentState.UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
-            //UserState userState = currentState.UserStates.Where(u => u.UserId.Equals(userId)).First();
-            //
-            //if (((userState.Role & RoleEnum.Ghost) != 0)
-            //    || ((votedUserState.Role & RoleEnum.Ghost) != 0)
-            //    || (userState == null)
-            //    || (votedUserId == null)
-            //    || ((votedUserState.Role & RoleEnum.Mafioso) == 0 && currentState.Phase.Equals(PhaseEnum.Night)))
-            //{
-            //    return false;
-            //}
-            return true;
+            return await room.CurrentGameState.IsVoteValid(userId, votedUserId);
         }
     }
 }

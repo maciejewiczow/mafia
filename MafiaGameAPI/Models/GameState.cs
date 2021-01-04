@@ -18,6 +18,7 @@ namespace MafiaGameAPI.Models
     )]
     public abstract class GameState
     {
+        public string Id { get; set; }
         public List<UserState> UserStates { get; set; }
 
         [JsonConverter(typeof(StringEnumConverter))]
@@ -25,8 +26,16 @@ namespace MafiaGameAPI.Models
         public DateTime VotingStart { get; set; }
         public DateTime VotingEnd { get; set; }
         public abstract Task<bool> IsVoteValid(string votingUserId, string votedUserId);
-        public abstract Task<IList<string>> GetUserChatGroups();
-        public abstract Task<bool> CanSendMessage(ChatTypeEnum chatType);
+        public abstract Task<IList<ChatTypeEnum>> GetUserChatGroups(string userId);
+        public abstract Task<bool> CanSendMessage(string userId, ChatTypeEnum chatType);
         public abstract Task ChangePhase();
+        public abstract bool HasVotingFinished();
+        [BsonIgnore]
+        protected private GameRoom _context { get; set; }
+
+        public void SetContext(GameRoom room)
+        {
+            _context = room;
+        }
     }
 }
