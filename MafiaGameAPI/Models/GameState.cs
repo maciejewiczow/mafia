@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
 using MafiaGameAPI.Models.UserGameStates;
 using MongoDB.Bson.Serialization.Attributes;
@@ -23,5 +24,9 @@ namespace MafiaGameAPI.Models
         public List<VoteState> VoteState { get; set; }
         public DateTime VotingStart { get; set; }
         public DateTime VotingEnd { get; set; }
+        public abstract Task<bool> IsVoteValid(string votingUserId, string votedUserId);
+        public abstract Task<IList<string>> GetUserChatGroups();
+        public abstract Task<bool> CanSendMessage(ChatTypeEnum chatType);
+        public abstract Task ChangePhase();
     }
 }

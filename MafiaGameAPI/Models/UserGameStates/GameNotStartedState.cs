@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace MafiaGameAPI.Models.UserGameStates
 {
-    public class GameNotStartedState : GameState, IUserGameState
+    public class GameNotStartedState : GameState
     {
         [BsonIgnore]
         private readonly GameRoom _context;
@@ -16,22 +16,22 @@ namespace MafiaGameAPI.Models.UserGameStates
             _context = room;
         }
 
-        public Task<bool> CanSendMessage(ChatTypeEnum chatType)
+        public override Task<bool> CanSendMessage(ChatTypeEnum chatType)
         {
             throw new NotImplementedException();
         }
 
-        public Task ChangePhase()
+        public override Task ChangePhase()
         {
             throw new NotImplementedException();
         }
 
-        public Task<IList<string>> GetUserChatGroups()
+        public override Task<IList<string>> GetUserChatGroups()
         {
             throw new NotImplementedException();
         }
 
-        public Task<bool> IsVoteValid(string votingUserId, string votedUserId)
+        public override Task<bool> IsVoteValid(string votingUserId, string votedUserId)
         {
             throw new NotImplementedException();
         }
