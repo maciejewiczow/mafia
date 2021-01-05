@@ -18,17 +18,15 @@ export interface ObjectId {
 
 export interface GameRoom {
     id: string;
-    gameHistory: GameState[];
-    currentGameStateId: string;
+    currentGameState: GameState;
     name: string;
     password: string;
     gameOptions: GameOptions;
     owner: string;
-    groupName: string;
     participants: string[];
     participantsWithNames: User[];
-    isGameStarted: boolean;
-    isGameEnded: boolean;
+    hasGameStarted: boolean;
+    hasGameEnded: boolean;
 }
 
 export type RoomsResponse = GameRoomProjection[];

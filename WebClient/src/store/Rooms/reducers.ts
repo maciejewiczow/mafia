@@ -59,8 +59,8 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
                 if (!draft.currentRoom)
                     return;
 
-                draft.currentRoom.isGameStarted = true;
-                draft.currentRoom.currentGameStateId = action.result.id;
+                draft.currentRoom.hasGameStarted = true;
+                draft.currentRoom.currentGameState = action.result;
             });
 
         case GameActionType.gameStarted:
@@ -68,8 +68,8 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
                 if (!draft.currentRoom)
                     return;
 
-                draft.currentRoom.isGameStarted = true;
-                draft.currentRoom.isGameEnded = false;
+                draft.currentRoom.hasGameStarted = true;
+                draft.currentRoom.hasGameEnded = false;
             });
 
         case GameActionType.gameEnded:
@@ -77,8 +77,8 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
                 if (!draft.currentRoom)
                     return;
 
-                draft.currentRoom.isGameEnded = true;
-                draft.currentRoom.isGameStarted = false;
+                draft.currentRoom.hasGameEnded = true;
+                draft.currentRoom.hasGameStarted = false;
                 draft.currentRoom.winnerRole = action.winnerRoleName;
             });
 

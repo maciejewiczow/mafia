@@ -140,7 +140,7 @@ const Game: React.FC = () => {
     if (!room)
         return <div>Loading current room...</div>;
 
-    if (!isCurrentRoomLoading && !room.isGameStarted && !room.isGameEnded)
+    if (!isCurrentRoomLoading && !room.hasGameStarted && !room.hasGameEnded)
         return <Redirect to="/room" />;
 
     if (!currentGameState)
@@ -201,7 +201,7 @@ const Game: React.FC = () => {
                     {currentUserRoles.includes(RoleEnum.Ghost) && <ChatArea chatType={ChatTypeEnum.Ghost} />}
                 </ChatsWrapper>
             </ContentWrapper>
-            {(room.isGameEnded) && (
+            {(room.hasGameEnded) && (
                 <WinnerOverlay>
                     Koniec gry!
                     {room.winnerRole && <span>Wygrany: {room.winnerRole}</span>}
