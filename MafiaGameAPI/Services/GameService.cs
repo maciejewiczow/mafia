@@ -149,7 +149,7 @@ namespace MafiaGameAPI.Services
             var voteState = await _gameRepository.Vote(roomId, vote);
 
             var updatedRoom = await _gameRoomsRepository.GetRoomById(roomId);
-            if (room.CurrentGameState.HasVotingFinished())
+            if (updatedRoom.CurrentGameState.HasVotingFinished())
             {
                 await VotingAction(roomId);
             }
