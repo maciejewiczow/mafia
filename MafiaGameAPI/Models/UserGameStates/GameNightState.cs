@@ -21,6 +21,7 @@ namespace MafiaGameAPI.Models.UserGameStates
 
         public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
         {
+            if (!IsUserInRoom(userId)) return false;
             UserState userState = UserStates.Where(u => u.UserId.Equals(userId)).First();
             if (chatType.Equals(ChatTypeEnum.Mafia) && (userState.Role & RoleEnum.Mafioso) != 0) return true;
             if (chatType.Equals(ChatTypeEnum.Ghost) && (userState.Role & RoleEnum.Ghost) != 0) return true;
@@ -68,6 +69,7 @@ namespace MafiaGameAPI.Models.UserGameStates
         public override IList<ChatTypeEnum> GetUserChatGroups(string userId)
         {
             IList<ChatTypeEnum> chatGroups = new List<ChatTypeEnum>();
+            if (!IsUserInRoom(userId)) return chatGroups;
             UserState userState = UserStates.Where(u => u.UserId.Equals(userId)).First();
 
             if ((userState.Role & RoleEnum.Ghost) != 0) chatGroups.Add(ChatTypeEnum.Ghost);
@@ -79,6 +81,8 @@ namespace MafiaGameAPI.Models.UserGameStates
 
         public override bool IsVoteValid(string votingUserId, string votedUserId)
         {
+            if (!IsUserInRoom(votingUserId) || !IsUserInRoom(votedUserId)) return false;
+
             UserState votedUserState = UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
             UserState votingUserState = UserStates.Where(u => u.UserId.Equals(votingUserId)).First();
 
@@ -117,6 +121,11 @@ namespace MafiaGameAPI.Models.UserGameStates
             }
 
             return false;
+        }
+
+        private bool IsUserInRoom(string userId)
+        {
+            return this._context.Participants.Contains(userId);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace MafiaGameAPI.Models.UserGameStates
         public override IList<ChatTypeEnum> GetUserChatGroups(string userId)
         {
             IList<ChatTypeEnum> chatGroups = new List<ChatTypeEnum>();
-            chatGroups.Add(ChatTypeEnum.General);
+            if (IsUserInRoom(userId)) chatGroups.Add(ChatTypeEnum.General);
             return chatGroups;
         }
 
@@ -90,6 +90,11 @@ namespace MafiaGameAPI.Models.UserGameStates
             }
 
             return userStates;
+        }
+
+        private bool IsUserInRoom(string userId)
+        {
+            return this._context.Participants.Contains(userId);
         }
     }
 }
