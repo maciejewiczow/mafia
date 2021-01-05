@@ -19,8 +19,15 @@ namespace MafiaGameAPI.Models
         public List<string> Participants { get; set; }
         public RoleEnum WinnerRole { get; set; }
 
+        // TODO: Fix projection issues caused by read-only values
         [BsonIgnore]
         public List<UserProjection> ParticipantsWithNames { get; set; }
+
+        [BsonIgnore]
+        public bool HasGameEnded => CurrentGameState is GameEndedState;
+
+        [BsonIgnore]
+        public bool HasGameStarted => !(CurrentGameState is GameNotStartedState);
 
         public GameRoom(string name, string ownerId)
         {
@@ -31,5 +38,4 @@ namespace MafiaGameAPI.Models
             Participants = new List<string>();
         }
     }
-
 }

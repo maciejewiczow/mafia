@@ -20,8 +20,6 @@ namespace MafiaGameAPI.Models
     {
         public string Id { get; set; }
         public List<UserState> UserStates { get; set; }
-
-        [JsonConverter(typeof(StringEnumConverter))]
         public List<VoteState> VoteState { get; set; }
         public DateTime VotingStart { get; set; }
         public DateTime VotingEnd { get; set; }
@@ -30,12 +28,17 @@ namespace MafiaGameAPI.Models
         public abstract bool CanSendMessage(string userId, ChatTypeEnum chatType);
         public abstract void ChangePhase();
         public abstract bool HasVotingFinished();
-        [BsonIgnore]
-        protected private GameRoom _context { get; set; }
 
-        public void SetContext(GameRoom room)
+        [BsonIgnore]
+        [JsonIgnore]
+        public GameRoom Context { get; set; }
+
+        [BsonIgnore]
+        public PhaseEnum? Phase => Context.CurrentGameState switch
         {
-            _context = room;
-        }
+            GameDayState _ => PhaseEnum.Day,
+            GameNightState _ => PhaseEnum.Night,
+            _ => null
+        };
     }
 }

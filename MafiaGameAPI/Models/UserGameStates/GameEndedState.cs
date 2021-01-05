@@ -9,7 +9,7 @@ namespace MafiaGameAPI.Models.UserGameStates
     {
         public GameEndedState(GameRoom room)
         {
-            _context = room;
+            Context = room;
         }
 
         //Dodałem taki konstruktor, żeby mogo nie mia problemu z tworzeniem instancji

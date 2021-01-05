@@ -21,11 +21,11 @@ namespace MafiaGameAPI.Repositories
 
         public async Task<List<GameRoomProjection>> GetRooms()
         {
+            // FIXME: Room projection ma teraz wszędzie default value w HasGameStarted, przez to że to jest read-only w GameRoomie
             var project = new BsonDocument
             {
                 { "_id", new BsonDocument("$toString", "$_id") },
                 { "name", 1 },
-                { "isGameStarted", 1 },
                 { "maxPlayers", "$gameOptions.maxPlayers" },
                 { "currentPlayersCount", new BsonDocument("$size", "$participants") }
             };
@@ -64,7 +64,7 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
             //room.ParticipantsWithNames = GetParticipantsWithNames(room.Id);
-            room.CurrentGameState.SetContext(room);
+            room.CurrentGameState.Context = room;
             room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }

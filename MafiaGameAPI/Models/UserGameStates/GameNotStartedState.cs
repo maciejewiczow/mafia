@@ -11,7 +11,7 @@ namespace MafiaGameAPI.Models.UserGameStates
     {
         public GameNotStartedState(GameRoom room)
         {
-            _context = room;
+            Context = room;
         }
 
         //Dodałem taki konstruktor, żeby mogo nie mia problemu z tworzeniem instancji
@@ -21,22 +21,23 @@ namespace MafiaGameAPI.Models.UserGameStates
 
         public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
         {
-            if (chatType.Equals(ChatTypeEnum.General)) return true;
+            if (chatType.Equals(ChatTypeEnum.General))
+                return true;
             return false;
         }
 
         public override void ChangePhase()
         {
             var votingStartDate = DateTime.Now;
-            GameState state = new GameNightState(_context)
+            GameState state = new GameNightState(Context)
             {
                 Id = IdentifiersHelper.CreateGuidString(),
                 UserStates = AssignPlayersToRoles(),
                 VoteState = new List<VoteState>(),
                 VotingStart = votingStartDate,
-                VotingEnd = votingStartDate.Add(_context.GameOptions.PhaseDuration)
+                VotingEnd = votingStartDate.Add(Context.GameOptions.PhaseDuration)
             };
-            _context.CurrentGameState = state;
+            Context.CurrentGameState = state;
         }
 
         public override IList<ChatTypeEnum> GetUserChatGroups(string userId)
@@ -59,7 +60,7 @@ namespace MafiaGameAPI.Models.UserGameStates
         private List<UserState> AssignPlayersToRoles()
         {
             List<UserState> userStates = new List<UserState>();
-            GameRoom room = _context;
+            GameRoom room = Context;
 
             int mafiosoCount = room.GameOptions.MafiosoCount;
             int currentMafiosoCount = 0;
@@ -94,7 +95,7 @@ namespace MafiaGameAPI.Models.UserGameStates
 
         private bool IsUserInRoom(string userId)
         {
-            return this._context.Participants.Contains(userId);
+            return this.Context.Participants.Contains(userId);
         }
     }
 }

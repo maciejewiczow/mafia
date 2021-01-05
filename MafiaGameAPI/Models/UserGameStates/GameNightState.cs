@@ -11,7 +11,7 @@ namespace MafiaGameAPI.Models.UserGameStates
     {
         public GameNightState(GameRoom room)
         {
-            _context = room;
+            Context = room;
         }
 
         //Dodałem taki konstruktor, żeby mongo nie mial problemu z tworzeniem instancji
@@ -49,7 +49,7 @@ namespace MafiaGameAPI.Models.UserGameStates
                     UserStates = UserStates,
                     VoteState = new List<VoteState>(),
                     VotingStart = votingStartDate,
-                    VotingEnd = votingStartDate.Add(_context.GameOptions.PhaseDuration)
+                    VotingEnd = votingStartDate.Add(Context.GameOptions.PhaseDuration)
                 };
             }
             else
@@ -60,10 +60,10 @@ namespace MafiaGameAPI.Models.UserGameStates
                     UserStates = UserStates,
                     VoteState = new List<VoteState>(),
                     VotingStart = votingStartDate,
-                    VotingEnd = votingStartDate.Add(_context.GameOptions.PhaseDuration)
+                    VotingEnd = votingStartDate.Add(Context.GameOptions.PhaseDuration)
                 };
             }
-            _context.CurrentGameState = newState;
+            Context.CurrentGameState = newState;
         }
 
         public override IList<ChatTypeEnum> GetUserChatGroups(string userId)
@@ -125,7 +125,7 @@ namespace MafiaGameAPI.Models.UserGameStates
 
         private bool IsUserInRoom(string userId)
         {
-            return this._context.Participants.Contains(userId);
+            return this.Context.Participants.Contains(userId);
         }
     }
 }
