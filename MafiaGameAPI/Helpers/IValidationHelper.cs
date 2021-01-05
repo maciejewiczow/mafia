@@ -7,7 +7,7 @@ namespace MafiaGameAPI.Helpers
     public interface IValidationHelper
     {
         Task<bool> IsUserAutorizedToStartGame(string roomId, string userId);
-        Task<bool> IsMessageValid(string userId, GameRoom room, ChatTypeEnum chatType, string content);
-        Task<bool> IsVoteValid(string userId, GameRoom room, string votedUserId);
+        bool IsMessageValid(string userId, GameRoom room, ChatTypeEnum chatType, string content);
+        bool IsVoteValid(string userId, GameRoom room, string votedUserId);
     }
 }

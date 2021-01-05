@@ -33,7 +33,7 @@ namespace MafiaGameAPI.Services
         {
             List<Message> messages = new List<Message>();
             var room = await _gameRoomsRepository.GetRoomById(roomId);
-            var chatGroups = await room.CurrentGameState.GetUserChatGroups(userId);
+            var chatGroups = room.CurrentGameState.GetUserChatGroups(userId);
 
             foreach (var chatGroup in chatGroups)
             {
@@ -46,7 +46,7 @@ namespace MafiaGameAPI.Services
         public async Task<Message> SendMessage(String userId, String roomId, ChatTypeEnum chatType, String content)
         {
             var room = await _gameRoomsRepository.GetRoomById(roomId);
-            if (!await _validationHelper.IsMessageValid(userId, room, chatType, content))
+            if (!_validationHelper.IsMessageValid(userId, room, chatType, content))
             {
                 throw new HubException("Message not allowed!");
             }

@@ -38,7 +38,7 @@ namespace MafiaGameAPI.Hubs
             var room = await _gameRoomsService.GetRoomById(roomId);
 
             List<string> groupNames = new List<string>();
-            var chatTypes = await room.CurrentGameState.GetUserChatGroups(Context.User.Identity.Name);
+            var chatTypes = room.CurrentGameState.GetUserChatGroups(Context.User.Identity.Name);
 
             foreach (var chatType in chatTypes)
             {

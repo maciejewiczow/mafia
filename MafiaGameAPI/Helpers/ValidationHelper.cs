@@ -24,16 +24,16 @@ namespace MafiaGameAPI.Helpers
             else return false;
         }
 
-        public async Task<bool> IsMessageValid(string userId, GameRoom room, ChatTypeEnum chatType, string content)
+        public bool IsMessageValid(string userId, GameRoom room, ChatTypeEnum chatType, string content)
         {
             if (content.Length > 50) return false;
 
-            return await room.CurrentGameState.CanSendMessage(userId, chatType);
+            return room.CurrentGameState.CanSendMessage(userId, chatType);
         }
 
-        public async Task<bool> IsVoteValid(string userId, GameRoom room, string votedUserId)
+        public bool IsVoteValid(string userId, GameRoom room, string votedUserId)
         {
-            return await room.CurrentGameState.IsVoteValid(userId, votedUserId);
+            return room.CurrentGameState.IsVoteValid(userId, votedUserId);
         }
     }
 }
