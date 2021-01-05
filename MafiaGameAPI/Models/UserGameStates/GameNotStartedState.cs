@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
+using MafiaGameAPI.Helpers;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MafiaGameAPI.Models.UserGameStates
 {
@@ -17,29 +19,77 @@ namespace MafiaGameAPI.Models.UserGameStates
         {
         }
 
-        public override Task<bool> CanSendMessage(string userId, ChatTypeEnum chatType)
+        public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
         {
-            throw new NotImplementedException();
+            if (chatType.Equals(ChatTypeEnum.General)) return true;
+            return false;
         }
 
-        public override Task ChangePhase()
+        public override void ChangePhase()
         {
-            throw new NotImplementedException();
+            var votingStartDate = DateTime.Now;
+            GameState state = new GameNightState(_context)
+            {
+                Id = IdentifiersHelper.CreateGuidString(),
+                UserStates = AssignPlayersToRoles(),
+                VoteState = new List<VoteState>(),
+                VotingStart = votingStartDate,
+                VotingEnd = votingStartDate.Add(_context.GameOptions.PhaseDuration)
+            };
+            _context.CurrentGameState = state;
         }
 
-        public override Task<IList<ChatTypeEnum>> GetUserChatGroups(string userId)
+        public override IList<ChatTypeEnum> GetUserChatGroups(string userId)
         {
-            throw new NotImplementedException();
+            IList<ChatTypeEnum> chatGroups = new List<ChatTypeEnum>();
+            chatGroups.Add(ChatTypeEnum.General);
+            return chatGroups;
         }
 
-        public override Task<bool> IsVoteValid(string votingUserId, string votedUserId)
+        public override bool IsVoteValid(string votingUserId, string votedUserId)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool HasVotingFinished()
         {
-            throw new NotImplementedException();
+            return false;
+        }
+
+        private List<UserState> AssignPlayersToRoles()
+        {
+            List<UserState> userStates = new List<UserState>();
+            GameRoom room = _context;
+
+            int mafiosoCount = room.GameOptions.MafiosoCount;
+            int currentMafiosoCount = 0;
+
+            List<String> users = room.Participants;
+            Random random = new Random();
+
+            int usersCount = users.Count;
+            if (usersCount <= 2 * mafiosoCount)
+            {
+                throw new HubException("Too few citizens to start the game");
+            }
+
+            foreach (var user in users)
+            {
+                UserState userState = new UserState() { UserId = user };
+                if (random.NextDouble() > (double)(mafiosoCount - currentMafiosoCount) / usersCount)
+                {
+                    userState.Role = RoleEnum.Citizen;
+                }
+                else
+                {
+                    userState.Role = RoleEnum.Mafioso;
+                    currentMafiosoCount++;
+                }
+                userStates.Add(userState);
+                usersCount--;
+            }
+
+            return userStates;
         }
     }
 }

@@ -25,10 +25,10 @@ namespace MafiaGameAPI.Models
         public List<VoteState> VoteState { get; set; }
         public DateTime VotingStart { get; set; }
         public DateTime VotingEnd { get; set; }
-        public abstract Task<bool> IsVoteValid(string votingUserId, string votedUserId);
-        public abstract Task<IList<ChatTypeEnum>> GetUserChatGroups(string userId);
-        public abstract Task<bool> CanSendMessage(string userId, ChatTypeEnum chatType);
-        public abstract Task ChangePhase();
+        public abstract bool IsVoteValid(string votingUserId, string votedUserId);
+        public abstract IList<ChatTypeEnum> GetUserChatGroups(string userId);
+        public abstract bool CanSendMessage(string userId, ChatTypeEnum chatType);
+        public abstract void ChangePhase();
         public abstract bool HasVotingFinished();
         [BsonIgnore]
         protected private GameRoom _context { get; set; }

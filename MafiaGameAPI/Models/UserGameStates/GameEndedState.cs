@@ -17,29 +17,27 @@ namespace MafiaGameAPI.Models.UserGameStates
         {
         }
 
-        public override Task<bool> CanSendMessage(string userId, ChatTypeEnum chatType)
+        public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
-        public override Task ChangePhase()
+        public override void ChangePhase()
+        { }
+
+        public override IList<ChatTypeEnum> GetUserChatGroups(string userId)
         {
-            throw new NotImplementedException();
+            return new List<ChatTypeEnum>();
         }
 
-        public override Task<IList<ChatTypeEnum>> GetUserChatGroups(string userId)
+        public override bool IsVoteValid(string votingUserId, string votedUserId)
         {
-            throw new NotImplementedException();
-        }
-
-        public override Task<bool> IsVoteValid(string votingUserId, string votedUserId)
-        {
-            throw new NotImplementedException();
+            return false;
         }
 
         public override bool HasVotingFinished()
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }
