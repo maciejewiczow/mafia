@@ -8,7 +8,7 @@ export const getRooms = (): PickAction<RoomsAction, RoomsActionType.roomsRequest
     isRequestAction: true,
     payload: {
         request: {
-            url: '/GameRooms',
+            url: '/gameRooms',
         },
     },
 });

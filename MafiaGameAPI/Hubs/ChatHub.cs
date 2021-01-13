@@ -24,6 +24,8 @@ namespace MafiaGameAPI.Hubs
             _gameService = gameService;
         }
 
+        // TODO: openapi, testy integracyjne
+
         public async Task SendMessage(SendMessageDTO messageDTO)
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
