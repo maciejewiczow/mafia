@@ -40,10 +40,7 @@ export const gameReducer: Reducer<GameStateInStore, GameAction | RoomsAction> = 
         case RoomsActionType.getCurrentRoomSuccess:
         case RoomsActionType.createRoomRequestSuccess:
             return produce(state, draft => {
-                if (action.payload.data.gameHistory.length > 0) {
-                    const currentState = action.payload.data.gameHistory.find(h => h.id === action.payload.data.currentGameStateId);
-                    draft.currentGameState = currentState;
-                }
+                draft.currentGameState = action.payload.data.currentGameState;
             });
 
         default:

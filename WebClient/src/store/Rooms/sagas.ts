@@ -16,7 +16,7 @@ function* createRoomWatcher() {
 
 function* createRoomWorker({ name }: PickAction<RoomsAction, RoomsActionType.createRoom>) {
     try {
-        const result: AxiosResponse<GameRoom> = yield call(api.post, `/GameRooms/create?name=${encodeURIComponent(name)}`);
+        const result: AxiosResponse<GameRoom> = yield call(api.post, `/gameRooms?name=${encodeURIComponent(name)}`);
 
         yield put(createRoomSuccess(result));
         yield put(replace('room'));
@@ -32,7 +32,7 @@ function* joinRoomWatcher() {
 
 function* joinRoomWorker(action: PickAction<RoomsAction, RoomsActionType.joinRoom>) {
     try {
-        const room: AxiosResponse<GameRoom> = yield call(api.post, `/GameRooms/join/${action.roomId}`);
+        const room: AxiosResponse<GameRoom> = yield call(api.post, `/gameRooms/${action.roomId}/join`);
 
         yield put(joinRoomSuccess(room));
         yield put(replace('room'));
@@ -49,7 +49,7 @@ export function* getCurrentRoomWorker() {
 
     try {
         put({ type: RoomsActionType.getCurrentRoom });
-        const room: AxiosResponse<GameRoom> = yield call(api.get, '/GameRooms/current');
+        const room: AxiosResponse<GameRoom> = yield call(api.get, '/gameRooms/current');
 
         yield put(getCurrentRoomSuccess(room));
         const hasGameStarted = yield select(roomSelectors.hasCurrentGameStarted);

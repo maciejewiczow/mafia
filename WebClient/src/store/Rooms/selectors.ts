@@ -8,4 +8,4 @@ export const currentRoom = (store: AppState) => store.rooms.currentRoom;
 
 export const isCurrentRoomLoading = (store: AppState) => store.rooms.isCurrentRoomLoading;
 
-export const hasCurrentGameStarted = (store: AppState) => store.rooms.currentRoom?.isGameStarted;
+export const hasCurrentGameStarted = (store: AppState) => store.rooms.currentRoom?.hasGameStarted;

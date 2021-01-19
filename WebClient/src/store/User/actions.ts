@@ -8,7 +8,7 @@ export const getCurrentUser = (): PickAction<UserAction, UserActionType.getCurre
     isRequestAction: true,
     payload: {
         request: {
-            url: '/Users/current',
+            url: '/users/current',
         },
     },
 });
