@@ -31,7 +31,7 @@ namespace MafiaGameAPI.Controllers
             return await _gameRoomsService.GetRooms();
         }
 
-        [HttpGet("getRoom/{roomId}")]
+        [HttpGet("{roomId}")]
         public async Task<GameRoom> GetRoomById([FromRoute] String roomId)
         {
             return await _gameRoomsService.GetRoomById(roomId);
@@ -44,19 +44,20 @@ namespace MafiaGameAPI.Controllers
             return await _gameRoomsService.GetRoomById(roomId);
         }
 
-        [HttpPost("create")]
+        // TODO: add create room TDO to remove name param from query
+        [HttpPost]
         public async Task<GameRoom> CreateRoom(String name)
         {
             return await _gameRoomsService.CreateRoom(name, User.Identity.Name);
         }
 
-        [HttpPost("join/{roomId}")]
+        [HttpPost("{roomId}/join")]
         public async Task<GameRoom> JoinRoom([FromRoute] String roomId)
         {
             return await _gameRoomsService.JoinRoom(roomId, User.Identity.Name);
         }
 
-        [HttpPut("options/{roomId}")]
+        [HttpPut("{roomId}/options")]
         public async Task<GameOptions> UpdateOptions([FromRoute] String roomId, int maxPlayers, int minutes, int mafiosoCount, bool isPublic, bool areVotesVisible)
         {
             // TODO: weryfikacja czy user może zmieniać opcje gry (najlepiej, żeby mógł tylko owner)

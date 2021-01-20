@@ -21,11 +21,11 @@ namespace MafiaGameAPI.Repositories
 
         public async Task<List<GameRoomProjection>> GetRooms()
         {
+            // FIXME: Room projection ma teraz wszędzie default value w HasGameStarted, przez to że to jest read-only w GameRoomie
             var project = new BsonDocument
             {
                 { "_id", new BsonDocument("$toString", "$_id") },
                 { "name", 1 },
-                { "isGameStarted", 1 },
                 { "maxPlayers", "$gameOptions.maxPlayers" },
                 { "currentPlayersCount", new BsonDocument("$size", "$participants") }
             };
@@ -63,6 +63,8 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
+            //room.ParticipantsWithNames = GetParticipantsWithNames(room.Id);
+            room.CurrentGameState.Context = room;
             room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }
@@ -106,11 +108,11 @@ namespace MafiaGameAPI.Repositories
             {
                 throw;
             }
+            //room.ParticipantsWithNames = GetParticipantsWithNames(room.Id);
             room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
             return room;
         }
 
-        // FIXME: prosze zrób to inaczej
         private async Task<List<UserProjection>> GetParticipantsWithNames(List<string> users)
         {
             List<UserProjection> participants = new List<UserProjection>();
@@ -119,6 +121,43 @@ namespace MafiaGameAPI.Repositories
                 participants.Add(await GetUserById(item));
             }
             return participants;
+        }
+
+        //FIXME: Błędy przez agregację
+        private List<UserProjection> GetParticipantsWithNames(ObjectId roomId)
+        {
+            var match = new BsonDocument("$match",
+                new BsonDocument("_id",
+                new BsonDocument("$eq", roomId)));
+            var project = new BsonDocument("$project",
+                new BsonDocument("participants", 1));
+            var unwind1 = new BsonDocument("$unwind",
+                new BsonDocument("path", "$participants"));
+            var addFields = new BsonDocument("$addFields",
+                new BsonDocument("id",
+                new BsonDocument("$toObjectId", "$participants")));
+            var lookup = new BsonDocument("$lookup",
+                new BsonDocument
+                    {
+                        { "from", "users" },
+                        { "localField", "id" },
+                        { "foreignField", "_id" },
+                        { "as", "user" }
+                    });
+            var unwind2 = new BsonDocument("$unwind",
+                new BsonDocument("path", "$user"));
+            var replaceRoot = new BsonDocument("$replaceRoot",
+                new BsonDocument("newRoot", "$user"));
+            var pipeline = new[] { match, project, unwind1, addFields, lookup, unwind2, replaceRoot };
+
+            try
+            {
+                return _gameRoomsCollection.Aggregate<UserProjection>(pipeline).ToList();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
         private async Task<UserProjection> GetUserById(String userId)
         {
@@ -152,6 +191,68 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
             return options;
+        }
+
+        public GameOptions GetOptionsByRoomId(String roomId)
+        {
+            var objectRoomId = ObjectId.Parse(roomId);
+
+            var match = new BsonDocument("$match",
+                new BsonDocument("_id",
+                new BsonDocument("$eq", objectRoomId)));
+            var replaceRoot = new BsonDocument("$replaceRoot",
+                new BsonDocument("newRoot", "$gameOptions"));
+            var pipeline = new[] { match, replaceRoot };
+
+            try
+            {
+                return _gameRoomsCollection.Aggregate<GameOptions>(pipeline).First();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<String> GetRoomOwner(String roomId)
+        {
+            var objectRoomId = ObjectId.Parse(roomId);
+            var filter = Builders<GameRoom>
+                .Filter.Where(r => r.Id.Equals(objectRoomId));
+            var project = new ProjectionDefinitionBuilder<GameRoom>().Expression(r => r.Owner);
+
+            try
+            {
+                return await _gameRoomsCollection
+                    .Find(filter)
+                    .Project<string>(project)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> IsUserInRoom(String userId, String roomId)
+        {
+            var objectRoomId = ObjectId.Parse(roomId);
+            var filter = Builders<GameRoom>
+                .Filter.Where(r => r.Id.Equals(objectRoomId));
+            var project = new ProjectionDefinitionBuilder<GameRoom>().Expression(r => r.Participants);
+
+            try
+            {
+                var participants = await _gameRoomsCollection
+                    .Find(filter)
+                    .Project<List<String>>(project)
+                    .FirstOrDefaultAsync();
+                return participants.Contains(userId);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

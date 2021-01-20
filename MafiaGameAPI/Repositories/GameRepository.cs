@@ -1,12 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
-using MafiaGameAPI.Enums;
 using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
-using System.Linq;
-using MongoDB.Bson.Serialization;
 using System.Collections.Generic;
 
 namespace MafiaGameAPI.Repositories
@@ -22,50 +18,19 @@ namespace MafiaGameAPI.Repositories
             _usersCollection = mongoClient.GetDatabase("mafia").GetCollection<User>("users");
         }
 
-        public async Task<GameState> StartGame(String roomId, GameState state)
-        {
-            var objectRoomId = ObjectId.Parse(roomId);
-
-            var filter = Builders<GameRoom>
-                .Filter.Eq(r => r.Id, objectRoomId);
-
-            var updateGameState = Builders<GameRoom>.Update
-                .Push<GameState>(r => r.GameHistory, state);
-
-            var updateIsGameStarted = Builders<GameRoom>.Update
-                .Set<bool>(r => r.IsGameStarted, true);
-
-            var updateCurrentGameState = Builders<GameRoom>.Update
-                .Set<String>(r => r.CurrentGameStateId, state.Id);
-
-            try
-            {
-                await _gameRoomsCollection.UpdateOneAsync(filter, updateIsGameStarted);
-                await _gameRoomsCollection.UpdateOneAsync(filter, updateGameState);
-                await _gameRoomsCollection.UpdateOneAsync(filter, updateCurrentGameState);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return state;
-        }
-
         public async Task ChangePhase(String roomId, GameState state)
         {
             var objectRoomId = ObjectId.Parse(roomId);
+
             var filter = Builders<GameRoom>
                 .Filter.Eq(r => r.Id, objectRoomId);
+
             var update = Builders<GameRoom>.Update
-                .Push<GameState>(r => r.GameHistory, state);
-            var updateGameState = Builders<GameRoom>.Update
-                .Set<String>(r => r.CurrentGameStateId, state.Id);
-            
+                .Set<GameState>(r => r.CurrentGameState, state);
+
             try
             {
                 await _gameRoomsCollection.UpdateOneAsync(filter, update);
-                await _gameRoomsCollection.UpdateOneAsync(filter, updateGameState);
             }
             catch (Exception)
             {
@@ -80,17 +45,10 @@ namespace MafiaGameAPI.Repositories
             var filter = Builders<GameRoom>
                 .Filter.Eq(r => r.Id, objectRoomId);
 
-            //var updateVotes = Builders<GameRoom>.Update.Push<VoteState>(
-            //    r => r.GameHistory.Where(s => s.Id.Equals(GetCurrentGameStateId(roomId)))
-            //            .FirstOrDefault().VoteState,
-            //    vote
-            //);
-            
             var room = await GetRoomById(roomId);
-            var stateId = await GetCurrentGameStateId(roomId);
-            room.GameHistory.Where(s => s.Id.Equals(stateId)).First().VoteState.Add(vote);
+            room.CurrentGameState.VoteState.Add(vote);
             var updateGameState = Builders<GameRoom>.Update
-                .Set<List<GameState>>(r => r.GameHistory, room.GameHistory);
+                .Set<GameState>(r => r.CurrentGameState, room.CurrentGameState);
 
             try
             {
@@ -106,25 +64,18 @@ namespace MafiaGameAPI.Repositories
 
         public async Task<GameState> GetCurrentState(String roomId)
         {
-            var currentStateId = await GetCurrentGameStateId(roomId);
             var objectRoomId = ObjectId.Parse(roomId);
 
             var filter = Builders<GameRoom>
                 .Filter.Where(r => r.Id.Equals(objectRoomId));
 
-            var projection = Builders<GameRoom>.Projection
-                .ElemMatch(r => r.GameHistory, s => s.Id.Equals(currentStateId));
-
             GameState currentState;
             try
             {
-                var bson = await _gameRoomsCollection
+                var room = await _gameRoomsCollection
                     .Find(filter)
-                    .Project(projection)
                     .FirstAsync();
-
-                bson = bson.GetElement("gameHistory").Value.AsBsonArray[0].AsBsonDocument;
-                currentState = BsonSerializer.Deserialize<GameState>(bson);
+                currentState = room.CurrentGameState;
             }
             catch (Exception)
             {
@@ -134,33 +85,6 @@ namespace MafiaGameAPI.Repositories
             return currentState;
         }
 
-        public async Task<String> GetCurrentGameStateId(String roomId)
-        {
-            var objectRoomId = ObjectId.Parse(roomId);
-
-            var filter = Builders<GameRoom>.Filter.
-                Where(r => r.Id.Equals(objectRoomId));
-
-            var project = Builders<GameRoom>.Projection
-                .Include(r => r.CurrentGameStateId).Exclude(r => r.Id);
-
-            String currentStateId;
-            try
-            {
-                var result = await _gameRoomsCollection
-                    .Find(filter)
-                    .Project<GameRoom>(project)
-                    .FirstAsync();
-
-                currentStateId = result.CurrentGameStateId;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
-            return currentStateId;
-        }
         public async Task<GameRoom> GetRoomById(String roomId)
         {
             var objectRoomId = ObjectId.Parse(roomId);
@@ -203,39 +127,6 @@ namespace MafiaGameAPI.Repositories
                 .Find(Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId)))
                 .Project<UserProjection>(project)
                 .FirstOrDefaultAsync();
-        }
-
-        public async Task SetGameEnded(String roomId, RoleEnum winnerRole)
-        {
-            var objectRoomId = ObjectId.Parse(roomId);
-
-            var filter = Builders<GameRoom>
-                .Filter.Eq(r => r.Id, objectRoomId);
-
-            var updateIsGameEnded = Builders<GameRoom>.Update
-                .Set<bool>(r => r.IsGameEnded, true);
-
-            var updateWinnerRole = Builders<GameRoom>.Update
-                .Set<RoleEnum>(r => r.WinnerRole, winnerRole);
-            
-            try
-            {
-                var room = await _gameRoomsCollection.FindOneAndUpdateAsync(filter, updateIsGameEnded);
-                foreach(string userId in room.Participants)
-                {
-                    var objectUserId = ObjectId.Parse(userId);
-                    var userFilter = Builders<User>
-                        .Filter.Eq(r => r.Id, objectUserId);
-                    var userUpdate = Builders<User>.Update
-                        .Set<String>(u => u.RoomId, null);
-                    await _usersCollection.UpdateOneAsync(userFilter, userUpdate);
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-
         }
     }
 }

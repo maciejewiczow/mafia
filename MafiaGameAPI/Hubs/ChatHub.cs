@@ -6,7 +6,6 @@ using MafiaGameAPI.Helpers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using MafiaGameAPI.Models.DTO;
-using System.Linq;
 using System.Collections.Generic;
 
 namespace MafiaGameAPI.Hubs
@@ -25,6 +24,8 @@ namespace MafiaGameAPI.Hubs
             _gameService = gameService;
         }
 
+        // TODO: openapi, testy integracyjne
+
         public async Task SendMessage(SendMessageDTO messageDTO)
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
@@ -37,21 +38,16 @@ namespace MafiaGameAPI.Hubs
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var room = await _gameRoomsService.GetRoomById(roomId);
+
             List<string> groupNames = new List<string>();
-            if (room.IsGameStarted)
+            var chatTypes = room.CurrentGameState.GetUserChatGroups(Context.User.Identity.Name);
+
+            foreach (var chatType in chatTypes)
             {
-                var state = await _gameService.GetCurrentState(roomId);
-                var userState = state.UserStates.First(u => u.UserId.Equals(Context.User.Identity.Name));
-                if ((userState.Role & RoleEnum.Mafioso) != 0)
-                {
-                    groupNames.Add(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.Mafia));
-                }
-                groupNames.Add(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.Citizen));
+                groupNames.Add(IdentifiersHelper.GenerateChatGroupName(roomId, chatType));
             }
+
             var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
-
-            groupNames.Add(IdentifiersHelper.GenerateChatGroupName(roomId, ChatTypeEnum.General));
-
             foreach (string groupName in groupNames)
             {
                 await Groups.AddToGroupAsync(Context.ConnectionId, groupName);

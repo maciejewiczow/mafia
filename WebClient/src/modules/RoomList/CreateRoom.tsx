@@ -27,13 +27,13 @@ const CreateRoom: React.FC = () => {
     return (
         <Wrapper>
             {isCollapsed ? (
-                <button type="button" onClick={() => setIsCollapsed(false)}><FaPlus/> dodaj pokój</button>
+                <button type="button" onClick={() => setIsCollapsed(false)}><FaPlus /> dodaj pokój</button>
             ) : (
                 <>
                     <Title>Stwórz pokój</Title>
                     <form action="" onSubmit={handleSubmit}>
-                        <input type="text" placeholder="Nazwa pokoju" value={roomName} onChange={e => setRoomName(e.target.value)} required/>
-                        <button type="submit">Stwórz <FaArrowRight/></button>
+                        <input type="text" placeholder="Nazwa pokoju" value={roomName} onChange={e => setRoomName(e.target.value)} required />
+                        <button type="submit">Stwórz <FaArrowRight /></button>
                     </form>
                 </>
             )}

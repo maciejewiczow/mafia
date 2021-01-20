@@ -12,7 +12,7 @@ function* createUserWatcher() {
 
 function* createUserWorker({ userName }: PickAction<UserAction, UserActionType.createUser>) {
     try {
-        const token = yield call(api.post, '/Users/create', { userName });
+        const token = yield call(api.post, '/users', { userName });
         yield call(setTokens, token.data);
 
         yield put(getCurrentUser());

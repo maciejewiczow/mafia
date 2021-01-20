@@ -21,10 +21,11 @@ namespace MafiaGameAPI.Hubs
         }
 
         // TODO: Dodać autoryzację roli: admin pokoju ([Authorize(Role = RoomAdmin)] czy coś w tym stylu)
+        // FIXME: Przy starcie gry dodawać wszystkich z pokoju do odpowiednich grup signalr w ChatHubie
         public async Task<GameState> StartGame()
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
-            var state = await _gameService.StartGame(roomId);
+            var state = await _gameService.StartGame(roomId, Context.User.Identity.Name);
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
 
             await Clients.OthersInGroup(groupName).GameStartedAsync();

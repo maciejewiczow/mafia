@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using MafiaGameAPI.Helpers;
 
 namespace MafiaGameAPI
 {
@@ -174,6 +175,8 @@ namespace MafiaGameAPI
             services.AddScoped<IGameRoomsRepository, GameRoomsRepository>();
             services.AddScoped<IUsersRepository, UsersRepository>();
 
+            services.AddScoped<IValidationHelper, ValidationHelper>();
+
             services.AddScoped<IMongoClient>(m =>
             {
                 var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
@@ -201,7 +204,10 @@ namespace MafiaGameAPI
 
             app.UseRouting();
 
-            app.UseCors(FrontendOrigin);
+            if (env.IsDevelopment())
+            {
+                app.UseCors(FrontendOrigin);
+            }
 
             app.UseAuthentication();
 
