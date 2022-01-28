@@ -39,11 +39,12 @@ const ContentWrapper = styled.div`
 `;
 
 const Participants = styled.div`
-    padding: 0 12px;
+    padding: 0 12px 12px;
     background: white;
     grid-area: participants;
     display: flex;
     flex-flow: column nowrap;
+    height: 100%;
 `;
 
 const Participant = styled.div``;
@@ -56,6 +57,8 @@ const Badge = styled.span`
 const ChatArea = styled(Chat)`
     padding: 0 12px;
     padding-bottom: 8px;
+    /* TODO: zrobić jakoś żeby to było na 100% a nie z jakimś hardcoded height */
+    max-height: calc(100vh - 90px);
 `;
 
 const StartGameButton = styled.button`

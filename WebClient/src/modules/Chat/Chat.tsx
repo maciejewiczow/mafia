@@ -17,7 +17,6 @@ const ChatWrapper = styled.div`
     background: white;
     display: flex;
     flex-flow: column nowrap;
-    max-height: calc(100vh - 86px);
 `;
 
 const MessagesWrapper = styled.div`
