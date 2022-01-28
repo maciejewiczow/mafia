@@ -126,28 +126,42 @@ namespace MafiaGameAPI.Repositories
         //FIXME: Błędy przez agregację
         private List<UserProjection> GetParticipantsWithNames(ObjectId roomId)
         {
-            var match = new BsonDocument("$match",
+            var match = new BsonDocument(
+                "$match",
                 new BsonDocument("_id",
-                new BsonDocument("$eq", roomId)));
-            var project = new BsonDocument("$project",
-                new BsonDocument("participants", 1));
-            var unwind1 = new BsonDocument("$unwind",
-                new BsonDocument("path", "$participants"));
-            var addFields = new BsonDocument("$addFields",
+                new BsonDocument("$eq", roomId))
+            );
+            var project = new BsonDocument(
+                "$project",
+                new BsonDocument("participants", 1)
+            );
+            var unwind1 = new BsonDocument(
+                "$unwind",
+                new BsonDocument("path", "$participants")
+            );
+            var addFields = new BsonDocument(
+                "$addFields",
                 new BsonDocument("id",
-                new BsonDocument("$toObjectId", "$participants")));
-            var lookup = new BsonDocument("$lookup",
+                new BsonDocument("$toObjectId", "$participants"))
+            );
+            var lookup = new BsonDocument(
+                "$lookup",
                 new BsonDocument
-                    {
-                        { "from", "users" },
-                        { "localField", "id" },
-                        { "foreignField", "_id" },
-                        { "as", "user" }
-                    });
-            var unwind2 = new BsonDocument("$unwind",
-                new BsonDocument("path", "$user"));
-            var replaceRoot = new BsonDocument("$replaceRoot",
-                new BsonDocument("newRoot", "$user"));
+                {
+                    { "from", "users" },
+                    { "localField", "id" },
+                    { "foreignField", "_id" },
+                    { "as", "user" }
+                }
+            );
+            var unwind2 = new BsonDocument(
+                "$unwind",
+                new BsonDocument("path", "$user")
+            );
+            var replaceRoot = new BsonDocument(
+                "$replaceRoot",
+                new BsonDocument("newRoot", "$user")
+            );
             var pipeline = new[] { match, project, unwind1, addFields, lookup, unwind2, replaceRoot };
 
             try
