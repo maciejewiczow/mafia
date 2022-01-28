@@ -161,7 +161,7 @@ const Game: React.FC = () => {
     return (
         <ViewWrapper>
             <Header>
-                {currentGameState.votingEnd && <PhaseCounter title="Czas do końca głsowoania">{dayjs(remaining).format('mm:ss')}</PhaseCounter>}
+                {currentGameState.votingEnd && <PhaseCounter title="Czas do końca głosowania">{dayjs(remaining).format('mm:ss')}</PhaseCounter>}
                 {room.name}
                 <Phase>{phase} {(phase === PhaseEnum.Day) ? <IoIosSunny /> : <IoIosCloudyNight />}</Phase>
             </Header>
