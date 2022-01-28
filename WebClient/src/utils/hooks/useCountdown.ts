@@ -1,10 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import dayjs from 'dayjs';
 
-export const useCountdown = (to: string | number | Date | dayjs.Dayjs | undefined) => {
-    if (!to)
-        to = new Date();
-
+export const useCountdown = (to: string | number | Date | dayjs.Dayjs = new Date()) => {
     const [remaining, setRemaining] = useState<number>(dayjs(to).diff(new Date(), 'millisecond'));
     const intervalRef = useRef<number>();
 
@@ -21,5 +18,5 @@ export const useCountdown = (to: string | number | Date | dayjs.Dayjs | undefine
             clearInterval(intervalRef.current);
     }, [remaining]);
 
-    return remaining;
+    return Math.max(remaining, 0);
 };
