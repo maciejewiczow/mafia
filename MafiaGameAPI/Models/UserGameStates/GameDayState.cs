@@ -85,8 +85,8 @@ namespace MafiaGameAPI.Models.UserGameStates
             UserState votedUserState = UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
             UserState votingUserState = UserStates.Where(u => u.UserId.Equals(votingUserId)).First();
 
-            return votingUserState.Role.HasFlag(RoleEnum.Ghost) ||
-                votedUserState.Role.HasFlag(RoleEnum.Ghost);
+            return !votingUserState.Role.HasFlag(RoleEnum.Ghost) &&
+                !votedUserState.Role.HasFlag(RoleEnum.Ghost);
         }
 
         public override bool HasVotingFinished()
