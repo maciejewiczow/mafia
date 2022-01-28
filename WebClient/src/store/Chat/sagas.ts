@@ -8,8 +8,7 @@ import {
 } from 'redux-saga/effects';
 import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import { buffers, END, EventChannel, eventChannel } from 'redux-saga';
-import { Message, User } from 'api';
-import { getAccessToken } from 'api/tokens';
+import { Message, User, getAccessToken } from 'api';
 import { InvokeAction, InvokeActionError, InvokeActionSuccess } from 'store/utils';
 import { AnyAction } from 'redux';
 import { toast } from 'react-toastify';
@@ -115,11 +114,11 @@ function* invokeActionsWorker(action: InvokeAction<string, any[], string, string
         }
     } catch (error) {
         if (action.errorActionType) {
-            const sucessAction: InvokeActionError<string> = {
+            const errorAction: InvokeActionError<string> = {
                 type: action.errorActionType,
                 error,
             };
-            yield put(sucessAction);
+            yield put(errorAction);
         }
         console.error('Error has ocurred when invoking a hub method', error);
         toast.error(`Błąd podczas przewarzania akcji: ${error.message}`);

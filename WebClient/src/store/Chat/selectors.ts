@@ -1,5 +1,5 @@
-import { ChatTypeEnum } from '../../api';
-import { AppState } from '../store';
+import { ChatTypeEnum } from 'api';
+import { AppState } from '../constants';
 import { AnnouncementMessage, DefaultMessage, MessageInStore, MessageType } from './store';
 
 export interface DefaultMessageWithUserName extends DefaultMessage {

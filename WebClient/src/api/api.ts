@@ -1,6 +1,5 @@
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
-import api from '.';
 import { TokenResponse, CreateUserResponse } from './responses';
 
 const accessTokenKey = 'at';
@@ -10,6 +9,11 @@ interface AccessTokenInStorage {
     val: string;
     exp: number;
 }
+
+export const api = axios.create({
+    baseURL: 'http://localhost:5000/api',
+    responseType: 'json',
+});
 
 const storage = sessionStorage;
 
@@ -34,7 +38,7 @@ export const getAccessToken = async (): Promise<string | null> => {
             '/Users/tokenRefresh',
             { headers: { Authorization: `Bearer ${refreshToken}` } },
         );
-    } catch (e) {
+    } catch (e: any) {
         console.error('Token refresh request failed', e);
         toast.error(`Błąd tokenów: ${e.message}`);
         return null;
@@ -72,3 +76,5 @@ export const addAuthorizationToken = async (config: AxiosRequestConfig): Promise
 
     return config;
 };
+
+api.interceptors.request.use(addAuthorizationToken);

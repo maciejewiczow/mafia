@@ -1,19 +1,19 @@
 import { Saga } from 'redux-saga';
 import { all, call, put, spawn } from 'redux-saga/effects';
 import { AxiosResponse } from 'axios';
-import api, { User } from 'api';
-import { getAccessToken } from 'api/tokens';
+import api, { User, getAccessToken } from 'api';
 import { getCurrentUserSuccess } from './User/actions';
 
 import roomsWatchers, { getCurrentRoomWorker } from './Rooms/sagas';
 import userWatchers from './User/sagas';
 import chatWatchers from './Chat/sagas';
 import gameWatchers from './Game/sagas';
+import { AsyncRetT } from './utils';
 
 const spawnAll = (sagasExport: {[key: string]: Saga}) => Object.values(sagasExport).map(saga => spawn(saga));
 
 function* initSaga() {
-    const token = yield call(getAccessToken);
+    const token: AsyncRetT<typeof getAccessToken> = yield call(getAccessToken);
 
     if (token !== null) {
         try {

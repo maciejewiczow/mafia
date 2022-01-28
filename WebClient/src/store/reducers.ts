@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { History } from 'history';
 import { connectRouter } from 'connected-react-router';
 
-import { AppState } from './store';
+import { AppState } from './constants';
 import { roomsReducer } from './Rooms/reducers';
 import { userReducer } from './User/reducers';
 import { chatsReducer } from './Chat/reducers';

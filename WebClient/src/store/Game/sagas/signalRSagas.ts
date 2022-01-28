@@ -10,9 +10,8 @@ import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signal
 import { buffers, END, EventChannel, eventChannel } from 'redux-saga';
 import { AnyAction } from 'redux';
 import { toast } from 'react-toastify';
-import { getAccessToken } from 'api/tokens';
+import { getAccessToken, GameState, User, VoteState } from 'api';
 import { InvokeAction, InvokeActionError, InvokeActionSuccess } from 'store/utils';
-import { GameState, User, VoteState } from 'api';
 import { GameAction, GameActionType, gameHubClientName } from '../constants';
 import {
     connectToGameSuccess,

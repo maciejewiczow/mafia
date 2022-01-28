@@ -1,7 +1,6 @@
 import { toast } from 'react-toastify';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import api from '../../api';
-import { setTokens } from '../../api/tokens';
+import api, { setTokens } from 'api';
 import { PickAction } from '../utils';
 import { getCurrentUser } from './actions';
 import { UserActionType, UserAction } from './constants';
