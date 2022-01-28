@@ -44,7 +44,7 @@ namespace MafiaGameAPI.Controllers
             return await _gameRoomsService.GetRoomById(roomId);
         }
 
-        // TODO: add create room TDO to remove name param from query
+        // TODO: add create room DTO to remove name param from query
         [HttpPost]
         public async Task<GameRoom> CreateRoom(String name)
         {

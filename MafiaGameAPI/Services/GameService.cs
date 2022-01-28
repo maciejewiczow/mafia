@@ -33,8 +33,8 @@ namespace MafiaGameAPI.Services
         {
             var room = await _gameRoomsRepository.GetRoomById(roomId);
             var currentState = room.CurrentGameState;
-            int mafiosoCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
-            int citizenCount = currentState.UserStates.Count(u => (u.Role & RoleEnum.Citizen) != 0 && (u.Role & RoleEnum.Ghost) == 0);
+            int mafiosoCount = currentState.UserStates.Count(u => u.Role.HasFlag(RoleEnum.Mafioso) && !u.Role.HasFlag(RoleEnum.Ghost));
+            int citizenCount = currentState.UserStates.Count(u => u.Role.HasFlag(RoleEnum.Citizen) && !u.Role.HasFlag(RoleEnum.Ghost));
 
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
 

@@ -23,8 +23,8 @@ namespace MafiaGameAPI.Models.UserGameStates
         {
             if (!IsUserInRoom(userId)) return false;
             UserState userState = UserStates.Where(u => u.UserId.Equals(userId)).First();
-            if (chatType.Equals(ChatTypeEnum.Mafia) && (userState.Role & RoleEnum.Mafioso) != 0) return true;
-            if (chatType.Equals(ChatTypeEnum.Ghost) && (userState.Role & RoleEnum.Ghost) != 0) return true;
+            if (chatType.Equals(ChatTypeEnum.Mafia) && userState.Role.HasFlag(RoleEnum.Mafioso)) return true;
+            if (chatType.Equals(ChatTypeEnum.Ghost) && userState.Role.HasFlag(RoleEnum.Ghost)) return true;
             return false;
         }
 
@@ -72,8 +72,8 @@ namespace MafiaGameAPI.Models.UserGameStates
             if (!IsUserInRoom(userId)) return chatGroups;
             UserState userState = UserStates.Where(u => u.UserId.Equals(userId)).First();
 
-            if ((userState.Role & RoleEnum.Ghost) != 0) chatGroups.Add(ChatTypeEnum.Ghost);
-            if ((userState.Role & RoleEnum.Mafioso) != 0) chatGroups.Add(ChatTypeEnum.Mafia);
+            if (userState.Role.HasFlag(RoleEnum.Ghost)) chatGroups.Add(ChatTypeEnum.Ghost);
+            if (userState.Role.HasFlag(RoleEnum.Mafioso)) chatGroups.Add(ChatTypeEnum.Mafia);
             chatGroups.Add(ChatTypeEnum.Citizen);
 
             return chatGroups;
@@ -86,9 +86,9 @@ namespace MafiaGameAPI.Models.UserGameStates
             UserState votedUserState = UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
             UserState votingUserState = UserStates.Where(u => u.UserId.Equals(votingUserId)).First();
 
-            if (((votingUserState.Role & RoleEnum.Ghost) != 0)
-                || ((votedUserState.Role & RoleEnum.Ghost) != 0)
-                || ((votingUserState.Role & RoleEnum.Mafioso) == 0))
+            if ((votingUserState.Role.HasFlag(RoleEnum.Ghost))
+                || (votedUserState.Role.HasFlag(RoleEnum.Ghost))
+                || (!votingUserState.Role.HasFlag(RoleEnum.Mafioso)))
             {
                 return false;
             }
@@ -101,14 +101,14 @@ namespace MafiaGameAPI.Models.UserGameStates
         public override bool HasVotingFinished()
         {
             int votesCount = VoteState.Count;
-            int requiredVoteCount = UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
+            int requiredVoteCount = UserStates.Count(u => u.Role.HasFlag(RoleEnum.Mafioso) && !u.Role.HasFlag(RoleEnum.Ghost));
             return votesCount >= requiredVoteCount;
         }
 
         private bool HasGameEnded()
         {
-            int mafiosoCount = UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
-            int citizenCount = UserStates.Count(u => (u.Role & RoleEnum.Citizen) != 0 && (u.Role & RoleEnum.Ghost) == 0);
+            int mafiosoCount = UserStates.Count(u => u.Role.HasFlag(RoleEnum.Mafioso) && !u.Role.HasFlag(RoleEnum.Ghost));
+            int citizenCount = UserStates.Count(u => u.Role.HasFlag(RoleEnum.Citizen) && !u.Role.HasFlag(RoleEnum.Ghost));
 
             if (mafiosoCount == citizenCount)
             {

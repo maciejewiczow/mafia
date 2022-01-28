@@ -14,17 +14,15 @@ namespace MafiaGameAPI.Models.UserGameStates
             Context = room;
         }
 
-        //Dodałem taki konstruktor, żeby mogo nie mia problemu z tworzeniem instancji
-        public GameDayState()
-        {
-        }
+        //Dodałem taki konstruktor, żeby mongo nie miało problemu z tworzeniem instancji
+        public GameDayState() { }
 
         public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
         {
             UserState userState = UserStates.Where(u => u.UserId.Equals(userId)).First();
             if (!IsUserInRoom(userId)) return false;
-            if (chatType.Equals(ChatTypeEnum.Citizen) && (userState.Role & RoleEnum.Ghost) == 0) return true;
-            if (chatType.Equals(ChatTypeEnum.Ghost) && (userState.Role & RoleEnum.Ghost) != 0) return true;
+            if (chatType.Equals(ChatTypeEnum.Citizen) && !userState.Role.HasFlag(RoleEnum.Ghost)) return true;
+            if (chatType.Equals(ChatTypeEnum.Ghost) && userState.Role.HasFlag(RoleEnum.Ghost)) return true;
             //mafia nie moze pisac ze soba w dzien
             return false;
         }
@@ -73,8 +71,8 @@ namespace MafiaGameAPI.Models.UserGameStates
             if (!IsUserInRoom(userId)) return chatGroups;
             UserState userState = UserStates.Where(u => u.UserId.Equals(userId)).First();
 
-            if ((userState.Role & RoleEnum.Ghost) != 0) chatGroups.Add(ChatTypeEnum.Ghost);
-            if ((userState.Role & RoleEnum.Mafioso) != 0) chatGroups.Add(ChatTypeEnum.Mafia);
+            if (userState.Role.HasFlag(RoleEnum.Ghost)) chatGroups.Add(ChatTypeEnum.Ghost);
+            if (userState.Role.HasFlag(RoleEnum.Mafioso)) chatGroups.Add(ChatTypeEnum.Mafia);
             chatGroups.Add(ChatTypeEnum.Citizen);
 
             return chatGroups;
@@ -87,28 +85,21 @@ namespace MafiaGameAPI.Models.UserGameStates
             UserState votedUserState = UserStates.Where(u => u.UserId.Equals(votedUserId)).First();
             UserState votingUserState = UserStates.Where(u => u.UserId.Equals(votingUserId)).First();
 
-            if (((votingUserState.Role & RoleEnum.Ghost) != 0) ||
-                ((votedUserState.Role & RoleEnum.Ghost) != 0))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
+            return votingUserState.Role.HasFlag(RoleEnum.Ghost) ||
+                votedUserState.Role.HasFlag(RoleEnum.Ghost);
         }
 
         public override bool HasVotingFinished()
         {
             int votesCount = VoteState.Count;
-            int requiredVoteCount = UserStates.Count(u => (u.Role & RoleEnum.Ghost) == 0);
+            int requiredVoteCount = UserStates.Count(u => !u.Role.HasFlag(RoleEnum.Ghost));
             return votesCount >= requiredVoteCount;
         }
 
         private bool HasGameEnded()
         {
-            int mafiosoCount = UserStates.Count(u => (u.Role & RoleEnum.Mafioso) != 0 && (u.Role & RoleEnum.Ghost) == 0);
-            int citizenCount = UserStates.Count(u => (u.Role & RoleEnum.Citizen) != 0 && (u.Role & RoleEnum.Ghost) == 0);
+            int mafiosoCount = UserStates.Count(u => u.Role.HasFlag(RoleEnum.Mafioso) && !u.Role.HasFlag(RoleEnum.Ghost));
+            int citizenCount = UserStates.Count(u => u.Role.HasFlag(RoleEnum.Citizen) && !u.Role.HasFlag(RoleEnum.Ghost));
 
             if (mafiosoCount == citizenCount)
             {
