@@ -1,9 +1,7 @@
-import React from 'react';
-import styled from 'styled-components';
 import { CreateUser, RoomList } from 'modules';
-import { ViewWrapper } from './ViewWrapper';
+import styled from 'styled-components';
 
-const Header = styled.header`
+export const Header = styled.header`
     background-color: #282c34;
     display: flex;
     flex-direction: column;
@@ -16,7 +14,7 @@ const Header = styled.header`
     grid-area: header;
 `;
 
-const ContentWrapper = styled.div`
+export const ContentWrapper = styled.div`
     padding: 0 12px;
 
     grid-area: body;
@@ -28,23 +26,11 @@ const ContentWrapper = styled.div`
     grid-template-areas: 'user rooms';
 `;
 
-const RoomListArea = styled(RoomList)`
+export const RoomListArea = styled(RoomList)`
     grid-area: rooms;
 `;
 
-const UserArea = styled(CreateUser)`
+export const UserArea = styled(CreateUser)`
     grid-area: user;
     height: 250px;
 `;
-
-const LandingView = () => (
-    <ViewWrapper>
-        <Header>Mafia</Header>
-        <ContentWrapper>
-            <RoomListArea />
-            <UserArea />
-        </ContentWrapper>
-    </ViewWrapper>
-);
-
-export default LandingView;

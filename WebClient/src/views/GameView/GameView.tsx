@@ -1,9 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import styled from 'styled-components';
 import { Redirect } from 'react-router';
 import dayjs from 'dayjs';
-import { Chat } from 'modules';
 import { ChatTypeEnum, PhaseEnum, RoleEnum } from 'api';
 import { connectToGame, invokeVote } from 'store/Game/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
@@ -14,101 +12,24 @@ import { IoIosCloudyNight, IoIosSunny } from 'react-icons/io';
 import { useCountdown } from 'utils/hooks/useCountdown';
 import { getCurrentUser } from 'store/User/actions';
 import { replace } from 'connected-react-router';
-import { ViewWrapper } from './ViewWrapper';
-
-const Header = styled.header`
-    background-color: #282c34;
-    display: flex;
-    font-size: calc(15px + 2vmin);
-    flex-flow: row nowrap;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    padding: 16px;
-
-    position: relative;
-
-    grid-area: header;
-`;
-
-const ContentWrapper = styled.div`
-    grid-area: body;
-
-    padding: 0 12px;
-    padding-bottom: 8px;
-    display: grid;
-    grid-template-columns: 1fr 3fr;
-    grid-template-rows: 1fr;
-    grid-gap: 8px;
-
-    grid-template-areas: 'participants chat';
-`;
-
-const Participants = styled.div`
-    padding: 0 12px;
-    background: white;
-    grid-area: participants;
-    display: flex;
-    flex-flow: column nowrap;
-`;
-
-const Participant = styled.div``;
-
-const Badge = styled.span`
-    color: #777;
-    font-size: 12px;
-`;
-
-const ChatsWrapper = styled.div`
-    display: flex;
-    grid-area: chat;
-    background: transparent;
-`;
-
-const ChatArea = styled(Chat)`
-    padding: 0 12px;
-    padding-bottom: 8px;
-    margin-right: 8px;
-    flex: 1;
-    &:last-child {
-        margin-right: 0;
-    }
-`;
-
-const Phase = styled.div`
-    position: absolute;
-    right: 16px;
-`;
-
-const WinnerOverlay = styled.div`
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background: rgba(21.8%, 21.8%, 21.8%, 0.7);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 35px;
-    flex-flow: column nowrap;
-    backdrop-filter: blur(2px);
-`;
-
-const GoBack = styled.button`
-    font-size: 17px;
-    margin-top: 24px;
-`;
-
-const PhaseCounter = styled.div`
-    position: absolute;
-    left: 16px;
-`;
+import { ViewWrapper } from '../ViewWrapper';
+import {
+    PhaseCounter,
+    Phase,
+    ChatsWrapper,
+    WinnerOverlay,
+    GoBack,
+    Header,
+    ContentWrapper,
+    Participants,
+    Participant,
+    Badge,
+    ChatArea,
+} from './parts';
 
 // TODO: Clear state after the game is finished
 
-const Game: React.FC = () => {
+const GameView: React.FC = () => {
     const dispatch = useDispatch();
     const room = useSelector(roomSelectors.currentRoom);
     const isUserLoading = useSelector(userSelectors.isUserLoading);
@@ -212,4 +133,4 @@ const Game: React.FC = () => {
     );
 };
 
-export default Game;
+export default GameView;
