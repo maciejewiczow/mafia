@@ -1,4 +1,4 @@
-import { AppState } from '../store';
+import { AppState } from '../constants';
 
 export const areRoomsLoading = (store: AppState) => store.rooms.isRoomListLoading;
 

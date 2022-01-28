@@ -6,7 +6,7 @@ import * as roomSelectors from 'store/Rooms/selectors';
 import api, { GameRoom } from 'api';
 import * as userSelectors from 'store/User/selectors';
 import { PickAction } from 'store/utils';
-import { AppState } from 'store/store';
+import { AppState } from 'store/constants';
 import { createRoomSuccess, getCurrentRoomSuccess, joinRoomSuccess } from './actions';
 import { RoomsActionType, RoomsAction } from './constants';
 
