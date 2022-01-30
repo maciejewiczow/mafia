@@ -1,5 +1,5 @@
 import { Chat } from 'modules';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 export const Header = styled.header`
     background-color: #282c34;
@@ -38,6 +38,13 @@ export const Participants = styled.div`
 `;
 
 export const Participant = styled.div``;
+
+export const ParticipantName = styled.span<{isHighlighted?: boolean}>`
+    ${({ isHighlighted }) => isHighlighted && css`
+        color: #b50808;
+        font-weight: bold;
+    `}
+`;
 
 export const Badge = styled.span`
     color: #777;

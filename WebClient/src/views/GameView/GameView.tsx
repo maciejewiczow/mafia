@@ -2,16 +2,15 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import dayjs from 'dayjs';
+import { replace } from 'connected-react-router';
 import { ChatTypeEnum, PhaseEnum, RoleEnum } from 'api';
 import { connectToGame, invokeVote } from 'store/Game/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import * as gameSelectors from 'store/Game/selectors';
-import { FaGhost, FaUserSecret } from 'react-icons/fa';
 import { IoIosCloudyNight, IoIosSunny } from 'react-icons/io';
 import { useCountdown } from 'utils/hooks/useCountdown';
 import { getCurrentUser } from 'store/User/actions';
-import { replace } from 'connected-react-router';
 import { ViewWrapper } from '../ViewWrapper';
 import {
     PhaseCounter,
@@ -26,6 +25,7 @@ import {
     Badge,
     ChatArea,
 } from './parts';
+import { ParticipantWithVoteButton } from './ParticipantWithVoteButton';
 
 // TODO: Clear state after the game is finished
 
@@ -69,10 +69,6 @@ const GameView: React.FC = () => {
 
     const { phase } = currentGameState;
 
-    const voteForUser = (userId: string) => () => {
-        dispatch(invokeVote(userId));
-    };
-
     const handleGoBackClick = () => {
         // FIXME: ogarnąć update stanu po końcu gry lepiej
         dispatch(getCurrentUser());
@@ -89,32 +85,7 @@ const GameView: React.FC = () => {
             <ContentWrapper>
                 <Participants>
                     <h3>Uczestnicy gry</h3>
-                    {participantsWithNamesAndRoles?.map(user => {
-                        let shouldShowVoteButton = false;
-
-                        // TODO: dodać do api metodę w stylu isVoteValid
-                        if (phase === PhaseEnum.Night)
-                            shouldShowVoteButton = currentUserRoles.includes(RoleEnum.Mafioso) && !user.roles.includes(RoleEnum.Mafioso);
-                        else if (phase === PhaseEnum.Day)
-                            shouldShowVoteButton = true;
-
-                        shouldShowVoteButton = shouldShowVoteButton && !currentUserRoles.includes(RoleEnum.Ghost) && !user.roles.includes(RoleEnum.Ghost);
-
-                        if (currentUser?.id === user.id)
-                            shouldShowVoteButton = false;
-
-                        return (
-                            <Participant key={user.id}>
-                                {user.name}
-                                {' '}
-                                {user.roles.includes(RoleEnum.Mafioso) && currentUserRoles.includes(RoleEnum.Mafioso) && <span><FaUserSecret title="Mafia" /> </span>}
-                                {user.roles.includes(RoleEnum.Ghost) && <FaGhost title="Duch" />}
-
-                                {(user.id === currentUser?.id) && <Badge> (ty)</Badge> }
-                                {shouldShowVoteButton && <button type="button" onClick={voteForUser(user.id)}>Zagłosuj</button>}
-                            </Participant>
-                        );
-                    })}
+                    {participantsWithNamesAndRoles?.map(user => <ParticipantWithVoteButton key={user.id} phase={phase} participant={user} />)}
                 </Participants>
                 <ChatsWrapper>
                     {(currentUserRoles.includes(RoleEnum.Citizen) || currentUserRoles.includes(RoleEnum.Mafioso)) && <ChatArea chatType={ChatTypeEnum.Citizen} />}
