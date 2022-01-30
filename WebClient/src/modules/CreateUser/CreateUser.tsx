@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
 import styled from 'styled-components';
 import { createUser } from 'store/User/actions';
 import * as selectors from 'store/User/selectors';
@@ -12,14 +15,6 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
     flex-flow: column;
-`;
-
-const NickInput = styled.input`
-    padding: 3px 5px;
-`;
-
-const Button = styled.button`
-    padding: 3px 5px;
 `;
 
 interface ClassProps {
@@ -50,13 +45,16 @@ const CreateUser: React.FC<ClassProps> = ({ className }) => {
                     </>
                 ) : (
                     <>
-                        <h2>Podaj nickname</h2>
-                        <form action="" onSubmit={handleSubmit}>
-                            <NickInput type="text" placeholder="Twój nick" value={userName} onChange={e => setUserName(e.target.value)} required />
-                            <Button type="submit">Ok</Button>
-                        </form>
+                        <h3>Wybierz nick</h3>
+                        <Form action="" onSubmit={handleSubmit}>
+                            <InputGroup>
+                                <Form.Control type="text" placeholder="Twój nick" value={userName} onChange={e => setUserName(e.target.value)} required />
+                                <Button variant="primary" type="submit">Ok</Button>
+                            </InputGroup>
+                        </Form>
                     </>
-                ))}
+                )
+            )}
         </Wrapper>
     );
 };

@@ -4,7 +4,6 @@ import styled from 'styled-components';
 export const Header = styled.header`
     background-color: #282c34;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: calc(15px + 2vmin);
@@ -20,7 +19,7 @@ export const ContentWrapper = styled.div`
     grid-area: body;
 
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 4fr;
     grid-gap: 8px;
 
     grid-template-areas: 'user rooms';
@@ -28,9 +27,10 @@ export const ContentWrapper = styled.div`
 
 export const RoomListArea = styled(RoomList)`
     grid-area: rooms;
+    max-width: 100%;
 `;
 
 export const UserArea = styled(CreateUser)`
     grid-area: user;
-    height: 250px;
+    height: 130px;
 `;

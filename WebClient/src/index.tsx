@@ -9,11 +9,11 @@ import store from './store';
 import App from './App';
 
 import 'react-toastify/dist/ReactToastify.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const GlobalStyles = createGlobalStyle`
     body, html, #root {
-        height: 100%;
-        width: 100%;
+        min-height: 100vh;
     }
 
     body {

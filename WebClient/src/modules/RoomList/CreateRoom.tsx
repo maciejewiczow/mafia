@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { FaArrowRight, FaPlus } from 'react-icons/fa';
 import { useDispatch } from 'react-redux';
+import Button from 'react-bootstrap/Button';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Form from 'react-bootstrap/Form';
+import { FaArrowRight, FaPlus } from 'react-icons/fa';
+import { CgEnter } from 'react-icons/cg';
 import styled from 'styled-components';
 import { createRoom } from 'store/Rooms/actions';
 
 const Wrapper = styled.div`
-    padding: 12px;
-    margin-top: 8px;
+    margin: 8px 0;
 `;
 
-const Title = styled.h4`
-    margin-top: 0;
-    margin-bottom: 8px;
+const MyForm = styled.form`
+    display: inline-block;
 `;
 
 const CreateRoom: React.FC = () => {
@@ -27,15 +29,14 @@ const CreateRoom: React.FC = () => {
     return (
         <Wrapper>
             {isCollapsed ? (
-                <button type="button" onClick={() => setIsCollapsed(false)}><FaPlus /> dodaj pokój</button>
+                <Button variant="primary" onClick={() => setIsCollapsed(false)}>Stwórz grę &nbsp;<FaPlus /></Button>
             ) : (
-                <>
-                    <Title>Stwórz pokój</Title>
-                    <form action="" onSubmit={handleSubmit}>
-                        <input type="text" placeholder="Nazwa pokoju" value={roomName} onChange={e => setRoomName(e.target.value)} required />
-                        <button type="submit">Stwórz <FaArrowRight /></button>
-                    </form>
-                </>
+                <MyForm action="" onSubmit={handleSubmit}>
+                    <InputGroup>
+                        <Form.Control type="text" placeholder="Nazwa gry" value={roomName} onChange={e => setRoomName(e.target.value)} required />
+                        <Button variant="primary" type="submit"><CgEnter /></Button>
+                    </InputGroup>
+                </MyForm>
             )}
         </Wrapper>
     );
