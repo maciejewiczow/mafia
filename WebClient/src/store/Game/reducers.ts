@@ -34,6 +34,10 @@ export const gameReducer: Reducer<GameStateInStore, GameAction | RoomsAction> = 
         case GameActionType.stateUpdate:
             return produce(state, draft => {
                 draft.currentGameState = action.state;
+
+                if (!('voteState' in draft.currentGameState))
+                    // @ts-ignore
+                    draft.currentGameState.voteState = [];
             });
 
         case RoomsActionType.joinRoomSuccess:

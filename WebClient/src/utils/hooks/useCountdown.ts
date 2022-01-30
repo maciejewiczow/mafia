@@ -18,5 +18,9 @@ export const useCountdown = (to: string | number | Date | dayjs.Dayjs = new Date
             clearInterval(intervalRef.current);
     }, [remaining]);
 
+    // eslint-disable-next-line no-restricted-globals
+    if (isNaN(remaining))
+        return 0;
+
     return Math.max(remaining, 0);
 };

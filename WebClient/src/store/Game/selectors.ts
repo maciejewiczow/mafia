@@ -1,3 +1,4 @@
+import { User } from 'api';
 import { AppState } from 'store';
 
 export const isConnectedToGame = (state: AppState) => state.game.isConnected;
@@ -13,7 +14,11 @@ export const userRoles = (userId: string) => (state: AppState) => {
     return role.split(',').map(r => r.trim());
 };
 
-export const participantsWithNamesAndRoles = (state: AppState) => (
+export interface ParticipantWithNameAndRole extends User {
+    roles: string[];
+}
+
+export const participantsWithNamesAndRoles = (state: AppState): ParticipantWithNameAndRole[] | undefined => (
     state.rooms.currentRoom?.participantsWithNames.map(participant => ({
         ...participant,
         roles: userRoles(participant.id)(state),
