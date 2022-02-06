@@ -2,6 +2,9 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { AiOutlineSend } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import Form from 'react-bootstrap/Form';
+import InputGroup from 'react-bootstrap/InputGroup';
+import Button from 'react-bootstrap/Button';
 import { ChatTypeEnum } from 'api';
 import { connectToChat, sendMessage } from 'store/Chat/actions';
 import * as chatSelectors from 'store/Chat/selectors';
@@ -32,9 +35,8 @@ const MessageInput = styled.input`
     width: 100%;
 `;
 
-const MessageForm = styled.form`
+const MessageFormWrapper = styled.div`
     margin-top: 12px;
-    display: flex;
 `;
 
 const NoMessages = styled.div`
@@ -88,16 +90,20 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
                             messages.map(m => <Message message={m} key={m.id} />)
                         )}
                     </MessagesWrapper>
-                    <MessageForm onSubmit={handleSendMessage}>
-                        <MessageInput
-                            type="text"
-                            placeholder="Napisz coś..."
-                            value={currentMessageContent}
-                            onChange={e => setCurrentMessageContent(e.target.value)}
-                            required
-                        />
-                        <button type="submit"><AiOutlineSend /></button>
-                    </MessageForm>
+                    <MessageFormWrapper>
+                        <Form onSubmit={handleSendMessage}>
+                            <InputGroup>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Napisz coś..."
+                                    value={currentMessageContent}
+                                    onChange={e => setCurrentMessageContent(e.target.value)}
+                                    required
+                                />
+                                <Button variant="secondary" type="submit"><AiOutlineSend /></Button>
+                            </InputGroup>
+                        </Form>
+                    </MessageFormWrapper>
                 </>
             )}
         </ChatWrapper>

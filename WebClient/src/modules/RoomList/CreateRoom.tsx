@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import { FaArrowRight, FaPlus } from 'react-icons/fa';
+import { FaPlus } from 'react-icons/fa';
 import { CgEnter } from 'react-icons/cg';
 import styled from 'styled-components';
 import { createRoom } from 'store/Rooms/actions';
