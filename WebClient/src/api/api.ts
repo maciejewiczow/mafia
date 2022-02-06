@@ -17,7 +17,6 @@ export const api = axios.create({
 
 const storage = sessionStorage;
 
-// FIXME: move this to sagas
 export const getAccessToken = async (): Promise<string | null> => {
     const accesTokenString = storage.getItem(accessTokenKey);
     const refreshToken = storage.getItem(refreshTokenKey);

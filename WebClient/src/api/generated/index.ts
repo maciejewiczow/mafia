@@ -55,7 +55,7 @@ export interface GameOptions {
     phaseDuration: string;
     mafiosoCount: number;
     isPublic: boolean;
-    visibleVotes: boolean;
+    areVotesVisible: boolean;
 }
 
 export interface GameState {
