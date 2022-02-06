@@ -7,37 +7,24 @@ namespace MafiaGameAPI.Models.UserGameStates
 {
     public class GameEndedState : GameState
     {
-        public GameEndedState(GameRoom room)
+        public GameEndedState(GameRoom room): base()
         {
             Context = room;
         }
 
         //Dodałem taki konstruktor, żeby mogo nie mia problemu z tworzeniem instancji
-        public GameEndedState()
-        {
-        }
+        public GameEndedState(): base()
+        { }
 
-        public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
-        {
-            return false;
-        }
+        public override bool CanSendMessage(string userId, ChatTypeEnum chatType) => false;
 
         public override void ChangePhase()
         { }
 
-        public override IList<ChatTypeEnum> GetUserChatGroups(string userId)
-        {
-            return new List<ChatTypeEnum>();
-        }
+        public override IList<ChatTypeEnum> GetUserChatGroups(string userId) => new List<ChatTypeEnum>();
 
-        public override bool IsVoteValid(string votingUserId, string votedUserId)
-        {
-            return false;
-        }
+        public override bool IsVoteValid(string votingUserId, string votedUserId) => false;
 
-        public override bool HasVotingFinished()
-        {
-            return false;
-        }
+        public override bool HasVotingFinished() => false;
     }
 }

@@ -9,15 +9,14 @@ namespace MafiaGameAPI.Models.UserGameStates
 {
     public class GameNotStartedState : GameState
     {
-        public GameNotStartedState(GameRoom room)
+        public GameNotStartedState(GameRoom room): base()
         {
             Context = room;
         }
 
         //Dodałem taki konstruktor, żeby mogo nie mia problemu z tworzeniem instancji
-        public GameNotStartedState()
-        {
-        }
+        public GameNotStartedState(): base()
+        { }
 
         public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
         {
@@ -47,15 +46,9 @@ namespace MafiaGameAPI.Models.UserGameStates
             return chatGroups;
         }
 
-        public override bool IsVoteValid(string votingUserId, string votedUserId)
-        {
-            return false;
-        }
+        public override bool IsVoteValid(string votingUserId, string votedUserId) => false;
 
-        public override bool HasVotingFinished()
-        {
-            return false;
-        }
+        public override bool HasVotingFinished() => false;
 
         private List<UserState> AssignPlayersToRoles()
         {
@@ -93,9 +86,6 @@ namespace MafiaGameAPI.Models.UserGameStates
             return userStates;
         }
 
-        private bool IsUserInRoom(string userId)
-        {
-            return this.Context.Participants.Contains(userId);
-        }
+        private bool IsUserInRoom(string userId) => this.Context.Participants.Contains(userId);
     }
 }

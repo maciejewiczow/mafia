@@ -40,5 +40,11 @@ namespace MafiaGameAPI.Models
             GameNightState _ => PhaseEnum.Night,
             _ => null
         };
+
+        public GameState() 
+        {
+            UserStates = new List<UserState>();
+            VoteState = new List<VoteState>();
+        }
     }
 }

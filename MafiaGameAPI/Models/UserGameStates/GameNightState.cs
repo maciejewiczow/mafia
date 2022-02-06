@@ -9,15 +9,14 @@ namespace MafiaGameAPI.Models.UserGameStates
 {
     public class GameNightState : GameState
     {
-        public GameNightState(GameRoom room)
+        public GameNightState(GameRoom room): base()
         {
             Context = room;
         }
 
         //Dodałem taki konstruktor, żeby mongo nie mial problemu z tworzeniem instancji
-        public GameNightState()
-        {
-        }
+        public GameNightState(): base()
+        { }
 
         public override bool CanSendMessage(string userId, ChatTypeEnum chatType)
         {
