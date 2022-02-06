@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using MafiaGameAPI.Models.DTO;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MafiaGameAPI.Hubs
 {
@@ -37,13 +38,9 @@ namespace MafiaGameAPI.Hubs
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var room = await _gameRoomsService.GetRoomById(roomId);
 
-            List<string> groupNames = new List<string>();
-            var chatTypes = room.CurrentGameState.GetUserChatGroups(Context.User.Identity.Name);
-
-            foreach (var chatType in chatTypes)
-            {
-                groupNames.Add(IdentifiersHelper.GenerateChatGroupName(roomId, chatType));
-            }
+            var groupNames = room.CurrentGameState
+                .GetUserChatGroups(Context.User.Identity.Name)
+                .Select(chatType => IdentifiersHelper.GenerateChatGroupName(roomId, chatType));
 
             var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
             foreach (string groupName in groupNames)
