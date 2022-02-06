@@ -103,6 +103,7 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
             room.ParticipantsWithNames = await GetParticipantsWithNames(room.Participants);
+            room.CurrentGameState.Context = room;
             return room;
         }
 

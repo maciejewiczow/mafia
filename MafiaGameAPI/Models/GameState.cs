@@ -34,7 +34,7 @@ namespace MafiaGameAPI.Models
         public GameRoom Context { get; set; }
 
         [BsonIgnore]
-        public PhaseEnum? Phase => Context.CurrentGameState switch
+        public PhaseEnum? Phase => this switch 
         {
             GameDayState _ => PhaseEnum.Day,
             GameNightState _ => PhaseEnum.Night,
