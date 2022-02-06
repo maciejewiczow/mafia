@@ -41,8 +41,11 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
 
         case GameActionType.gameMemberConnected:
             return produce(state, draft => {
-                draft.currentRoom?.participants.push(action.user.id);
-                draft.currentRoom?.participantsWithNames.push(action.user);
+                if (!draft.currentRoom?.participants.includes(action.user.id))
+                    draft.currentRoom?.participants.push(action.user.id);
+
+                if ((draft.currentRoom?.participantsWithNames.filter(u => u.id === action.user.id).length ?? 1) === 0)
+                    draft.currentRoom?.participantsWithNames.push(action.user);
             });
 
         case GameActionType.gameMemberDisconnected:
