@@ -85,6 +85,14 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
                 draft.currentRoom.winnerRole = action.winnerRoleName;
             });
 
+        case RoomsActionType.updateRoomSettings:
+            return produce(state, draft => {
+                if (!draft.currentRoom)
+                    return;
+
+                Object.assign(draft.currentRoom.gameOptions, action.options);
+            });
+
         default:
             return state;
     }

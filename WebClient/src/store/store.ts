@@ -4,12 +4,13 @@ import { createBrowserHistory } from 'history';
 import { routerMiddleware } from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 
+import { isDevEnv } from 'isDevEnv';
 import api from 'api';
 import { AxiosMiddlewareOptions, requestActionErrorSuffix, requestActionSuccessSuffix } from './constants';
 import createRootReducer from './reducers';
 import rootSaga from './rootSaga';
 
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers = (isDevEnv && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
 const axios = axiosMiddleware(
     api,

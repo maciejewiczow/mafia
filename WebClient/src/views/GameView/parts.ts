@@ -30,7 +30,7 @@ export const ContentWrapper = styled.div`
 `;
 
 export const Participants = styled.div`
-    padding: 0 12px;
+    padding: 8px 12px;
     background: white;
     grid-area: participants;
     display: flex;
@@ -58,7 +58,7 @@ export const ChatsWrapper = styled.div`
 `;
 
 export const ChatArea = styled(Chat)`
-    padding: 0 12px;
+    padding: 8px 12px;
     padding-bottom: 8px;
     margin-right: 8px;
     flex: 1;

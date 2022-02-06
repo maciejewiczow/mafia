@@ -70,7 +70,32 @@ export function* getCurrentRoomWorker() {
     }
 }
 
+function* saveRoomOptionsWatcher() {
+    yield takeLatest(RoomsActionType.saveRoomSettings, saveRoomOptionsWorker);
+}
+
+function* saveRoomOptionsWorker() {
+    const currentRoomId = yield select((state: AppState) => state.rooms.currentRoom?.id);
+
+    if (!currentRoomId)
+        return;
+
+    const currentRoomOpts = yield select(roomSelectors.currentRoomOptions);
+
+    if (!currentRoomOpts)
+        return;
+
+    try {
+        yield call(api.put, `/gameRooms/${currentRoomId}/options`, currentRoomOpts);
+        toast.success('Ustawienia zapisano pomyślnie');
+    } catch (e) {
+        toast.error('Przy zapisywaniu ustawień wystąpił błąd');
+        console.log(e);
+    }
+}
+
 export default {
     createRoomWatcher,
     joinRoomWatcher,
+    saveRoomOptionsWatcher,
 };

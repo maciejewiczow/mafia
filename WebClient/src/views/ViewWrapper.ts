@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const ViewWrapper = styled.div`
     background: #e6e6e6;
-    height: 100%;
+    min-height: 100%;
     display: grid;
 
     grid-row-gap: 8px;

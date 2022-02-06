@@ -11,3 +11,5 @@ export const isCurrentRoomLoading = (store: AppState) => store.rooms.isCurrentRo
 export const hasCurrentGameStarted = (store: AppState) => store.rooms.currentRoom?.hasGameStarted;
 
 export const participantsWithNames = (state: AppState) => state.rooms.currentRoom?.participantsWithNames;
+
+export const currentRoomOptions = (state: AppState) => state.rooms.currentRoom?.gameOptions;

@@ -13,7 +13,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const GlobalStyles = createGlobalStyle`
     body, html, #root {
-        min-height: 100vh;
+        height: 100vh;
+        overflow: auto;
     }
 
     body {

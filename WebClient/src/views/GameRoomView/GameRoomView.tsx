@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { ChatTypeEnum } from 'api';
@@ -6,16 +6,19 @@ import { connectToGame, startGame } from 'store/Game/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import * as gameSelectors from 'store/Game/selectors';
+import Button from 'react-bootstrap/esm/Button';
 import { ViewWrapper } from '../ViewWrapper';
 import {
     Header,
-    StartGameButton,
+    StartGameButtonWrapper,
     ContentWrapper,
-    Participants,
+    ParticipantsWrapper,
     Participant,
     Badge,
     ChatArea,
+    SettingsButton,
 } from './parts';
+import { Settings } from './Settings';
 
 const GameRoomView: React.FC = () => {
     const dispatch = useDispatch();
@@ -24,6 +27,8 @@ const GameRoomView: React.FC = () => {
     const currentUser = useSelector(userSelectors.currentUser);
     const isConnectedToGame = useSelector(gameSelectors.isConnectedToGame);
     const isConnectingToGame = useSelector(gameSelectors.isConnectingToGame);
+
+    const [areSettingsOpen, setAreSettingsOpen] = useState(false);
 
     useEffect(() => {
         if (!isConnectingToGame && !isConnectedToGame && room)
@@ -53,16 +58,24 @@ const GameRoomView: React.FC = () => {
             <Header>
                 {room.name}
                 {(room.owner === currentUser?.id && !room.hasGameEnded) && (
-                    <StartGameButton
-                        onClick={handleStartGameClick}
-                        disabled={!isConnectedToGame || isConnectingToGame}
-                    >
-                      Rozpocznij grę
-                    </StartGameButton>
+                    <StartGameButtonWrapper>
+                        <Button
+                            variant="primary"
+                            onClick={handleStartGameClick}
+                            disabled={!isConnectedToGame || isConnectingToGame || room.participants.length < 3}
+                            title={room.participants.length < 3 ? 'Wymagane jest minimum 3 graczy' : ''}
+                        >
+                          Rozpocznij grę
+                        </Button>
+                        <SettingsButton
+                            onClick={() => setAreSettingsOpen(state => !state)}
+                            title="Ustawienia gry"
+                        />
+                    </StartGameButtonWrapper>
                 )}
             </Header>
-            <ContentWrapper>
-                <Participants>
+            <ContentWrapper areSettingsOpen={areSettingsOpen}>
+                <ParticipantsWrapper>
                     <h3>Uczestnicy gry</h3>
                     {room.participantsWithNames.map(user => (
                         <Participant key={user.id}>
@@ -73,8 +86,11 @@ const GameRoomView: React.FC = () => {
                             {(user.id === room.owner) && <Badge>(właściel)</Badge>}
                         </Participant>
                     ))}
-                </Participants>
+                </ParticipantsWrapper>
                 <ChatArea chatType={ChatTypeEnum.General} />
+                {areSettingsOpen && (
+                    <Settings />
+                )}
             </ContentWrapper>
         </ViewWrapper>
     );

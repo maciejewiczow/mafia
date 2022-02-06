@@ -1,5 +1,6 @@
 import { Chat } from 'modules';
-import styled from 'styled-components';
+import { FiSettings } from 'react-icons/fi';
+import styled, { css } from 'styled-components';
 
 export const Header = styled.header`
     background-color: #282c34;
@@ -16,26 +17,38 @@ export const Header = styled.header`
     grid-area: header;
 `;
 
-export const ContentWrapper = styled.div`
+export const ContentWrapper = styled.div<{areSettingsOpen?: boolean}>`
     grid-area: body;
 
     padding: 0 12px;
     padding-bottom: 8px;
     display: grid;
-    grid-template-columns: 1fr 3fr;
-    grid-auto-rows: minmax(min-content, max-content);
+    grid-template-columns: 1fr 2fr 22%;
+    grid-auto-rows: /* minmax(min-content, max-content) */1fr;
     grid-gap: 8px;
 
-    grid-template-areas: 'participants chat';
+    ${({ areSettingsOpen }) => (areSettingsOpen ? css`
+        grid-template-areas: 'participants chat settings';
+    ` : css`
+        grid-template-areas: 'participants chat chat';
+    `)}
 `;
 
-export const Participants = styled.div`
-    padding: 0 12px 12px;
+export const ParticipantsWrapper = styled.div`
+    padding: 8px 12px;
     background: white;
     grid-area: participants;
     display: flex;
     flex-flow: column nowrap;
     height: 100%;
+`;
+
+export const SettingsWrapper = styled(ParticipantsWrapper)`
+    grid-area: settings;
+
+    form > div {
+        margin-bottom: 18px;
+    }
 `;
 
 export const Participant = styled.div``;
@@ -46,13 +59,23 @@ export const Badge = styled.span`
 `;
 
 export const ChatArea = styled(Chat)`
-    padding: 0 12px;
+    padding: 8px 12px;
     padding-bottom: 8px;
     /* TODO: zrobić jakoś żeby to było na 100% a nie z jakimś hardcoded height */
-    max-height: calc(100vh - 90px);
+    max-height: calc(100vh - 86px);
 `;
 
-export const StartGameButton = styled.button`
+export const StartGameButtonWrapper = styled.div`
     position: absolute;
-    right: 16px;
+    right: 12px;
+
+    .btn {
+        font-size: 1.5rem;
+        margin-top: -5px;
+    }
+`;
+
+export const SettingsButton = styled(FiSettings)`
+    margin-left: 12px;
+    cursor: pointer;
 `;

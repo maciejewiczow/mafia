@@ -1,11 +1,10 @@
-import { AxiosResponse } from 'axios';
-import { GameRoom, RoomsResponse } from '../../api';
+import { GameOptions, GameRoom, RoomsResponse } from 'api';
 import { RequestActionBundle, ResponseSuccessAction } from '../utils';
 
 export enum RoomsActionType {
     roomsRequest = 'rooms/REQUEST',
     roomsRequestSuccess = 'rooms/REQUEST_SUCCESS',
-    roomsRequestFailed = 'rooms/REQUEST_FAILED',
+    roomsRequestFailed = 'rooms/REQUEST_FAIL',
     createRoom = 'createRoom',
     createRoomRequest = 'createRoom/REQUEST',
     createRoomRequestSuccess = 'createRoom/REQUEST_SUCCESS',
@@ -14,6 +13,8 @@ export enum RoomsActionType {
     joinRoomSuccess = 'joinRoom/SUCCESS',
     getCurrentRoom = 'getCurrentRoom',
     getCurrentRoomSuccess = 'getCurrentRoom/SUCCESS',
+    updateRoomSettings = 'rooms/UPDATE_SETTINGS',
+    saveRoomSettings = 'rooms/SAVE_SETTINGS',
 }
 
 export type RoomsAction = RequestActionBundle<
@@ -42,4 +43,9 @@ export type RoomsAction = RequestActionBundle<
 > | ResponseSuccessAction<
     RoomsActionType.getCurrentRoomSuccess,
     GameRoom
->;
+> | {
+    type: RoomsActionType.updateRoomSettings;
+    options: Partial<GameOptions>;
+} | {
+    type: RoomsActionType.saveRoomSettings;
+};
