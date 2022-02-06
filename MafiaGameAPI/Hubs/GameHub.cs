@@ -38,9 +38,7 @@ namespace MafiaGameAPI.Hubs
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
 
-            var vote = await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
-
-            await Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).NewVoteAsync(vote);
+            await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
         }
 
         public async override Task OnConnectedAsync()

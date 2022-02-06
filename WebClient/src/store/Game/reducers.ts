@@ -26,18 +26,15 @@ export const gameReducer: Reducer<GameStateInStore, GameAction | RoomsAction> = 
                 draft.currentGameState?.voteState.push(action.vote);
             });
 
-            // case GameActionType.votingResult:
-            //     return produce(state, draft => {
-
-            //     });
+        case GameActionType.votingResult:
+            return produce(state, draft => {
+                if (draft.currentGameState)
+                    draft.currentGameState.voteState = [];
+            });
 
         case GameActionType.stateUpdate:
             return produce(state, draft => {
                 draft.currentGameState = action.state;
-
-                if (!('voteState' in draft.currentGameState))
-                    // @ts-ignore
-                    draft.currentGameState.voteState = [];
             });
 
         case RoomsActionType.joinRoomSuccess:

@@ -20,8 +20,12 @@ namespace MafiaGameAPI.Services
         private readonly IHubContext<GameHub, IGameClient> _context;
         private readonly IValidationHelper _validationHelper;
 
-        public GameService(IGameRepository gameRepository, IGameRoomsRepository gameRoomsRepository,
-                IHubContext<GameHub, IGameClient> context, IValidationHelper validationHelper)
+        public GameService(
+            IGameRepository gameRepository,
+            IGameRoomsRepository gameRoomsRepository,
+            IHubContext<GameHub, IGameClient> context,
+            IValidationHelper validationHelper
+        )
         {
             _gameRepository = gameRepository;
             _gameRoomsRepository = gameRoomsRepository;
@@ -147,6 +151,7 @@ namespace MafiaGameAPI.Services
                 VotedUserId = votedUserId
             };
             var voteState = await _gameRepository.Vote(roomId, vote);
+            await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).NewVoteAsync(voteState);
 
             var updatedRoom = await _gameRoomsRepository.GetRoomById(roomId);
             if (updatedRoom.CurrentGameState.HasVotingFinished())
