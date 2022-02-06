@@ -15,6 +15,6 @@ namespace MafiaGameAPI.Services
         Task<UserProjection> GetUserProjectionById(string userId);
         Task<User> GetUserById(string userId);
         Task<GameRoom> GetRoomById(String roomId);
-        Task<GameOptions> UpdateOptions(String roomId, int maxPlayers, int minutes, int mafiosoCount, bool isPublic, bool areVotesVisible);
+        Task<GameOptions> UpdateOptions(String roomId, GameOptions options);
     }
 }
