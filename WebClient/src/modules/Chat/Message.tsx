@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useSelector } from 'react-redux';
-import { MessageType } from 'store/Chat/store';
+import { MessageType } from 'store/GameChat/Chat/store';
 import * as userSelectors from 'store/User/selectors';
-import { MessageInStoreWithUserName } from 'store/Chat/selectors';
+import { MessageInStoreWithUserName } from 'store/GameChat/Chat/selectors';
 
 const DefaultMessage = styled.div``;
 

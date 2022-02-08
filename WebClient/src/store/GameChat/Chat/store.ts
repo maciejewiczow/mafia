@@ -1,10 +1,6 @@
-import { ChatTypeEnum, Message } from '../../api';
+import { ChatTypeEnum, Message } from '../../../api';
 
-export interface ChatsState {
-    isConnected: boolean;
-    isConnecting: boolean;
-    chats: Record<string, ChatState>;
-}
+export type ChatsState = Record<string, ChatState>;
 
 export enum MessageType {
     Default,
@@ -29,8 +25,4 @@ interface ChatState {
     messages: MessageInStore[];
 }
 
-export const initialChatState: ChatsState = {
-    isConnected: false,
-    isConnecting: false,
-    chats: {},
-};
+export const initialChatState: ChatsState = {};

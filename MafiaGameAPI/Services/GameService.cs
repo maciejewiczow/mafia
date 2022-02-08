@@ -17,13 +17,13 @@ namespace MafiaGameAPI.Services
     {
         private readonly IGameRepository _gameRepository;
         private readonly IGameRoomsRepository _gameRoomsRepository;
-        private readonly IHubContext<GameHub, IGameClient> _context;
+        private readonly IHubContext<GameChatHub, IGameChatClient> _context;
         private readonly IValidationHelper _validationHelper;
 
         public GameService(
             IGameRepository gameRepository,
             IGameRoomsRepository gameRoomsRepository,
-            IHubContext<GameHub, IGameClient> context,
+            IHubContext<GameChatHub, IGameChatClient> context,
             IValidationHelper validationHelper
         )
         {

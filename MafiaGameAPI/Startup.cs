@@ -150,14 +150,7 @@ namespace MafiaGameAPI
 
             if (_env.IsDevelopment())
             {
-                builder.AddHubOptions<GameHub>(opts =>
-                {
-                    opts.EnableDetailedErrors = true;
-                    opts.ClientTimeoutInterval = TimeSpan.MaxValue;
-                    opts.HandshakeTimeout = TimeSpan.MaxValue;
-                });
-
-                builder.AddHubOptions<ChatHub>(opts =>
+                builder.AddHubOptions<GameChatHub>(opts =>
                 {
                     opts.EnableDetailedErrors = true;
                     opts.ClientTimeoutInterval = TimeSpan.MaxValue;
@@ -216,8 +209,7 @@ namespace MafiaGameAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<GameHub>("/hubs/game");
-                endpoints.MapHub<ChatHub>("/hubs/chat");
+                endpoints.MapHub<GameChatHub>("/hubs/gameChat");
             });
         }
     }

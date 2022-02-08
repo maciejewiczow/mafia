@@ -8,29 +8,22 @@ using Microsoft.AspNetCore.Authorization;
 using MafiaGameAPI.Models.DTO;
 using System.Collections.Generic;
 using System.Linq;
+using MafiaGameAPI.Models;
 
 namespace MafiaGameAPI.Hubs
 {
     [Authorize]
-    public class ChatHub : Hub<IChatClient>
+    public partial class GameChatHub : Hub<IGameChatClient>
     {
         private readonly IChatService _chatService;
         private readonly IGameRoomsService _gameRoomsService;
         private readonly IGameService _gameService;
 
-        public ChatHub(IChatService chatService, IGameRoomsService gameRoomsService, IGameService gameService)
+        public GameChatHub(IChatService chatService, IGameRoomsService gameRoomsService, IGameService gameService)
         {
             _chatService = chatService;
             _gameRoomsService = gameRoomsService;
             _gameService = gameService;
-        }
-
-        public async Task SendMessage(SendMessageDTO messageDTO)
-        {
-            var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
-            var message = await _chatService.SendMessage(Context.User.Identity.Name, roomId, messageDTO.ChatType, messageDTO.Content);
-
-            await Clients.Groups(IdentifiersHelper.GenerateChatGroupName(roomId, message.ChatType)).MessageAsync(message);
         }
 
         public override async Task OnConnectedAsync()
@@ -40,7 +33,10 @@ namespace MafiaGameAPI.Hubs
 
             var groupNames = room.CurrentGameState
                 .GetUserChatGroups(Context.User.Identity.Name)
-                .Select(chatType => IdentifiersHelper.GenerateChatGroupName(roomId, chatType));
+                .Select(chatType => IdentifiersHelper.GenerateChatGroupName(roomId, chatType))
+                .ToList();
+
+            groupNames.Add(IdentifiersHelper.GenerateRoomGroupName(roomId));
 
             var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
             foreach (string groupName in groupNames)
@@ -57,13 +53,17 @@ namespace MafiaGameAPI.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
+            var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
+            var roomId = user.RoomId;
 
             foreach (ChatTypeEnum value in Enum.GetValues(typeof(ChatTypeEnum)))
             {
                 var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, value);
-                await Clients.OthersInGroup(groupName).UserDisconnectedAsync(Context.User.Identity.Name);
+                await Clients.OthersInGroup(groupName).UserDisconnectedAsync(user);
             }
+
+            await Clients.OthersInGroup(IdentifiersHelper.GenerateRoomGroupName(roomId))
+                .UserDisconnectedAsync(user);
 
             await base.OnDisconnectedAsync(exception);
         }

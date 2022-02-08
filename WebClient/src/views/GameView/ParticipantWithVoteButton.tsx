@@ -3,11 +3,11 @@ import React, { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import { FaGhost, FaUserSecret } from 'react-icons/fa';
-import { ParticipantWithNameAndRole } from 'store/Game/selectors';
+import { ParticipantWithNameAndRole } from 'store/GameChat/Game/selectors';
 import * as userSelectors from 'store/User/selectors';
-import * as gameSelectors from 'store/Game/selectors';
+import * as gameSelectors from 'store/GameChat/Game/selectors';
 import * as roomSelectors from 'store/Rooms/selectors';
-import { invokeVote } from 'store/Game/actions';
+import { invokeVote } from 'store/GameChat/Game/actions';
 import { Participant, Badge, ParticipantName } from './parts';
 
 export interface ParticipantProps {
@@ -85,7 +85,7 @@ export const ParticipantWithVoteButton: React.FC<ParticipantProps> = ({ classNam
                 && <span><FaUserSecret title="Mafia" /> </span>
             )}
             {user.roles.includes(RoleEnum.Ghost) && <FaGhost title="Duch" />}
-            {(user.id === currentUser?.id) && <Badge> (ty)</Badge> }
+            {(user.id === currentUser?.id) && <Badge> (ty)</Badge>}
             {showVotes && (
                 <span>({votesForUser?.join(', ')})</span>
             )}

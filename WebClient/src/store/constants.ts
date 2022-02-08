@@ -4,15 +4,13 @@ import { AnyAction } from 'redux';
 
 import { RoomsState } from './Rooms/store';
 import { CurrentUserState } from './User/store';
-import { ChatsState } from './Chat/store';
-import { GameStateInStore } from './Game/store';
+import { GameChatState } from './GameChat/store';
 
 export interface AppState {
     router: RouterState;
     currentUser: CurrentUserState;
     rooms: RoomsState;
-    chats: ChatsState;
-    game: GameStateInStore;
+    gameChat: GameChatState;
 }
 
 export type AxiosMiddlewareOptions = Partial<{

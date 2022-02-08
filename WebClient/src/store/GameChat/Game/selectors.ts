@@ -1,15 +1,11 @@
 import { User } from 'api';
 import { AppState } from 'store';
 
-export const isConnectedToGame = (state: AppState) => state.game.isConnected;
-
-export const isConnectingToGame = (state: AppState) => state.game.isConnecting;
-
 export const userRoles = (userId: string) => (state: AppState) => {
-    if (!state.game.currentGameState?.userStates)
+    if (!state.gameChat.game?.userStates)
         return [];
 
-    const role = state.game.currentGameState.userStates.find(us => us.userId === userId)?.role || '';
+    const role = state.gameChat.game.userStates.find(us => us.userId === userId)?.role || '';
 
     return role.split(',').map(r => r.trim());
 };
@@ -25,4 +21,4 @@ export const participantsWithNamesAndRoles = (state: AppState): ParticipantWithN
     }))
 );
 
-export const currentGameState = (state: AppState) => state.game.currentGameState;
+export const currentGameState = (state: AppState) => state.gameChat.game;

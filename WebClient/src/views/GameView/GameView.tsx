@@ -4,10 +4,11 @@ import { Redirect } from 'react-router';
 import dayjs from 'dayjs';
 import { replace } from 'connected-react-router';
 import { ChatTypeEnum, PhaseEnum, RoleEnum } from 'api';
-import { connectToGame, invokeVote } from 'store/Game/actions';
+import { connectToGameChat } from 'store/GameChat/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
-import * as gameSelectors from 'store/Game/selectors';
+import * as gameSelectors from 'store/GameChat/Game/selectors';
+import * as gameChatSelectors from 'store/GameChat/selectors';
 import { IoIosCloudyNight, IoIosSunny } from 'react-icons/io';
 import { useCountdown } from 'utils/hooks/useCountdown';
 import { getCurrentUser } from 'store/User/actions';
@@ -35,20 +36,20 @@ const GameView: React.FC = () => {
     const isUserLoading = useSelector(userSelectors.isUserLoading);
     const currentUser = useSelector(userSelectors.currentUser);
     const currentUserRoles = useSelector(gameSelectors.userRoles(currentUser?.id || ''));
-    const isConnectedToGame = useSelector(gameSelectors.isConnectedToGame);
-    const isConnectingToGame = useSelector(gameSelectors.isConnectingToGame);
+    const isConnectedToGameChat = useSelector(gameChatSelectors.isConnectedToGameChat);
+    const isConnectingToGameChat = useSelector(gameChatSelectors.isConnectingToGameChat);
     const isCurrentRoomLoading = useSelector(roomSelectors.isCurrentRoomLoading);
     const participantsWithNamesAndRoles = useSelector(gameSelectors.participantsWithNamesAndRoles);
     const currentGameState = useSelector(gameSelectors.currentGameState);
 
     useEffect(() => {
-        if (!isUserLoading && currentUser?.roomId !== null && !isConnectingToGame && !isConnectedToGame)
-            dispatch(connectToGame());
+        if (!isUserLoading && currentUser?.roomId !== null && !isConnectingToGameChat && !isConnectedToGameChat)
+            dispatch(connectToGameChat());
     }, [
         currentUser?.roomId,
         dispatch,
-        isConnectedToGame,
-        isConnectingToGame,
+        isConnectedToGameChat,
+        isConnectingToGameChat,
         isUserLoading,
         room,
     ]);

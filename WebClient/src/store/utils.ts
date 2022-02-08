@@ -34,7 +34,7 @@ export type InvokeActionBundle<
     InvokeActionT extends string,
     SuccessActionT extends string,
     FailedActionT extends string,
-    P extends (any[]|undefined) = undefined,
+    P extends (any[] | undefined) = undefined,
     RetT = undefined,
 > = (
     InvokeAction<InvokeActionT, P, SuccessActionT, FailedActionT> |
@@ -44,7 +44,7 @@ export type InvokeActionBundle<
 
 export interface InvokeAction<
     TAction extends string,
-    P extends (any[]|undefined) = undefined,
+    P extends (any[] | undefined) = undefined,
     TActionSuccess extends (string | undefined) = undefined,
     TActionError extends (string | undefined) = undefined,
 > {
@@ -52,7 +52,6 @@ export interface InvokeAction<
     successActionType: TActionSuccess;
     errorActionType: TActionError;
     isInvokeAction: true;
-    hubClientName: string;
     methodName: string;
     args?: P;
 }

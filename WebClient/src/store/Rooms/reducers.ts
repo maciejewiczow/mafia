@@ -1,10 +1,11 @@
 import { produce } from 'immer';
 import { Reducer } from 'redux';
-import { GameAction, GameActionType } from 'store/Game/constants';
+import { GameChatAction, GameChatActionType } from 'store/GameChat/constants';
+import { GameAction, GameActionType } from 'store/GameChat/Game/constants';
 import { RoomsAction, RoomsActionType } from './constants';
 import { initialRoomsState, RoomsState } from './store';
 
-export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
+export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction | GameChatAction> = (
     state = initialRoomsState,
     action,
 ) => {
@@ -39,7 +40,7 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
                 draft.currentRoom = action.payload.data;
             });
 
-        case GameActionType.gameMemberConnected:
+        case GameChatActionType.memberConnected:
             return produce(state, draft => {
                 if (!draft.currentRoom?.participants.includes(action.user.id))
                     draft.currentRoom?.participants.push(action.user.id);
@@ -48,7 +49,7 @@ export const roomsReducer: Reducer<RoomsState, RoomsAction | GameAction> = (
                     draft.currentRoom?.participantsWithNames.push(action.user);
             });
 
-        case GameActionType.gameMemberDisconnected:
+        case GameChatActionType.memberDisconnected:
             return produce(state, draft => {
                 if (!draft.currentRoom)
                     return;

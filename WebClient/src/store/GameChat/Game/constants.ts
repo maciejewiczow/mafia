@@ -2,9 +2,6 @@ import { GameState, User, VoteState } from 'api';
 import { InvokeAction, InvokeActionBundle } from 'store/utils';
 
 export enum GameActionType {
-    connectToGame = 'game/CONNECT',
-    connectToGameSuccess = 'game/CONNECT_SUCCESS',
-
     // invoke actions
     vote = 'game/VOTE',
     startGame = 'game/START',
@@ -14,8 +11,6 @@ export enum GameActionType {
     invokeStartGameFail = 'game/INVOKE_START_FAIL',
 
     // server actions
-    gameMemberConnected = 'game/MEMBER_CONNECTED',
-    gameMemberDisconnected = 'game/MEMBER_DISCONNECTED',
     newVote = 'game/NEW_VOTE',
     gameEnded = 'game/ENDED',
     votingResult = 'game/VOTING_RESULT',
@@ -23,20 +18,14 @@ export enum GameActionType {
     gameStarted = 'game/GAME_STARTED',
 }
 
-export const gameHubClientName = 'gameHubClient';
-
 export type GameAction = {
-    type: GameActionType.connectToGame;
-} | {
-    type: GameActionType.connectToGameSuccess;
-} | {
     type: GameActionType.startGame;
-} | InvokeAction<
-    GameActionType.invokeVote,
-    [
-        string, // votedUserId
-    ]
-> | (
+} | (
+    InvokeAction<
+        GameActionType.invokeVote,
+        [string /* votedUserId */]
+    >
+) | (
     InvokeActionBundle<
         GameActionType.invokeStartGame,
         GameActionType.invokeStartGameSuccess,
@@ -44,18 +33,12 @@ export type GameAction = {
         undefined,
         GameState
     >
-)| {
+) | {
     type: GameActionType.newVote;
     vote: VoteState;
 } | {
     type: GameActionType.stateUpdate;
     state: GameState;
-} | {
-    type: GameActionType.gameMemberConnected;
-    user: User;
-} | {
-    type: GameActionType.gameMemberDisconnected;
-    user: User;
 } | {
     type: GameActionType.gameEnded;
     winnerRoleName: string;

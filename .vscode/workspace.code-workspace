@@ -1,12 +1,12 @@
 {
-	"folders": [
-		{
-			"path": "..\\WebClient"
-		},
-		{
-			"path": "..\\MafiaGameAPI"
-		}
-	],
+    "folders": [
+        {
+            "path": "..\\WebClient"
+        },
+        {
+            "path": "..\\MafiaGameAPI"
+        }
+    ],
     "settings": {
         "gitlens.currentLine.enabled": true,
         "typescript.tsdk": "node_modules\\typescript\\lib",
@@ -41,6 +41,6 @@
                 "icon": "flame"
             }
         },
-
+        "omnisharp.useEditorFormattingSettings": false,
     }
 }

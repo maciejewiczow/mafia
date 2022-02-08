@@ -6,8 +6,8 @@ import { getCurrentUserSuccess } from './User/actions';
 
 import roomsWatchers, { getCurrentRoomWorker } from './Rooms/sagas';
 import userWatchers from './User/sagas';
-import chatWatchers from './Chat/sagas';
-import gameWatchers from './Game/sagas';
+import gameWatchers from './GameChat/Game/sagas';
+import gameChatWatchers from './GameChat/sagas';
 import { AsyncRetT } from './utils';
 
 const spawnAll = (sagasExport: {[key: string]: Saga}) => Object.values(sagasExport).map(saga => spawn(saga));
@@ -31,8 +31,8 @@ export default function* rootSaga() {
     yield all([
         ...spawnAll(userWatchers),
         ...spawnAll(roomsWatchers),
-        ...spawnAll(chatWatchers),
         ...spawnAll(gameWatchers),
+        ...spawnAll(gameChatWatchers),
         call(initSaga),
     ]);
 }

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Redirect } from 'react-router';
 import { ChatTypeEnum } from 'api';
-import { connectToGame, startGame } from 'store/Game/actions';
+import { startGame } from 'store/GameChat/Game/actions';
+import { connectToGameChat } from 'store/GameChat/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
-import * as gameSelectors from 'store/Game/selectors';
+import * as gameChatSelectors from 'store/GameChat/selectors';
 import Button from 'react-bootstrap/esm/Button';
 import { ViewWrapper } from '../ViewWrapper';
 import {
@@ -25,18 +26,18 @@ const GameRoomView: React.FC = () => {
     const room = useSelector(roomSelectors.currentRoom);
     const isCurrentRoomLoading = useSelector(roomSelectors.isCurrentRoomLoading);
     const currentUser = useSelector(userSelectors.currentUser);
-    const isConnectedToGame = useSelector(gameSelectors.isConnectedToGame);
-    const isConnectingToGame = useSelector(gameSelectors.isConnectingToGame);
+    const isConnectedToGameChat = useSelector(gameChatSelectors.isConnectedToGameChat);
+    const isConnectingToGameChat = useSelector(gameChatSelectors.isConnectingToGameChat);
 
     const [areSettingsOpen, setAreSettingsOpen] = useState(false);
 
     useEffect(() => {
-        if (!isConnectingToGame && !isConnectedToGame && room)
-            dispatch(connectToGame());
+        if (!isConnectingToGameChat && !isConnectedToGameChat && room)
+            dispatch(connectToGameChat());
     }, [
         dispatch,
-        isConnectedToGame,
-        isConnectingToGame,
+        isConnectedToGameChat,
+        isConnectingToGameChat,
         room,
     ]);
 
@@ -62,7 +63,7 @@ const GameRoomView: React.FC = () => {
                         <Button
                             variant="primary"
                             onClick={handleStartGameClick}
-                            disabled={!isConnectedToGame || isConnectingToGame || room.participants.length < 3}
+                            disabled={!isConnectedToGameChat || isConnectingToGameChat || room.participants.length < 3}
                             title={room.participants.length < 3 ? 'Wymagane jest minimum 3 graczy' : ''}
                         >
                           Rozpocznij grę

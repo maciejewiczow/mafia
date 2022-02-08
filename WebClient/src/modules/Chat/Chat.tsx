@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { AiOutlineSend } from 'react-icons/ai';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
@@ -6,8 +6,9 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Button from 'react-bootstrap/Button';
 import { ChatTypeEnum } from 'api';
-import { connectToChat, sendMessage } from 'store/Chat/actions';
-import * as chatSelectors from 'store/Chat/selectors';
+import { sendMessage } from 'store/GameChat/Chat/actions';
+import * as chatSelectors from 'store/GameChat/Chat/selectors';
+import * as gameChatSelectors from 'store/GameChat/selectors';
 import Message from './Message';
 
 export interface ChatProps {
@@ -31,10 +32,6 @@ const MessagesWrapper = styled.div`
 
 const ChatHeader = styled.h3``;
 
-const MessageInput = styled.input`
-    width: 100%;
-`;
-
 const MessageFormWrapper = styled.div`
     margin-top: 12px;
 `;
@@ -47,17 +44,12 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
     const dispatch = useDispatch();
 
     const messages = useSelector(chatSelectors.chatMessages(chatType));
-    const isConnected = useSelector(chatSelectors.isConnectedToChat);
-    const isConnecting = useSelector(chatSelectors.isConnectingToChat);
+    const isConnected = useSelector(gameChatSelectors.isConnectedToGameChat);
+    const isConnecting = useSelector(gameChatSelectors.isConnectingToGameChat);
 
     const [currentMessageContent, setCurrentMessageContent] = useState('');
 
     const scrollAreaRef = useRef<HTMLDivElement>(null);
-
-    useEffect(() => {
-        if (!isConnected && !isConnecting)
-            dispatch(connectToChat());
-    }, [dispatch, isConnected, isConnecting]);
 
     useLayoutEffect(() => {
         if (!scrollAreaRef.current)
@@ -79,8 +71,8 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
     return (
         <ChatWrapper className={className}>
             <ChatHeader>{chatType} chat</ChatHeader>
-            {isConnecting ? (
-                <div>Connecting to chat...</div>
+            {!isConnected ? (
+                (isConnecting && <div>Connecting to chat...</div>) || <div>Not connected to chat</div>
             ) : (
                 <>
                     <MessagesWrapper ref={scrollAreaRef}>
