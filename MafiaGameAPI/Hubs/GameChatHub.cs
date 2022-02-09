@@ -9,6 +9,7 @@ using MafiaGameAPI.Models.DTO;
 using System.Collections.Generic;
 using System.Linq;
 using MafiaGameAPI.Models;
+using MafiaGameAPI.Repositories;
 
 namespace MafiaGameAPI.Hubs
 {
@@ -18,12 +19,14 @@ namespace MafiaGameAPI.Hubs
         private readonly IChatService _chatService;
         private readonly IGameRoomsService _gameRoomsService;
         private readonly IGameService _gameService;
+        private readonly IChatRepository _chatRepository;
 
-        public GameChatHub(IChatService chatService, IGameRoomsService gameRoomsService, IGameService gameService)
+        public GameChatHub(IChatService chatService, IGameRoomsService gameRoomsService, IGameService gameService,  IChatRepository chatRepository)
         {
             _chatService = chatService;
             _gameRoomsService = gameRoomsService;
             _gameService = gameService;
+            _chatRepository = chatRepository;
         }
 
         public override async Task OnConnectedAsync()

@@ -35,7 +35,18 @@ export const invokeAddMeToGroups = (): PickAction<GameChatAction, GameChatAction
     errorActionType: undefined,
     isInvokeAction: true,
     methodName: 'AddMeToGroupsOnGameStart',
-    args: undefined,
+});
+
+export const callAddMeToGhostGroup = (): PickAction<GameChatAction, GameChatActionType.callAddMeToGhostGroup> => ({
+    type: GameChatActionType.callAddMeToGhostGroup,
+});
+
+export const invokeAddMeToGhostGroup = (): PickAction<GameChatAction, GameChatActionType.invokeAddMeToGhostGroup> => ({
+    type: GameChatActionType.invokeAddMeToGhostGroup,
+    isInvokeAction: true,
+    methodName: 'AddMeToGhostGroup',
+    errorActionType: undefined,
+    successActionType: undefined,
 });
 
 export const connectToGameChat = (): PickAction<GameChatAction, GameChatActionType.connect> => ({

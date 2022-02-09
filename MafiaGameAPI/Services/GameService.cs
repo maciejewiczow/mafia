@@ -173,6 +173,11 @@ namespace MafiaGameAPI.Services
                                 .Select(grp => grp.Key).First();
 
                 await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateVotingResultAsync(votedUserId);
+
+                room.CurrentGameState.UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
+
+                // Add voted user to ghost chat group
+                await _context.Clients.User(votedUserId).CallAddToGhostGroup();
             }
             room.CurrentGameState.ChangePhase();
             await ChangePhase(roomId, room.CurrentGameState);

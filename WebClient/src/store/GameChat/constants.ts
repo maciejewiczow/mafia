@@ -8,6 +8,8 @@ export enum GameChatActionType {
     memberConnected = 'gameChat/MEMBER_CONNECTED',
     memberDisconnected= 'gameChat/MEMBER_DISCONNECTED',
     invokeAddMeToGroups = 'gameChat/ADD_ME_TO_GROUPS',
+    callAddMeToGhostGroup = 'gameChat/CALL_ADD_ME_TO_GHOST_GROUP',
+    invokeAddMeToGhostGroup = 'gameChat/INVOKE_ADD_ME_TO_GHOST_GROUP',
 }
 
 export type GameChatAction = {
@@ -24,4 +26,8 @@ export type GameChatAction = {
     message: AnnouncementMessage;
 } | (
     InvokeAction<GameChatActionType.invokeAddMeToGroups>
+) | {
+    type: GameChatActionType.callAddMeToGhostGroup;
+} | (
+    InvokeAction<GameChatActionType.invokeAddMeToGhostGroup>
 );

@@ -15,5 +15,6 @@ namespace MafiaGameAPI.Hubs
         Task NewVoteAsync(VoteState vote);
         Task GameEndedAsync(string winnerRoleName);
         Task UpdateVotingResultAsync(string votedUserId);
+        Task CallAddToGhostGroup();
     }
 }

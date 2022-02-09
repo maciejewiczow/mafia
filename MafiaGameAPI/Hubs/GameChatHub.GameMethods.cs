@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MafiaGameAPI.Enums;
 using MafiaGameAPI.Helpers;
 using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.DTO;
@@ -24,6 +25,14 @@ namespace MafiaGameAPI.Hubs
             return state;
         }
 
+        public async Task Vote(String votedUserId)
+        {
+            var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
+
+            await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
+        }
+
+        // These two methods exist because it is not possible to get Context.ConnectionId outside of a hub method
         public async Task AddMeToGroupsOnGameStart() {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var room = await _gameRoomsService.GetRoomById(roomId);
@@ -40,11 +49,15 @@ namespace MafiaGameAPI.Hubs
             }
         }
 
-        public async Task Vote(String votedUserId)
-        {
-            var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
+        public async Task AddMeToGhostGroup() {
+            var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
+            var chatGroupName = IdentifiersHelper.GenerateChatGroupName(user.RoomId, ChatTypeEnum.Ghost);
 
-            await _gameService.Vote(roomId, Context.User.Identity.Name, votedUserId);
+            await Groups.AddToGroupAsync(Context.ConnectionId, chatGroupName);
+            await Clients.Groups(chatGroupName).UserConnectedAsync(user);
+
+            var messages = await _chatRepository.GetMessages(user.RoomId, ChatTypeEnum.Ghost);
+            await Clients.Caller.MessagesOnConnectedAsync(messages);
         }
     }
 }

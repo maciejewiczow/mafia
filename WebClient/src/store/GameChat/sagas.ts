@@ -28,7 +28,13 @@ import {
     stateUpdate,
     votingResult,
 } from './Game/actions';
-import { connectToGameChatSuccess, memberConnected, memberDisconnected } from './actions';
+import {
+    callAddMeToGhostGroup,
+    connectToGameChatSuccess,
+    invokeAddMeToGhostGroup,
+    memberConnected,
+    memberDisconnected,
+} from './actions';
 import { GameChatAction, GameChatActionType } from './constants';
 
 const subscribe = (connection: HubConnection) => (
@@ -60,6 +66,10 @@ const subscribe = (connection: HubConnection) => (
             });
             connection.on('UserDisconnectedAsync', (user: User) => {
                 emit(memberDisconnected(user));
+            });
+            connection.on('CallAddToGhostGroup', () => {
+                console.log('Add to ghost group called');
+                emit(callAddMeToGhostGroup());
             });
 
             connection.onclose(error => {
@@ -153,6 +163,15 @@ function* invokeActionsWorker(action: InvokeAction<string, any[], string, string
     }
 }
 
+function* addMeToGhostGroupWatcher() {
+    yield takeLatest(GameChatActionType.callAddMeToGhostGroup, addMeToGhostGroupWorker);
+}
+
+function* addMeToGhostGroupWorker() {
+    yield put(invokeAddMeToGhostGroup());
+}
+
 export default {
     connectToGameChatWatcher,
+    addMeToGhostGroupWatcher,
 };

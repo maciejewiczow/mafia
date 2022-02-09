@@ -29,15 +29,6 @@ namespace MafiaGameAPI.Models.UserGameStates
 
         public override void ChangePhase()
         {
-            if (VoteState.Count != 0)
-            {
-                var votedUserId = VoteState
-                                .GroupBy(i => i.VotedUserId)
-                                .OrderByDescending(grp => grp.Count())
-                                .Select(grp => grp.Key).First();
-                UserStates.Find(u => u.UserId.Equals(votedUserId)).Role |= RoleEnum.Ghost;
-            }
-
             var votingStartDate = DateTime.Now;
             GameState newState;
             if (HasGameEnded())

@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using MafiaGameAPI.Helpers;
+using Microsoft.AspNetCore.SignalR;
 
 namespace MafiaGameAPI
 {
@@ -185,6 +186,8 @@ namespace MafiaGameAPI
 
                 return new MongoClient(String.Format(section["Base"], userPass));
             });
+
+            services.AddSingleton<IUserIdProvider, UserIdentityNameBasedIdProvider>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
