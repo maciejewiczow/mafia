@@ -74,18 +74,18 @@ const RoomList: React.FC<ClassProps> = ({ className }) => {
                     <HeaderItem>Nazwa gry</HeaderItem>
                     <HeaderItem>Uczestnicy</HeaderItem>
                     <HeaderItem />
-                    {rooms.flatMap(({ id, name, currentPlayersCount, maxPlayers, isGameStarted }) => (
+                    {rooms.flatMap(({ id, name, currentPlayersCount, maxPlayers, hasGameStarted }) => (
                         [
                             <div>{name} </div>,
                             <div>{currentPlayersCount}/{maxPlayers}</div>,
                             <div>
                                 {isUserLoggedIn && (
                                     <>
-                                        {(currentPlayersCount < maxPlayers && !isGameStarted) && (
+                                        {(currentPlayersCount < maxPlayers && !hasGameStarted) && (
                                             <Button variant="outline-success" onClick={handleJoinClick(id)}>Dołącz</Button>
                                         )}
                                         {(currentPlayersCount >= maxPlayers) && <span>Pokój jest pełny</span>}
-                                        {isGameStarted && <span>Gra już się rozpoczęła</span>}
+                                        {hasGameStarted && <span>Gra już się rozpoczęła</span>}
                                     </>
                                 )}
                             </div>,

@@ -16,7 +16,7 @@ function* createRoomWatcher() {
 
 function* createRoomWorker({ name }: PickAction<RoomsAction, RoomsActionType.createRoom>) {
     try {
-        const result: AxiosResponse<GameRoom> = yield call(api.post, `/gameRooms?name=${encodeURIComponent(name)}`);
+        const result: AxiosResponse<GameRoom> = yield call(api.post, '/gameRooms', { name });
 
         yield put(createRoomSuccess(result));
         yield put(replace('room'));

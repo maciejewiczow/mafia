@@ -24,7 +24,7 @@ export enum TokenType {
 export interface GameRoomProjection {
     id: string;
     name: string;
-    isGameStarted: boolean;
+    hasGameStarted: boolean;
     maxPlayers: number;
     currentPlayersCount: number;
 }

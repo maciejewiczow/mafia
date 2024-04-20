@@ -1,5 +1,5 @@
 {
-    "editor.formatOnSave": true,
+    // "editor.formatOnSave": true,
     "razor.disabled": true,
     "razor.format.enable": false,
     "csharp.semanticHighlighting.enabled": true,

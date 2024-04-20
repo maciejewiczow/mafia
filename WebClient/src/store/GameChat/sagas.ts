@@ -16,6 +16,7 @@ import {
     User,
     VoteState,
     Message,
+    ChatTypeEnum,
 } from 'api';
 import { InvokeAction, InvokeActionError, InvokeActionSuccess } from 'store/utils';
 import { messageRecieved } from 'store/GameChat/Chat/actions';
@@ -61,14 +62,13 @@ const subscribe = (connection: HubConnection) => (
             connection.on('MessagesOnConnectedAsync', (m: Message[]) => {
                 emit(messageRecieved(m));
             });
-            connection.on('UserConnectedAsync', (user: User) => {
-                emit(memberConnected(user));
+            connection.on('UserConnectedAsync', (user: User, chatType: ChatTypeEnum) => {
+                emit(memberConnected(user, chatType));
             });
-            connection.on('UserDisconnectedAsync', (user: User) => {
-                emit(memberDisconnected(user));
+            connection.on('UserDisconnectedAsync', (user: User, chatType: ChatTypeEnum) => {
+                emit(memberDisconnected(user, chatType));
             });
             connection.on('CallAddToGhostGroup', () => {
-                console.log('Add to ghost group called');
                 emit(callAddMeToGhostGroup());
             });
 

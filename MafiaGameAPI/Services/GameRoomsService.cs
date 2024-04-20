@@ -26,6 +26,14 @@ namespace MafiaGameAPI.Services
 
         public async Task<GameRoom> JoinRoom(String roomId, String userId)
         {
+            var room = await GetRoomById(roomId);
+
+            if (room.HasGameStarted)
+                throw new Exception("The game in this room has already started");
+
+            if (room.HasGameEnded)
+                throw new Exception("Game in this room already ended");
+
             return await _gameRoomsRepository.AddRoomParticipant(roomId, userId);
         }
 

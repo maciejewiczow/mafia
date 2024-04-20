@@ -33,20 +33,16 @@ namespace MafiaGameAPI.Hubs
         {
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var room = await _gameRoomsService.GetRoomById(roomId);
-
-            var groupNames = room.CurrentGameState
-                .GetUserChatGroups(Context.User.Identity.Name)
-                .Select(chatType => IdentifiersHelper.GenerateChatGroupName(roomId, chatType))
-                .ToList();
-
-            groupNames.Add(IdentifiersHelper.GenerateRoomGroupName(roomId));
-
             var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
-            foreach (string groupName in groupNames)
+
+            foreach (ChatTypeEnum chatType in room.CurrentGameState.GetUserChatGroups(Context.User.Identity.Name))
             {
+                var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, chatType);
                 await Groups.AddToGroupAsync(Context.ConnectionId, groupName);
-                await Clients.Groups(groupName).UserConnectedAsync(user);
+                await Clients.Groups(groupName).UserConnectedAsync(user, chatType);
             }
+
+            await Groups.AddToGroupAsync(Context.ConnectionId, IdentifiersHelper.GenerateRoomGroupName(roomId));
 
             var messages = await _chatService.GetMessagesForUser(Context.User.Identity.Name, roomId);
             await Clients.Caller.MessagesOnConnectedAsync(messages);
@@ -59,14 +55,17 @@ namespace MafiaGameAPI.Hubs
             var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
             var roomId = user.RoomId;
 
-            foreach (ChatTypeEnum value in Enum.GetValues(typeof(ChatTypeEnum)))
+            // instead call service method to remove the disconnected user from room after a delay, if it was their last connection
+            // this needs connection counting per room participant to be implemented
+
+            foreach (ChatTypeEnum chatType in Enum.GetValues(typeof(ChatTypeEnum)))
             {
-                var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, value);
-                await Clients.OthersInGroup(groupName).UserDisconnectedAsync(user);
+                var groupName = IdentifiersHelper.GenerateChatGroupName(roomId, chatType);
+                await Clients.OthersInGroup(groupName).UserDisconnectedAsync(user, chatType);
             }
 
-            await Clients.OthersInGroup(IdentifiersHelper.GenerateRoomGroupName(roomId))
-                .UserDisconnectedAsync(user);
+            // await Clients.OthersInGroup(IdentifiersHelper.GenerateRoomGroupName(roomId))
+            //     .UserDisconnectedAsync(user);
 
             await base.OnDisconnectedAsync(exception);
         }

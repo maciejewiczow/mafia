@@ -5,6 +5,9 @@ using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.DTO.Projections;
 using MongoDB.Driver;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using System.Linq;
+using MafiaGameAPI.Models.UserGameStates;
 
 namespace MafiaGameAPI.Repositories
 {
@@ -19,24 +22,45 @@ namespace MafiaGameAPI.Repositories
             _usersCollection = mongoClient.GetDatabase("mafia").GetCollection<User>("users");
         }
 
+        private class GameRoomProjectionDTO {
+            [BsonId]
+            public string Id { get; set; }
+            public String Name { get; set; }
+            public int MaxPlayers { get; set; }
+            public int CurrentPlayersCount { get; set; }
+            public List<string> CurrentGameStateType { get; set; }
+        }
+
         public async Task<List<GameRoomProjection>> GetRooms()
         {
-            // FIXME: Room projection ma teraz wszędzie default value w HasGameStarted, przez to że to jest read-only w GameRoomie
             var project = new BsonDocument
             {
                 { "_id", new BsonDocument("$toString", "$_id") },
                 { "name", 1 },
                 { "maxPlayers", "$gameOptions.maxPlayers" },
-                { "currentPlayersCount", new BsonDocument("$size", "$participants") }
+                { "currentPlayersCount", new BsonDocument("$size", "$participants") },
+                { "currentGameStateType",  "$currentGameState._t"}
             };
 
             List<GameRoomProjection> rooms;
             try
             {
-                rooms = await _gameRoomsCollection
+                var roomsDto = await _gameRoomsCollection
                     .Find(Builders<GameRoom>.Filter.Empty)
-                    .Project<GameRoomProjection>(project)
+                    .Project<GameRoomProjectionDTO>(project)
                     .ToListAsync();
+
+                rooms = roomsDto
+                    .Select(dto => new GameRoomProjection()
+                        {
+                            Id = dto.Id,
+                            Name = dto.Name,
+                            MaxPlayers = dto.MaxPlayers,
+                            CurrentPlayersCount = dto.CurrentPlayersCount,
+                            HasGameStarted = !dto.CurrentGameStateType.Contains(nameof(GameNotStartedState))
+                        }
+                    )
+                    .ToList();
             }
             catch (Exception)
             {

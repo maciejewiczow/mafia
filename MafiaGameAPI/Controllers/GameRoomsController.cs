@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MafiaGameAPI.Models;
+using MafiaGameAPI.Models.DTO;
 using MafiaGameAPI.Models.DTO.Projections;
 using MafiaGameAPI.Repositories;
 using MafiaGameAPI.Services;
@@ -44,11 +45,10 @@ namespace MafiaGameAPI.Controllers
             return await _gameRoomsService.GetRoomById(roomId);
         }
 
-        // TODO: add create room DTO to remove name param from query
         [HttpPost]
-        public async Task<GameRoom> CreateRoom(String name)
+        public async Task<GameRoom> CreateRoom(CreateRoomDTO dto)
         {
-            return await _gameRoomsService.CreateRoom(name, User.Identity.Name);
+            return await _gameRoomsService.CreateRoom(dto.Name, User.Identity.Name);
         }
 
         [HttpPost("{roomId}/join")]

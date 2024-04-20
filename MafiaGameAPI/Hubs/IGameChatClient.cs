@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using MafiaGameAPI.Models;
+using MafiaGameAPI.Enums;
 
 namespace MafiaGameAPI.Hubs
 {
@@ -8,8 +9,8 @@ namespace MafiaGameAPI.Hubs
     {
         Task MessageAsync(Message m);
         Task MessagesOnConnectedAsync(List<Message> m);
-        Task UserConnectedAsync(User u);
-        Task UserDisconnectedAsync(User u);
+        Task UserConnectedAsync(User u, ChatTypeEnum chatType);
+        Task UserDisconnectedAsync(User u, ChatTypeEnum chatType);
         Task UpdateGameStateAsync(GameState state);
         Task GameStartedAsync();
         Task NewVoteAsync(VoteState vote);

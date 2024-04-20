@@ -3,28 +3,26 @@ import { PickAction } from 'store';
 import { MessageType } from './Chat/store';
 import { GameChatAction, GameChatActionType } from './constants';
 
-export const memberConnected = (user: User): PickAction<GameChatAction, GameChatActionType.memberConnected> => ({
+export const memberConnected = (user: User, chatType: ChatTypeEnum): PickAction<GameChatAction, GameChatActionType.memberConnected> => ({
     type: GameChatActionType.memberConnected,
     user,
     message: {
         messageType: MessageType.Announcement,
         content: `${user.name} dołączył do chatu`,
         sentAt: new Date().toUTCString(),
-        // API-FIX: Wysyłać typ chatu w OnConnectedAsync
-        chatType: ChatTypeEnum.General,
+        chatType,
         id: Math.random().toString(),
     },
 });
 
-export const memberDisconnected = (user: User): PickAction<GameChatAction, GameChatActionType.memberDisconnected> => ({
+export const memberDisconnected = (user: User, chatType: ChatTypeEnum): PickAction<GameChatAction, GameChatActionType.memberDisconnected> => ({
     type: GameChatActionType.memberDisconnected,
     user,
     message: {
         messageType: MessageType.Announcement,
         content: `${user.name} opuścił chat`,
         sentAt: new Date().toUTCString(),
-        // API-FIX: Wysyłać typ chatu w OnDisconnectedConnectedAsync
-        chatType: ChatTypeEnum.General,
+        chatType,
         id: Math.random().toString(),
     },
 });

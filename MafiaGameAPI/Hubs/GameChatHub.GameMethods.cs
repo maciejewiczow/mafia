@@ -37,15 +37,12 @@ namespace MafiaGameAPI.Hubs
             var roomId = await _gameRoomsService.GetRoomIdByUserId(Context.User.Identity.Name);
             var room = await _gameRoomsService.GetRoomById(roomId);
 
-            var groupNames = room.CurrentGameState
-                .GetUserChatGroups(Context.User.Identity.Name)
-                .Select(chatType => IdentifiersHelper.GenerateChatGroupName(roomId, chatType));
-
             var user = await _gameRoomsService.GetUserById(Context.User.Identity.Name);
-            foreach (string chatGroupName in groupNames)
+            foreach (ChatTypeEnum chatType in room.CurrentGameState.GetUserChatGroups(Context.User.Identity.Name))
             {
+                var chatGroupName = IdentifiersHelper.GenerateChatGroupName(roomId, chatType);
                 await Groups.AddToGroupAsync(Context.ConnectionId, chatGroupName);
-                await Clients.Groups(chatGroupName).UserConnectedAsync(user);
+                await Clients.Groups(chatGroupName).UserConnectedAsync(user, chatType);
             }
         }
 
@@ -54,7 +51,7 @@ namespace MafiaGameAPI.Hubs
             var chatGroupName = IdentifiersHelper.GenerateChatGroupName(user.RoomId, ChatTypeEnum.Ghost);
 
             await Groups.AddToGroupAsync(Context.ConnectionId, chatGroupName);
-            await Clients.Groups(chatGroupName).UserConnectedAsync(user);
+            await Clients.Groups(chatGroupName).UserConnectedAsync(user, ChatTypeEnum.Ghost);
 
             var messages = await _chatRepository.GetMessages(user.RoomId, ChatTypeEnum.Ghost);
             await Clients.Caller.MessagesOnConnectedAsync(messages);
