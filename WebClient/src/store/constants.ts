@@ -1,16 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { UnknownAction } from 'redux';
-
-import { RoomsState } from './Rooms/store';
-import { CurrentUserState } from './User/store';
-import { GameChatState } from './GameChat/store';
-
-import { RoomsAction } from './Rooms/constants';
-import { UserAction } from './User/constants';
+import { RouterState } from 'redux-first-history';
+import { ChatAction } from './GameChat/Chat/constants';
 import { GameChatAction } from './GameChat/constants';
 import { GameAction } from './GameChat/Game/constants';
-import { ChatAction } from './GameChat/Chat/constants';
-import { RouterState } from 'redux-first-history';
+import { GameChatState } from './GameChat/store';
+import { RoomsAction } from './Rooms/constants';
+import { RoomsState } from './Rooms/store';
+import { UserAction } from './User/constants';
+import { CurrentUserState } from './User/store';
 
 export interface AppState {
     router: RouterState;

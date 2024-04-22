@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from 'store/hooks';
 import { getRooms, joinRoom } from 'store/Rooms/actions';
 import * as selectors from 'store/Rooms/selectors';
 import { currentUser as currentUserSelector } from 'store/User/selectors';
-import CreateRoom from './CreateRoom';
-import { useAppDispatch } from 'store/hooks';
+import styled from 'styled-components';
+import {CreateRoom }from './CreateRoom';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -46,7 +46,7 @@ interface ClassProps {
     className?: string;
 }
 
-const RoomList: React.FC<ClassProps> = ({ className }) => {
+export const RoomList: React.FC<ClassProps> = ({ className }) => {
     const dispatch = useAppDispatch();
 
     const areRoomsLoading = useSelector(selectors.areRoomsLoading);
@@ -62,7 +62,7 @@ const RoomList: React.FC<ClassProps> = ({ className }) => {
     };
 
     if (areRoomsLoading)
-        return <Wrapper className={className}>Ładowanie pokoi...</Wrapper>;
+        {return <Wrapper className={className}>Ładowanie pokoi...</Wrapper>;}
 
     return (
         <Wrapper className={className}>
@@ -75,10 +75,10 @@ const RoomList: React.FC<ClassProps> = ({ className }) => {
                     <HeaderItem>Nazwa gry</HeaderItem>
                     <HeaderItem>Uczestnicy</HeaderItem>
                     <HeaderItem />
-                    {rooms.flatMap(({ id, name, currentPlayersCount, maxPlayers, hasGameStarted }) => (
-                        [
-                            <div>{name} </div>,
-                            <div>{currentPlayersCount}/{maxPlayers}</div>,
+                    {rooms.map(({ id, name, currentPlayersCount, maxPlayers, hasGameStarted }) => (
+                        <React.Fragment key={id}>
+                            <div>{name} </div>
+                            <div>{currentPlayersCount}/{maxPlayers}</div>
                             <div>
                                 {isUserLoggedIn && (
                                     <>
@@ -89,13 +89,11 @@ const RoomList: React.FC<ClassProps> = ({ className }) => {
                                         {hasGameStarted && <span>Gra już się rozpoczęła</span>}
                                     </>
                                 )}
-                            </div>,
-                        ]
+                            </div>
+                        </React.Fragment>
                     ))}
                 </List>
             )}
         </Wrapper>
     );
 };
-
-export default RoomList;

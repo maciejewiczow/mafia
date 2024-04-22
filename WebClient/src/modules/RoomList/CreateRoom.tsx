@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
-import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import { FaPlus } from 'react-icons/fa';
+import InputGroup from 'react-bootstrap/InputGroup';
 import { CgEnter } from 'react-icons/cg';
-import styled from 'styled-components';
-import { createRoom } from 'store/Rooms/actions';
+import { FaPlus } from 'react-icons/fa';
 import { useAppDispatch } from 'store/hooks';
+import { createRoom } from 'store/Rooms/actions';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
     margin: 8px 0;
@@ -16,7 +16,7 @@ const MyForm = styled.form`
     display: inline-block;
 `;
 
-const CreateRoom: React.FC = () => {
+export const CreateRoom: React.FC = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [roomName, setRoomName] = useState('');
     const dispatch = useAppDispatch();
@@ -41,5 +41,3 @@ const CreateRoom: React.FC = () => {
         </Wrapper>
     );
 };
-
-export default CreateRoom;

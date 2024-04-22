@@ -1,5 +1,3 @@
-import { api } from './api';
-
-export default api;
+export { api } from './api';
+export { addAuthorizationToken, getAccessToken, setTokens } from './api';
 export * from './responses';
-export { setTokens, addAuthorizationToken, getAccessToken } from './api';

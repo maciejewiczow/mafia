@@ -1,7 +1,7 @@
-import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
-import { TokenResponse, CreateUserResponse } from './responses';
+import axios, { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { set } from 'lodash'
+import { CreateUserResponse, TokenResponse } from './responses';
 
 const accessTokenKey = 'at';
 const refreshTokenKey = 'rt';
@@ -25,12 +25,10 @@ export const getAccessToken = async (): Promise<string | null> => {
     if (accesTokenString) {
         const token: AccessTokenInStorage = JSON.parse(accesTokenString);
 
-        if (token.exp > Date.now())
-            return token.val;
+        if (token.exp > Date.now()) { return token.val; }
     }
 
-    if (!refreshToken)
-        return null;
+    if (!refreshToken) { return null; }
 
     let resp: AxiosResponse<TokenResponse>;
     try {
@@ -38,9 +36,9 @@ export const getAccessToken = async (): Promise<string | null> => {
             '/Users/tokenRefresh',
             { headers: { Authorization: `Bearer ${refreshToken}` } },
         );
-    } catch (e: any) {
+    } catch (e) {
         console.error('Token refresh request failed', e);
-        toast.error(`Błąd tokenów: ${e.message}`);
+        toast.error(`Błąd tokenów: ${(e as AxiosError).message}`);
         return null;
     }
 
@@ -66,13 +64,11 @@ export const setTokens = ({ token, refreshToken, expiresOn }: CreateUserResponse
 };
 
 export const addAuthorizationToken = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
-    if (config.url?.match(/Users\/token/))
-        return config;
+    if (config.url?.match(/Users\/token/)) { return config; }
 
     const token = await getAccessToken();
 
-    if (token)
-        set(config, 'headers.Authorization', `Bearer ${token}`);
+    if (token) { set(config, 'headers.Authorization', `Bearer ${token}`); }
 
     return config;
 };

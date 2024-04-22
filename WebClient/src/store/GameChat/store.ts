@@ -1,5 +1,5 @@
-import { ChatsState, initialChatState } from './Chat/store';
-import { GameStateInStore, initialGameState } from './Game/store';
+import { ChatsState } from './Chat/store';
+import { GameStateInStore } from './Game/store';
 
 export type GameChatConnectedState = boolean;
 export type GameChatConnectingState = boolean;

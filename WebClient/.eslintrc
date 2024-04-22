@@ -172,23 +172,9 @@
         },
         {
             "files": [
-                "./app/**/*.tsx",
-                "./**/*.stories.tsx",
-                "./**/*.stories.ts"
-            ],
-            "rules": {
-                "react/no-multi-comp": "off"
-            }
-        },
-        {
-            "files": [
-                "./**/*.tsx",
-                "./**/*.stories.tsx",
-                "./**/*.stories.ts",
-                "./.storybook/**/*.ts",
-                "./.storybook/**/*.tsx",
-                "**/*.d.ts",
-                "./codegen.ts"
+                "./**/sagas.ts",
+                "./**/rootSaga.ts",
+                "**/*.d.ts"
             ],
             "rules": {
                 "import/no-default-export": "off"

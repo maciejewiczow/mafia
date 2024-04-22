@@ -1,35 +1,35 @@
 import React, { useEffect } from 'react';
+import { IoIosCloudyNight, IoIosSunny } from 'react-icons/io';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router';
-import dayjs from 'dayjs';
 import { ChatTypeEnum, PhaseEnum, RoleEnum } from 'api';
+import dayjs from 'dayjs';
+import { replace } from 'redux-first-history';
 import { connectToGameChat } from 'store/GameChat/actions';
-import * as roomSelectors from 'store/Rooms/selectors';
-import * as userSelectors from 'store/User/selectors';
 import * as gameSelectors from 'store/GameChat/Game/selectors';
 import * as gameChatSelectors from 'store/GameChat/selectors';
-import { IoIosCloudyNight, IoIosSunny } from 'react-icons/io';
-import { useCountdown } from 'utils/hooks/useCountdown';
+import { useAppDispatch } from 'store/hooks';
+import * as roomSelectors from 'store/Rooms/selectors';
 import { getCurrentUser } from 'store/User/actions';
+import * as userSelectors from 'store/User/selectors';
+import { useCountdown } from 'utils/hooks/useCountdown';
 import { ViewWrapper } from '../ViewWrapper';
+import { ParticipantWithVoteButton } from './ParticipantWithVoteButton';
 import {
-    PhaseCounter,
-    Phase,
+    ChatArea,
     ChatsWrapper,
-    WinnerOverlay,
+    ContentWrapper,
     GoBack,
     Header,
-    ContentWrapper,
     Participants,
-    ChatArea,
+    Phase,
+    PhaseCounter,
+    WinnerOverlay,
 } from './parts';
-import { ParticipantWithVoteButton } from './ParticipantWithVoteButton';
-import { useAppDispatch } from 'store/hooks';
-import { replace } from 'redux-first-history';
 
 // TODO: Clear state after the game is finished
 
-const GameView: React.FC = () => {
+export const GameView: React.FC = () => {
     const dispatch = useAppDispatch();
     const room = useSelector(roomSelectors.currentRoom);
     const isUserLoading = useSelector(userSelectors.isUserLoading);
@@ -43,7 +43,7 @@ const GameView: React.FC = () => {
 
     useEffect(() => {
         if (!isUserLoading && currentUser?.roomId !== null && !isConnectingToGameChat && !isConnectedToGameChat)
-            dispatch(connectToGameChat());
+            {dispatch(connectToGameChat());}
     }, [
         currentUser?.roomId,
         dispatch,
@@ -56,16 +56,16 @@ const GameView: React.FC = () => {
     const remaining = useCountdown(currentGameState?.votingEnd || '');
 
     if (!isUserLoading && currentUser?.roomId === null)
-        return <Navigate to="/" />;
+        {return <Navigate to="/" />;}
 
     if (!room)
-        return <div>Loading current room...</div>;
+        {return <div>Loading current room...</div>;}
 
     if (!isCurrentRoomLoading && !room.hasGameStarted && !room.hasGameEnded)
-        return <Navigate to="/room" />;
+        {return <Navigate to="/room" />;}
 
     if (!currentGameState)
-        return <div>To się nie powinno zdazyc</div>;
+        {return <div>To się nie powinno zdazyc</div>;}
 
     const { phase } = currentGameState;
 
@@ -103,5 +103,3 @@ const GameView: React.FC = () => {
         </ViewWrapper>
     );
 };
-
-export default GameView;

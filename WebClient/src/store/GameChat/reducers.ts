@@ -1,12 +1,10 @@
 import { combineReducers, Reducer } from 'redux';
-import { AppState } from 'store/constants';
 import { chatsReducer } from './Chat/reducers';
 import { GameChatAction, GameChatActionType } from './constants';
 import { gameReducer } from './Game/reducers';
 import {
     GameChatConnectedState,
     GameChatConnectingState,
-    GameChatState,
     initialChatConnectedState,
     initialChatConnectingState,
 } from './store';

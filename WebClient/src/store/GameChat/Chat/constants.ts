@@ -1,4 +1,4 @@
-import { ChatTypeEnum, Message, User } from 'api';
+import { ChatTypeEnum, Message } from 'api';
 import { InvokeAction } from 'store/utils';
 
 export enum ChatActionType {

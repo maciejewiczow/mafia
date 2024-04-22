@@ -1,16 +1,16 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
-import { AiOutlineSend } from 'react-icons/ai';
-import { useSelector } from 'react-redux';
-import styled from 'styled-components';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
+import { AiOutlineSend } from 'react-icons/ai';
+import { useSelector } from 'react-redux';
 import { ChatTypeEnum } from 'api';
 import { sendMessage } from 'store/GameChat/Chat/actions';
 import * as chatSelectors from 'store/GameChat/Chat/selectors';
 import * as gameChatSelectors from 'store/GameChat/selectors';
-import Message from './Message';
 import { useAppDispatch } from 'store/hooks';
+import styled from 'styled-components';
+import Message from './Message';
 
 export interface ChatProps {
     className?: string;
@@ -41,7 +41,7 @@ const NoMessages = styled.div`
     color: #888;
 `;
 
-const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
+export const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
     const dispatch = useAppDispatch();
 
     const messages = useSelector(chatSelectors.chatMessages(chatType));
@@ -54,13 +54,13 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
 
     useLayoutEffect(() => {
         if (!scrollAreaRef.current)
-            return;
+            {return;}
 
         const el = scrollAreaRef.current;
 
         // scroll is at the bottom
         if (Math.abs((el.scrollHeight - el.scrollTop) - el.clientHeight) < 30)
-            el.scrollTop = el.scrollHeight;
+            {el.scrollTop = el.scrollHeight;}
     }, [messages]);
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
@@ -102,5 +102,3 @@ const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
         </ChatWrapper>
     );
 };
-
-export default Chat;

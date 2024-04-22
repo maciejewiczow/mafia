@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
+import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import Button from 'react-bootstrap/Button';
-import styled from 'styled-components';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from 'store/hooks';
 import { createUser } from 'store/User/actions';
 import * as selectors from 'store/User/selectors';
-import { useAppDispatch } from 'store/hooks';
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -22,7 +22,7 @@ interface ClassProps {
     className?: string;
 }
 
-const CreateUser: React.FC<ClassProps> = ({ className }) => {
+export const CreateUser: React.FC<ClassProps> = ({ className }) => {
     const dispatch = useAppDispatch();
     const [userName, setUserName] = useState('');
 
@@ -59,5 +59,3 @@ const CreateUser: React.FC<ClassProps> = ({ className }) => {
         </Wrapper>
     );
 };
-
-export default CreateUser;

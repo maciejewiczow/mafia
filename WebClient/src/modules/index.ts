@@ -1,4 +1,4 @@
-export { default as Chat } from './Chat/Chat';
-export { default as CreateUser } from './CreateUser/CreateUser';
-export { default as CreateRoom } from './RoomList/CreateRoom';
-export { default as RoomList } from './RoomList/RoomList';
+export { Chat } from './Chat/Chat';
+export { CreateUser } from './CreateUser/CreateUser';
+export { CreateRoom } from './RoomList/CreateRoom';
+export { RoomList } from './RoomList/RoomList';

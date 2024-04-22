@@ -1,14 +1,14 @@
-import { AxiosResponse } from 'axios';
 import { toast } from 'react-toastify';
+import { api, GameOptions, GameRoom } from 'api';
+import { AxiosResponse } from 'axios';
+import { replace } from 'redux-first-history';
 import { call, put, select, takeLatest } from 'redux-saga/effects';
+import { AppState } from 'store/constants';
 import * as roomSelectors from 'store/Rooms/selectors';
-import api, { GameOptions, GameRoom } from 'api';
 import * as userSelectors from 'store/User/selectors';
 import { PickAction } from 'store/utils';
-import { AppState } from 'store/constants';
 import { createRoomSuccess, getCurrentRoomSuccess, joinRoomSuccess } from './actions';
-import { RoomsActionType, RoomsAction } from './constants';
-import { replace } from 'redux-first-history';
+import { RoomsAction, RoomsActionType } from './constants';
 
 function* createRoomWatcher() {
     yield takeLatest(RoomsActionType.createRoom, createRoomWorker);
@@ -38,15 +38,13 @@ function* joinRoomWorker(action: PickAction<RoomsAction, RoomsActionType.joinRoo
         yield put(replace('room'));
     } catch (error) {
         console.error('Joining room failed with error: ', error);
-        if (error instanceof Error)
-            toast.error(`Podczs dołączania do pokoju wystąpił błąd: ${error.message}`);
+        if (error instanceof Error) { toast.error(`Podczs dołączania do pokoju wystąpił błąd: ${error.message}`); }
     }
 }
 
 export function* getCurrentRoomWorker() {
     const isUserInAnyRoom: string | undefined = yield select(userSelectors.currentUserRoom);
-    if (!isUserInAnyRoom)
-        return;
+    if (!isUserInAnyRoom) { return; }
 
     try {
         put({ type: RoomsActionType.getCurrentRoom });
@@ -57,18 +55,14 @@ export function* getCurrentRoomWorker() {
         const path: string | undefined = yield select((state: AppState) => state.router.location?.pathname);
 
         if (path === '/') {
-            if (!hasGameStarted)
-                yield put(replace('room'));
-            else
-                yield put(replace('game'));
+            if (!hasGameStarted) { yield put(replace('room')); }
+            else { yield put(replace('game')); }
         }
 
-        if (path === '/room' && hasGameStarted)
-            yield put(replace('game'));
+        if (path === '/room' && hasGameStarted) { yield put(replace('game')); }
     } catch (error) {
         console.log('Current room request failed with error: ', error);
-        if (error instanceof Error)
-            toast.error(`Błąd rządania: ${error.message}`);
+        if (error instanceof Error) { toast.error(`Błąd rządania: ${error.message}`); }
     }
 }
 
@@ -79,13 +73,11 @@ function* saveRoomOptionsWatcher() {
 function* saveRoomOptionsWorker() {
     const currentRoomId: string | undefined = yield select((state: AppState) => state.rooms.currentRoom?.id);
 
-    if (!currentRoomId)
-        return;
+    if (!currentRoomId) { return; }
 
     const currentRoomOpts: GameOptions | undefined = yield select(roomSelectors.currentRoomOptions);
 
-    if (!currentRoomOpts)
-        return;
+    if (!currentRoomOpts) { return; }
 
     try {
         yield call(api.put, `/gameRooms/${currentRoomId}/options`, currentRoomOpts);

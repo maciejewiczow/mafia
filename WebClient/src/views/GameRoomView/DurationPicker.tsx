@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 export interface DurationPickerProps {
     className?: string;
-    onChange?: (duration: string) => any;
+    onChange?: (duration: string) => void;
     value?: string;
 }
 

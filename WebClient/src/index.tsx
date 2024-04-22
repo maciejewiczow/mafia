@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createGlobalStyle } from 'styled-components';
 import { Provider } from 'react-redux';
 import { Slide, ToastContainer } from 'react-toastify';
-import reportWebVitals from './reportWebVitals';
-
-import store from './store';
-import App from './App';
-
+import { createGlobalStyle } from 'styled-components';
+import { App } from './App';
+import { reportWebVitals } from './reportWebVitals';
+import { store } from './store';
 import 'react-toastify/dist/ReactToastify.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -35,6 +33,7 @@ const GlobalStyles = createGlobalStyle`
     }
 `;
 
+// eslint-disable-next-line react/no-deprecated
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>

@@ -1,10 +1,9 @@
-import { ChatTypeEnum } from 'api';
 import { produce } from 'immer';
 import { Reducer } from 'redux';
-import { objectHasOwnProperty, PickAction } from 'store/utils';
+import { objectHasOwnProperty } from 'store/utils';
 import { GameChatAction, GameChatActionType } from '../constants';
 import { ChatAction, ChatActionType } from './constants';
-import { initialChatState, ChatsState, MessageType, MessageInStore } from './store';
+import { ChatsState, initialChatState, MessageInStore, MessageType } from './store';
 
 export const chatsReducer: Reducer<ChatsState, ChatAction | GameChatAction> = (
     state = initialChatState,

@@ -1,34 +1,26 @@
-import {
-    call,
-    take,
-    fork,
-    takeLatest,
-    apply,
-    put,
-} from 'redux-saga/effects';
-import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import { buffers, END, EventChannel, eventChannel } from 'redux-saga';
-import { AnyAction } from 'redux';
 import { toast } from 'react-toastify';
+import { HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
 import {
-    getAccessToken,
+    ChatTypeEnum,
     GameState,
+    getAccessToken,
+    Message,
     User,
     VoteState,
-    Message,
-    ChatTypeEnum,
 } from 'api';
-import { InvokeAction, InvokeActionError, InvokeActionSuccess } from 'store/utils';
+import { AnyAction } from 'redux';
+import { buffers, END, EventChannel, eventChannel } from 'redux-saga';
+import {
+    apply,
+    call,
+    fork,
+    put,
+    take,
+    takeLatest,
+} from 'redux-saga/effects';
 import { messageRecieved } from 'store/GameChat/Chat/actions';
 import { ChatAction } from 'store/GameChat/Chat/constants';
-import { GameAction } from './Game/constants';
-import {
-    gameEnded,
-    gameStarted,
-    newVote,
-    stateUpdate,
-    votingResult,
-} from './Game/actions';
+import { InvokeAction, InvokeActionError, InvokeActionSuccess } from 'store/utils';
 import {
     callAddMeToGhostGroup,
     connectToGameChatSuccess,
@@ -37,6 +29,14 @@ import {
     memberDisconnected,
 } from './actions';
 import { GameChatAction, GameChatActionType } from './constants';
+import {
+    gameEnded,
+    gameStarted,
+    newVote,
+    stateUpdate,
+    votingResult,
+} from './Game/actions';
+import { GameAction } from './Game/constants';
 
 const subscribe = (connection: HubConnection) => (
     eventChannel<GameAction | ChatAction | GameChatAction>(
@@ -96,8 +96,7 @@ function* connectToGameChatWatcher() {
 const getTokenOrThrow = async () => {
     const token = await getAccessToken();
 
-    if (!token)
-        throw new Error('Cannot connect to game without token');
+    if (!token) { throw new Error('Cannot connect to game without token'); }
 
     return token;
 };
@@ -117,8 +116,7 @@ function* connectToGameChatWorker() {
         yield put(connectToGameChatSuccess());
     } catch (error) {
         console.error('Game error:', error);
-        if (error instanceof Error)
-            toast.error(`Błąd gry: ${error.message}`);
+        if (error instanceof Error) { toast.error(`Błąd gry: ${error.message}`); }
     }
 }
 
@@ -132,7 +130,9 @@ function* incomingActionsWatcher(channel: EventChannel<GameAction | ChatAction |
 
 function* invokeActionsWatcher(connection: HubConnection) {
     while (true) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const action: InvokeAction<string, any[], string, string> = yield take(
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             (act: InvokeAction<any, any> | AnyAction) => act.isInvokeAction,
         );
         console.log('Outgoing client action', action);
@@ -140,12 +140,14 @@ function* invokeActionsWatcher(connection: HubConnection) {
     }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function* invokeActionsWorker(action: InvokeAction<string, any[], string, string>, connection: HubConnection) {
     try {
         // @ts-expect-error this actually should be any
         const result = yield apply(connection, connection.invoke, [action.methodName, ...(action.args || [])]);
 
         if (action.successActionType) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const sucessAction: InvokeActionSuccess<string, any> = {
                 type: action.successActionType,
                 result,
@@ -161,8 +163,9 @@ function* invokeActionsWorker(action: InvokeAction<string, any[], string, string
             yield put(errorAction);
         }
         console.error('Error has ocurred when invoking a hub method', error);
-        if (error instanceof Error)
+        if (error instanceof Error) {
             toast.error(`Błąd podczas przewarzania akcji: ${error.message}`);
+        }
     }
 }
 

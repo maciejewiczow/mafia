@@ -1,4 +1,4 @@
-import { GameState, User, VoteState } from 'api';
+import { GameState, VoteState } from 'api';
 import { PickAction } from 'store/utils';
 import { GameAction, GameActionType } from './constants';
 
@@ -43,7 +43,7 @@ export const votingResult = (votedUserId: string): PickAction<GameAction, GameAc
     votedUserId,
 });
 
-export const stateUpdate = (state: GameState) :PickAction<GameAction, GameActionType.stateUpdate> => ({
+export const stateUpdate = (state: GameState): PickAction<GameAction, GameActionType.stateUpdate> => ({
     type: GameActionType.stateUpdate,
     state,
 });

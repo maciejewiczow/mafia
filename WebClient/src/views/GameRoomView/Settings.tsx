@@ -1,12 +1,12 @@
 import React from 'react';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import { useSelector } from 'react-redux';
+import { useAppDispatch } from 'store/hooks';
 import { saveGameOptions, updateGameOptions } from 'store/Rooms/actions';
 import { currentRoomOptions } from 'store/Rooms/selectors';
 import { DurationPicker } from './DurationPicker';
 import { SettingsWrapper } from './parts';
-import { useAppDispatch } from 'store/hooks';
 
 export const Settings: React.FC = () => {
     const dispatch = useAppDispatch();
@@ -19,7 +19,7 @@ export const Settings: React.FC = () => {
     };
 
     if (!currentRoomOpts)
-        return null;
+        {return null;}
 
     return (
         <SettingsWrapper>

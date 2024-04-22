@@ -1,16 +1,15 @@
+import { api, getAccessToken, User } from 'api';
+import { AxiosResponse } from 'axios';
 import { Saga } from 'redux-saga';
 import { all, call, put, spawn } from 'redux-saga/effects';
-import { AxiosResponse } from 'axios';
-import api, { User, getAccessToken } from 'api';
-import { getCurrentUserSuccess } from './User/actions';
-
-import roomsWatchers, { getCurrentRoomWorker } from './Rooms/sagas';
-import userWatchers from './User/sagas';
 import gameWatchers from './GameChat/Game/sagas';
 import gameChatWatchers from './GameChat/sagas';
+import roomsWatchers, { getCurrentRoomWorker } from './Rooms/sagas';
+import { getCurrentUserSuccess } from './User/actions';
+import userWatchers from './User/sagas';
 import { AsyncRetT } from './utils';
 
-const spawnAll = (sagasExport: {[key: string]: Saga}) => Object.values(sagasExport).map(saga => spawn(saga));
+const spawnAll = (sagasExport: { [key: string]: Saga }) => Object.values(sagasExport).map(saga => spawn(saga));
 
 function* initSaga() {
     const token: AsyncRetT<typeof getAccessToken> = yield call(getAccessToken);
@@ -27,7 +26,7 @@ function* initSaga() {
     yield call(getCurrentRoomWorker);
 }
 
-export default function* rootSaga() {
+export function* rootSaga() {
     yield all([
         ...spawnAll(userWatchers),
         ...spawnAll(roomsWatchers),

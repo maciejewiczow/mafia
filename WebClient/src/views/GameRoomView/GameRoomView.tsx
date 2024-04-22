@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react';
+import Button from 'react-bootstrap/esm/Button';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router';
 import { ChatTypeEnum } from 'api';
-import { startGame } from 'store/GameChat/Game/actions';
 import { connectToGameChat } from 'store/GameChat/actions';
+import { startGame } from 'store/GameChat/Game/actions';
+import * as gameChatSelectors from 'store/GameChat/selectors';
+import { useAppDispatch } from 'store/hooks';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
-import * as gameChatSelectors from 'store/GameChat/selectors';
-import Button from 'react-bootstrap/esm/Button';
 import { ViewWrapper } from '../ViewWrapper';
 import {
-    Header,
-    StartGameButtonWrapper,
-    ContentWrapper,
-    ParticipantsWrapper,
-    Participant,
     Badge,
     ChatArea,
+    ContentWrapper,
+    Header,
+    Participant,
+    ParticipantsWrapper,
     SettingsButton,
+    StartGameButtonWrapper,
 } from './parts';
 import { Settings } from './Settings';
-import { useAppDispatch } from 'store/hooks';
 
-const GameRoomView: React.FC = () => {
+export const GameRoomView: React.FC = () => {
     const dispatch = useAppDispatch();
     const room = useSelector(roomSelectors.currentRoom);
     const isCurrentRoomLoading = useSelector(roomSelectors.isCurrentRoomLoading);
@@ -34,7 +34,7 @@ const GameRoomView: React.FC = () => {
 
     useEffect(() => {
         if (!isConnectingToGameChat && !isConnectedToGameChat && room)
-            dispatch(connectToGameChat());
+            {dispatch(connectToGameChat());}
     }, [
         dispatch,
         isConnectedToGameChat,
@@ -43,13 +43,13 @@ const GameRoomView: React.FC = () => {
     ]);
 
     if (!room && !isCurrentRoomLoading)
-        return <Navigate to="/" />;
+        {return <Navigate to="/" />;}
 
     if (!room)
-        return <div>Loading room...</div>;
+        {return <div>Loading room...</div>;}
 
     if (room.hasGameStarted && !room.hasGameEnded)
-        return <Navigate to="/game" />;
+        {return <Navigate to="/game" />;}
 
     const handleStartGameClick = () => {
         dispatch(startGame());
@@ -97,5 +97,3 @@ const GameRoomView: React.FC = () => {
         </ViewWrapper>
     );
 };
-
-export default GameRoomView;

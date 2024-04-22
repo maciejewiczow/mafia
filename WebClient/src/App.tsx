@@ -1,18 +1,15 @@
-import { HistoryRouter } from 'redux-first-history/rr6'
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-
-import * as Views from './views';
+import { HistoryRouter } from 'redux-first-history/rr6'
 import { history } from './store';
+import * as Views from './views';
 
-const App: React.FC = () => (
+export const App: React.FC = () => (
     <HistoryRouter history={history}>
         <Routes>
-            <Route path="/game"><Views.GameView /></Route>
-            <Route path="/room"><Views.GameRoomView /></Route>
-            <Route path="/"><Views.LandingView /></Route>
+            <Route path="/game" Component={Views.GameView} />
+            <Route path="/room" Component={Views.GameRoomView} />
+            <Route path="/" Component={Views.LandingView} />
         </Routes>
     </HistoryRouter>
 );
-
-export default App;

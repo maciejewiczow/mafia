@@ -1,9 +1,9 @@
 import React from 'react';
 import { FaUserSecret } from 'react-icons/fa';
 import { ViewWrapper } from '../ViewWrapper';
-import { RoomListArea, UserArea, Header, ContentWrapper } from './parts';
+import { ContentWrapper,Header, RoomListArea, UserArea } from './parts';
 
-const LandingView = () => (
+export const LandingView = () => (
     <ViewWrapper>
         <Header>Mafia&nbsp;<FaUserSecret /></Header>
         <ContentWrapper>
@@ -12,5 +12,3 @@ const LandingView = () => (
         </ContentWrapper>
     </ViewWrapper>
 );
-
-export default LandingView;

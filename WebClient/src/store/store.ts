@@ -1,15 +1,15 @@
+import { api } from 'api';
+import { createBrowserHistory } from 'history';
+import { isDevEnv } from 'isDevEnv';
 import { applyMiddleware, compose, legacy_createStore as createStore, UnknownAction } from 'redux';
 import axiosMiddleware from 'redux-axios-middleware';
-import { createBrowserHistory } from 'history';
-import createSagaMiddleware from 'redux-saga';
-
-import { isDevEnv } from 'isDevEnv';
-import api from 'api';
-import { AxiosMiddlewareOptions, requestActionErrorSuffix, requestActionSuccessSuffix } from './constants';
-import createRootReducer from './reducers';
-import rootSaga from './rootSaga';
 import { createReduxHistoryContext } from 'redux-first-history';
+import createSagaMiddleware from 'redux-saga';
+import { AxiosMiddlewareOptions, requestActionErrorSuffix, requestActionSuccessSuffix } from './constants';
+import { createRootReducer } from './reducers';
+import { rootSaga } from './rootSaga';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const composeEnhancers = (isDevEnv && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
 const axios = axiosMiddleware(
