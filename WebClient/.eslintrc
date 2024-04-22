@@ -1,178 +1,209 @@
 {
-    "root": true,
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaFeatures": {
-            "modules": true,
-            "experimentalObjectRestSpread": true,
-            "binaryLiterals": true,
-            "objectLiteralShorthandProperties": true,
-            "generators": true,
-            "jsx": true
-        },
-        "project": "./tsconfig.json"
+    "env": {
+        "browser": true,
+        "es2019": true,
+        "node": true
     },
-    "settings": {
-        "import/resolver": {
-          "node": {
-            "extensions": [".js", ".jsx", ".ts", ".tsx"]
-          }
-        }
-      },
-    "plugins": [
-        "@typescript-eslint",
-        "only-warn",
-        "react-hooks",
-        "import-newlines"
-    ],
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/eslint-recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/warnings",
+        "plugin:react/recommended",
+        "plugin:react/jsx-runtime",
         "plugin:react-hooks/recommended",
-        "airbnb-typescript"
+        "plugin:jsx-a11y/recommended",
+        "prettier"
     ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2019,
+        "sourceType": "module"
+    },
+    "plugins": ["@typescript-eslint", "simple-import-sort", "import"],
+    "root": true,
     "rules": {
-        "no-promise-executor-return": "warn",
-        "@typescript-eslint/member-delimiter-style": "warn",
-        "prefer-const": "warn",
-        "@typescript-eslint/no-unused-vars": "off",
-        "@typescript-eslint/camelcase": "off",
-        "@typescript-eslint/explicit-function-return-type": "off",
-        "@typescript-eslint/no-empty-interface": "off",
-        "@typescript-eslint/explicit-module-boundary-types": "off",
-        "@typescript-eslint/no-explicit-any": "off",
-        "indent": "off",
-        "import/no-unresolved": "off",
-        "react/jsx-indent": "off",
+        "curly": "warn",
+        "eqeqeq": ["error", "smart"],
+        "import/first": "warn",
+        "import/newline-after-import": "warn",
+        "import/no-duplicates": "warn",
+        "import/no-named-as-default-member": "warn",
         "import/prefer-default-export": "off",
-        "import/extensions": "off",
-        "no-console": "off",
-        "max-len": ["warn", 180],
-        "no-use-before-define": "off",
-        "react/jsx-indent-props": "off",
-        "nonblock-statement-body-position": ["warn", "below"],
-        "no-param-reassign": ["warn", { "props": false }],
-        "@typescript-eslint/no-use-before-define": ["warn", {
-            "enums": false,
-            "typedefs": false,
-            "ignoreTypeReferences": false,
-            "functions": false
-        }],
-        "object-curly-newline": ["warn", {
-            "ObjectExpression": { "multiline": true, "consistent": true },
-            "ObjectPattern": { "multiline": true, "consistent": true }
-        }],
-        "object-property-newline": ["warn", { "allowMultiplePropertiesPerLine": false }],
-        "no-restricted-syntax": ["warn", "ForInStatement", "LabeledStatement", "WithStatement"],
-        "react/jsx-one-expression-per-line": "off",
-        "import-newlines/enforce": [
-            "warn",
+        "import/no-default-export": "error",
+        "import/no-cycle": ["warn", { "ignoreExternal": true }],
+        "jsx-a11y/alt-text": [
+            "error",
             {
-                "max-length": 150
+                "elements": ["img"],
+                "img": ["Image"]
             }
         ],
-        "lines-between-class-members": [
-            "warn",
-            "always",
-            {
-                "exceptAfterSingleLine": true
-            }
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            { "args": "none", "varsIgnorePattern": "(^_|React)" }
         ],
-        "jsx-a11y/control-has-associated-label": "off",
-        "array-callback-return": "off",
-        "consistent-return": "off",
-        "react/prop-types": "off",
-        "@typescript-eslint/indent": [
-            "warn",
-            4,
-            {
-                "ignoredNodes": ["TSTypeParameterInstantiation"],
-                "SwitchCase": 1
-            }
-        ],
-        "linebreak-style": [
-            "warn",
-            "windows"
-        ],
-        "semi": [
-            "warn",
-            "always"
-        ],
-        "quotes": [
-            "warn",
-            "single"
-        ],
-        "newline-per-chained-call": "off",
-        "prefer-destructuring": "warn",
-        "curly": [
-            "warn",
-            "multi-or-nest",
-            "consistent"
-        ],
-        "eqeqeq": [
-            "warn",
-            "smart"
-        ],
-        "guard-for-in": "warn",
+        "no-confusing-arrow": "warn",
         "no-constructor-return": "warn",
         "no-eval": "error",
-        "no-extend-native": "warn",
-        "no-implied-eval": "warn",
-        "no-multi-spaces": "warn",
-        "keyword-spacing": ["warn", {"before": true, "after": true}],
+        "no-extend-native": "error",
+        "no-extra-semi": "off",
+        "no-implied-eval": "error",
+        "no-promise-executor-return": "warn",
+        "implicit-arrow-linebreak": ["warn", "beside"],
+        "no-restricted-imports": [
+            "error",
+            {
+                "paths": [
+                    {
+                        "name": "lodash",
+                        "importNames": ["default"],
+                        "message": "Please import a single lodash method, e.g. import { pick } from 'lodash', or single method package, e.g. import pick from 'lodash/pick'."
+                    }
+                ]
+            }
+        ],
+        "no-restricted-syntax": [
+            "warn",
+            "ForInStatement",
+            "LabeledStatement",
+            "WithStatement"
+        ],
+        "no-shadow": "off",
+        "@typescript-eslint/no-shadow": "warn",
         "no-unmodified-loop-condition": "warn",
         "no-useless-concat": "warn",
         "no-useless-return": "warn",
-        "require-await": "warn",
-        "wrap-iife": [
+        "prefer-arrow-callback": [
             "warn",
-            "inside"
+            {
+                "allowNamedFunctions": true
+            }
+        ],
+        "prefer-const": "warn",
+        "prefer-destructuring": "warn",
+        "react/destructuring-assignment": [
+            "warn",
+            "always",
+            {
+                "destructureInSignature": "always"
+            }
+        ],
+        "react/forbid-elements": [
+            "error",
+            {
+                "forbid": [
+                    {
+                        "element": "button",
+                        "message": "use <Button> instead"
+                    }
+                ]
+            }
+        ],
+        "react/jsx-boolean-value": "warn",
+        "react/jsx-curly-brace-presence": [
+            "warn",
+            {
+                "props": "never",
+                "children": "ignore",
+                "propElementValues": "always"
+            }
+        ],
+        "react/jsx-newline": [
+            "warn",
+            {
+                "prevent": true
+            }
+        ],
+        "react/jsx-no-constructed-context-values": "error",
+        "react/jsx-no-undef": "off",
+        "react/jsx-no-useless-fragment": [
+            "warn",
+            {
+                "allowExpressions": true
+            }
+        ],
+        "react/no-array-index-key": "error",
+        "react/no-multi-comp": "warn",
+        "react/no-object-type-as-default-prop": "error",
+        "react/prop-types": "off",
+        "react/void-dom-elements-no-children": "error",
+        "require-await": "warn",
+        "simple-import-sort/exports": "warn",
+        "simple-import-sort/imports": [
+            "warn",
+            {
+                "groups": [
+                    [
+                        // Side effect imports
+                        "^\\u0000",
+                        // Node.js builtins prefixed with `node:`
+                        "^node:",
+                        // Packages
+                        // `react` related packages come first.
+                        "^react",
+                        "^@?\\w",
+                        // Anything not matched in another group
+                        "^",
+                        // Relative imports
+                        // Relative to the project root
+                        "^~/.+",
+                        // Anything that starts with a dot
+                        "^\\.",
+                        // Style imports
+                        "^.+\\.css$",
+                        "^.+\\.styles$"
+                    ]
+                ]
+            }
         ],
         "yoda": [
-            "error",
+            "warn",
             "never",
             {
                 "exceptRange": true
             }
-        ],
-        "comma-dangle": "off",
-        "@typescript-eslint/comma-dangle": ["warn", "always-multiline"],
-        "no-shadow": "off",
-        "@typescript-eslint/no-shadow": ["warn"],
-        "array-bracket-newline": [
-            "warn",
-            {
-                "multiline": true
+        ]
+    },
+    "overrides": [
+        {
+            "extends": ["plugin:@typescript-eslint/recommended"],
+            "files": ["./**/*.{ts,tsx}"],
+            "rules": {
+                "@typescript-eslint/no-empty-interface": "off"
             }
-        ],
-        "object-curly-spacing": [
-            "warn",
-            "always"
-        ],
-        "implicit-arrow-linebreak": [
-            "warn",
-            "beside"
-        ],
-        "arrow-parens": [
-            "warn",
-            "as-needed"
-        ],
-        "arrow-spacing": [
-            "warn",
-            {
-                "before": true,
-                "after": true
+        },
+        {
+            "files": [
+                "./app/**/*.tsx",
+                "./**/*.stories.tsx",
+                "./**/*.stories.ts"
+            ],
+            "rules": {
+                "react/no-multi-comp": "off"
             }
-        ],
-        "arrow-body-style": [
-            "warn",
-            "as-needed"
-        ],
-        "no-confusing-arrow": "warn",
-        "prefer-arrow-callback": "warn",
-        "react-hooks/rules-of-hooks": "warn",
-        "react-hooks/exhaustive-deps": "warn"
+        },
+        {
+            "files": [
+                "./**/*.tsx",
+                "./**/*.stories.tsx",
+                "./**/*.stories.ts",
+                "./.storybook/**/*.ts",
+                "./.storybook/**/*.tsx",
+                "**/*.d.ts",
+                "./codegen.ts"
+            ],
+            "rules": {
+                "import/no-default-export": "off"
+            }
+        }
+    ],
+    "settings": {
+        "react": {
+            "version": "detect",
+            "linkComponents": [
+                {
+                    "name": "Link",
+                    "linkAttribute": "to"
+                }
+            ]
+        }
     }
 }

@@ -1,6 +1,7 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import { toast } from 'react-toastify';
 import { TokenResponse, CreateUserResponse } from './responses';
+import { set } from 'lodash'
 
 const accessTokenKey = 'at';
 const refreshTokenKey = 'rt';
@@ -64,14 +65,14 @@ export const setTokens = ({ token, refreshToken, expiresOn }: CreateUserResponse
     storage.setItem(accessTokenKey, JSON.stringify(tokenObj));
 };
 
-export const addAuthorizationToken = async (config: AxiosRequestConfig): Promise<AxiosRequestConfig> => {
+export const addAuthorizationToken = async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
     if (config.url?.match(/Users\/token/))
         return config;
 
     const token = await getAccessToken();
 
     if (token)
-        config.headers.Authorization = `Bearer ${token}`;
+        set(config, 'headers.Authorization', `Bearer ${token}`);
 
     return config;
 };

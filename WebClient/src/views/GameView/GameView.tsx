@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router';
 import dayjs from 'dayjs';
-import { replace } from 'connected-react-router';
 import { ChatTypeEnum, PhaseEnum, RoleEnum } from 'api';
 import { connectToGameChat } from 'store/GameChat/actions';
 import * as roomSelectors from 'store/Rooms/selectors';
@@ -22,16 +21,16 @@ import {
     Header,
     ContentWrapper,
     Participants,
-    Participant,
-    Badge,
     ChatArea,
 } from './parts';
 import { ParticipantWithVoteButton } from './ParticipantWithVoteButton';
+import { useAppDispatch } from 'store/hooks';
+import { replace } from 'redux-first-history';
 
 // TODO: Clear state after the game is finished
 
 const GameView: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const room = useSelector(roomSelectors.currentRoom);
     const isUserLoading = useSelector(userSelectors.isUserLoading);
     const currentUser = useSelector(userSelectors.currentUser);
@@ -57,13 +56,13 @@ const GameView: React.FC = () => {
     const remaining = useCountdown(currentGameState?.votingEnd || '');
 
     if (!isUserLoading && currentUser?.roomId === null)
-        return <Redirect to="/" />;
+        return <Navigate to="/" />;
 
     if (!room)
         return <div>Loading current room...</div>;
 
     if (!isCurrentRoomLoading && !room.hasGameStarted && !room.hasGameEnded)
-        return <Redirect to="/room" />;
+        return <Navigate to="/room" />;
 
     if (!currentGameState)
         return <div>To się nie powinno zdazyc</div>;

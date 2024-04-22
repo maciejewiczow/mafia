@@ -1,14 +1,12 @@
-import { combineReducers } from 'redux';
-import { History } from 'history';
-import { connectRouter } from 'connected-react-router';
+import { combineReducers, Reducer, UnknownAction } from 'redux';
 
-import { AppState } from './constants';
 import { roomsReducer } from './Rooms/reducers';
 import { userReducer } from './User/reducers';
 import { gameChatReducer } from './GameChat/reducers';
+import { RouterState } from 'redux-first-history';
 
-const createRootReducer = (history: History) => combineReducers<AppState>({
-    router: connectRouter(history),
+const createRootReducer = (routerReducer: Reducer<RouterState, UnknownAction, RouterState>) => combineReducers({
+    router: routerReducer,
     currentUser: userReducer,
     rooms: roomsReducer,
     gameChat: gameChatReducer,

@@ -3,25 +3,25 @@ import { Action } from 'redux';
 
 export type PickAction<A extends Action<string>, T extends A['type']> = Extract<A, { type: T }>;
 
-export interface RequestAction<ActionT = string, RequestT = undefined> extends Action<ActionT> {
+export interface RequestAction<ActionT extends string = string, RequestT = undefined> extends Action<ActionT> {
     isRequestAction: true;
     payload: {
         request: Omit<AxiosRequestConfig, 'data'> & { data?: RequestT };
     };
 }
 
-export interface ResponseSuccessAction<ActionT = string, ResponseT = undefined> extends Action<ActionT> {
+export interface ResponseSuccessAction<ActionT extends string = string, ResponseT = undefined> extends Action<ActionT> {
     payload: AxiosResponse<ResponseT>;
 }
 
-export interface ResponseFailedAction<ActionT = string, ResponseT = undefined> extends Action<ActionT> {
+export interface ResponseFailedAction<ActionT extends string = string, ResponseT = undefined> extends Action<ActionT> {
     error: AxiosError<ResponseT>;
 }
 
 export type RequestActionBundle<
-    RequestActionT = string,
-    SuccessActionT = string,
-    FailedActionT = string,
+    RequestActionT extends string = string,
+    SuccessActionT extends string = string,
+    FailedActionT extends string = string,
     RequestT = undefined,
     ResponseT = undefined,
 > = (

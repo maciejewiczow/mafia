@@ -1,6 +1,6 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { AiOutlineSend } from 'react-icons/ai';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
@@ -10,6 +10,7 @@ import { sendMessage } from 'store/GameChat/Chat/actions';
 import * as chatSelectors from 'store/GameChat/Chat/selectors';
 import * as gameChatSelectors from 'store/GameChat/selectors';
 import Message from './Message';
+import { useAppDispatch } from 'store/hooks';
 
 export interface ChatProps {
     className?: string;
@@ -41,7 +42,7 @@ const NoMessages = styled.div`
 `;
 
 const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const messages = useSelector(chatSelectors.chatMessages(chatType));
     const isConnected = useSelector(gameChatSelectors.isConnectedToGameChat);

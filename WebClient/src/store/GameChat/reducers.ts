@@ -43,7 +43,7 @@ const gameChatConnectingReducer: Reducer<GameChatConnectingState, GameChatAction
     }
 };
 
-export const gameChatReducer = combineReducers<GameChatState>({
+export const gameChatReducer = combineReducers({
     isConnected: gameChatConnectedReducer,
     isConnecting: gameChatConnectingReducer,
     chats: chatsReducer,

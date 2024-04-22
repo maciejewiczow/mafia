@@ -9,6 +9,8 @@ import * as gameSelectors from 'store/GameChat/Game/selectors';
 import * as roomSelectors from 'store/Rooms/selectors';
 import { invokeVote } from 'store/GameChat/Game/actions';
 import { Participant, Badge, ParticipantName } from './parts';
+import { GameAction } from 'store/GameChat/Game/constants';
+import { Dispatch } from 'redux';
 
 export interface ParticipantProps {
     participant: ParticipantWithNameAndRole;
@@ -17,7 +19,7 @@ export interface ParticipantProps {
 }
 
 export const ParticipantWithVoteButton: React.FC<ParticipantProps> = ({ className, participant: user, phase }) => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<Dispatch<GameAction>>();
     const currentUser = useSelector(userSelectors.currentUser);
     const currentUserRoles = useSelector(gameSelectors.userRoles(currentUser?.id || ''));
     const currentGameState = useSelector(gameSelectors.currentGameState);

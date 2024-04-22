@@ -1,4 +1,4 @@
-import { replace } from 'connected-react-router';
+import { replace } from 'redux-first-history';
 import { put, take, takeLatest } from 'redux-saga/effects';
 import { invokeAddMeToGroups } from '../actions';
 import { invokeStartGame } from './actions';

@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 export const useCountdown = (to: string | number | Date | dayjs.Dayjs = new Date()) => {
     const [remaining, setRemaining] = useState<number>(dayjs(to).diff(new Date(), 'millisecond'));
-    const intervalRef = useRef<number>();
+    const intervalRef = useRef<NodeJS.Timeout>();
 
     useEffect(() => {
         intervalRef.current = setInterval(() => {
@@ -18,7 +18,6 @@ export const useCountdown = (to: string | number | Date | dayjs.Dayjs = new Date
             clearInterval(intervalRef.current);
     }, [remaining]);
 
-    // eslint-disable-next-line no-restricted-globals
     if (isNaN(remaining))
         return 0;
 

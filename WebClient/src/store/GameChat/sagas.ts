@@ -117,7 +117,8 @@ function* connectToGameChatWorker() {
         yield put(connectToGameChatSuccess());
     } catch (error) {
         console.error('Game error:', error);
-        toast.error(`Błąd gry: ${error.message}`);
+        if (error instanceof Error)
+            toast.error(`Błąd gry: ${error.message}`);
     }
 }
 
@@ -141,6 +142,7 @@ function* invokeActionsWatcher(connection: HubConnection) {
 
 function* invokeActionsWorker(action: InvokeAction<string, any[], string, string>, connection: HubConnection) {
     try {
+        // @ts-expect-error this actually should be any
         const result = yield apply(connection, connection.invoke, [action.methodName, ...(action.args || [])]);
 
         if (action.successActionType) {
@@ -151,7 +153,7 @@ function* invokeActionsWorker(action: InvokeAction<string, any[], string, string
             yield put(sucessAction);
         }
     } catch (error) {
-        if (action.errorActionType) {
+        if (action.errorActionType && error instanceof Error) {
             const errorAction: InvokeActionError<string> = {
                 type: action.errorActionType,
                 error,
@@ -159,7 +161,8 @@ function* invokeActionsWorker(action: InvokeAction<string, any[], string, string
             yield put(errorAction);
         }
         console.error('Error has ocurred when invoking a hub method', error);
-        toast.error(`Błąd podczas przewarzania akcji: ${error.message}`);
+        if (error instanceof Error)
+            toast.error(`Błąd podczas przewarzania akcji: ${error.message}`);
     }
 }
 

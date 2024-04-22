@@ -18,6 +18,7 @@
         "noEmit": true,
         "jsx": "react",
         "sourceMap": true,
+        "skipDefaultLibCheck": true,
         "rootDir": "./src",
         "removeComments": false,
         "declaration": false,
@@ -27,7 +28,7 @@
         "noImplicitThis": true,
         "alwaysStrict": true,
         "allowJs": false,
-        "skipLibCheck": false,
+        "skipLibCheck": true,
         "forceConsistentCasingInFileNames": false
     },
     "include": [

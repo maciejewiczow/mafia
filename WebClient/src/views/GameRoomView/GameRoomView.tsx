@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Redirect } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router';
 import { ChatTypeEnum } from 'api';
 import { startGame } from 'store/GameChat/Game/actions';
 import { connectToGameChat } from 'store/GameChat/actions';
@@ -20,9 +20,10 @@ import {
     SettingsButton,
 } from './parts';
 import { Settings } from './Settings';
+import { useAppDispatch } from 'store/hooks';
 
 const GameRoomView: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const room = useSelector(roomSelectors.currentRoom);
     const isCurrentRoomLoading = useSelector(roomSelectors.isCurrentRoomLoading);
     const currentUser = useSelector(userSelectors.currentUser);
@@ -42,13 +43,13 @@ const GameRoomView: React.FC = () => {
     ]);
 
     if (!room && !isCurrentRoomLoading)
-        return <Redirect to="/" />;
+        return <Navigate to="/" />;
 
     if (!room)
         return <div>Loading room...</div>;
 
     if (room.hasGameStarted && !room.hasGameEnded)
-        return <Redirect to="/game" />;
+        return <Navigate to="/game" />;
 
     const handleStartGameClick = () => {
         dispatch(startGame());
@@ -66,7 +67,7 @@ const GameRoomView: React.FC = () => {
                             disabled={!isConnectedToGameChat || isConnectingToGameChat || room.participants.length < 3}
                             title={room.participants.length < 3 ? 'Wymagane jest minimum 3 graczy' : ''}
                         >
-                          Rozpocznij grę
+                            Rozpocznij grę
                         </Button>
                         <SettingsButton
                             onClick={() => setAreSettingsOpen(state => !state)}

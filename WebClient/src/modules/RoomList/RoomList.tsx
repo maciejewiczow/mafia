@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 import Button from 'react-bootstrap/Button';
 import { getRooms, joinRoom } from 'store/Rooms/actions';
 import * as selectors from 'store/Rooms/selectors';
 import { currentUser as currentUserSelector } from 'store/User/selectors';
 import CreateRoom from './CreateRoom';
+import { useAppDispatch } from 'store/hooks';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -46,7 +47,7 @@ interface ClassProps {
 }
 
 const RoomList: React.FC<ClassProps> = ({ className }) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const areRoomsLoading = useSelector(selectors.areRoomsLoading);
     const isUserLoggedIn = !!useSelector(currentUserSelector);

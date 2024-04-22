@@ -1,10 +1,16 @@
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
-import { RouterState } from 'connected-react-router';
-import { AnyAction } from 'redux';
+import { UnknownAction } from 'redux';
 
 import { RoomsState } from './Rooms/store';
 import { CurrentUserState } from './User/store';
 import { GameChatState } from './GameChat/store';
+
+import { RoomsAction } from './Rooms/constants';
+import { UserAction } from './User/constants';
+import { GameChatAction } from './GameChat/constants';
+import { GameAction } from './GameChat/Game/constants';
+import { ChatAction } from './GameChat/Chat/constants';
+import { RouterState } from 'redux-first-history';
 
 export interface AppState {
     router: RouterState;
@@ -13,6 +19,8 @@ export interface AppState {
     gameChat: GameChatState;
 }
 
+export type AppAction = RoomsAction | UserAction | GameChatAction | GameAction | ChatAction | UnknownAction;
+
 export type AxiosMiddlewareOptions = Partial<{
     errorSuffix: string;
     successSuffix: string;
@@ -20,8 +28,8 @@ export type AxiosMiddlewareOptions = Partial<{
     onError({ action, next, response }?: any, options?: any): any;
     onComplete(): any;
     returnRejectedPromiseOnError: boolean;
-    isAxiosRequest: (action: AnyAction) => boolean;
-    getRequestConfig: (action: AnyAction) => AxiosRequestConfig;
+    isAxiosRequest: (action: UnknownAction) => boolean;
+    getRequestConfig: (action: UnknownAction) => AxiosRequestConfig;
     getClientName: AxiosInstance;
     defaultClientName: string;
     getRequestOptions: any;

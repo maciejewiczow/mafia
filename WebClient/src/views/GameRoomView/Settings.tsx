@@ -1,14 +1,15 @@
 import React from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { saveGameOptions, updateGameOptions } from 'store/Rooms/actions';
 import { currentRoomOptions } from 'store/Rooms/selectors';
 import { DurationPicker } from './DurationPicker';
 import { SettingsWrapper } from './parts';
+import { useAppDispatch } from 'store/hooks';
 
 export const Settings: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const currentRoomOpts = useSelector(currentRoomOptions);
 

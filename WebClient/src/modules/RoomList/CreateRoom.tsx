@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
@@ -7,6 +6,7 @@ import { FaPlus } from 'react-icons/fa';
 import { CgEnter } from 'react-icons/cg';
 import styled from 'styled-components';
 import { createRoom } from 'store/Rooms/actions';
+import { useAppDispatch } from 'store/hooks';
 
 const Wrapper = styled.div`
     margin: 8px 0;
@@ -19,7 +19,7 @@ const MyForm = styled.form`
 const CreateRoom: React.FC = () => {
     const [isCollapsed, setIsCollapsed] = useState(true);
     const [roomName, setRoomName] = useState('');
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
