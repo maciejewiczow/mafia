@@ -40,56 +40,56 @@ import {
 import { GameAction } from './Game/constants';
 
 const subscribe = (connection: HubConnection) => eventChannel<GameAction | ChatAction | GameChatAction>(emit => {
-        connection.on('UpdateGameStateAsync', (state: GameState) => {
-            emit(stateUpdate(state));
-        });
-        connection.on('NewVoteAsync', (v: VoteState) => {
-            emit(newVote(v));
-        });
-        connection.on('GameEndedAsync', (roleName: string) => {
-            emit(gameEnded(roleName));
-        });
-        connection.on('UpdateVotingResultAsync', (userId: string) => {
-            emit(votingResult(userId));
-        });
-        connection.on('GameStartedAsync', () => {
-            emit(gameStarted());
-        });
-        connection.on('MessageAsync', (m: Message) => {
-            emit(messageRecieved([m]));
-        });
-        connection.on('MessagesOnConnectedAsync', (m: Message[]) => {
-            emit(messageRecieved(m));
-        });
-        connection.on(
-            'UserConnectedAsync',
-            (user: User, chatType: ChatTypeEnum) => {
-                emit(memberConnected(user, chatType));
-            },
-        );
-        connection.on(
-            'UserDisconnectedAsync',
-            (user: User, chatType: ChatTypeEnum) => {
-                emit(memberDisconnected(user, chatType));
-            },
-        );
-        connection.on('CallAddToGhostGroup', () => {
-            emit(callAddMeToGhostGroup());
-        });
+    connection.on('UpdateGameStateAsync', (state: GameState) => {
+        emit(stateUpdate(state));
+    });
+    connection.on('NewVoteAsync', (v: VoteState) => {
+        emit(newVote(v));
+    });
+    connection.on('GameEndedAsync', (roleName: string) => {
+        emit(gameEnded(roleName));
+    });
+    connection.on('UpdateVotingResultAsync', (userId: string) => {
+        emit(votingResult(userId));
+    });
+    connection.on('GameStartedAsync', () => {
+        emit(gameStarted());
+    });
+    connection.on('MessageAsync', (m: Message) => {
+        emit(messageRecieved([m]));
+    });
+    connection.on('MessagesOnConnectedAsync', (m: Message[]) => {
+        emit(messageRecieved(m));
+    });
+    connection.on(
+        'UserConnectedAsync',
+        (user: User, chatType: ChatTypeEnum) => {
+            emit(memberConnected(user, chatType));
+        },
+    );
+    connection.on(
+        'UserDisconnectedAsync',
+        (user: User, chatType: ChatTypeEnum) => {
+            emit(memberDisconnected(user, chatType));
+        },
+    );
+    connection.on('CallAddToGhostGroup', () => {
+        emit(callAddMeToGhostGroup());
+    });
 
-        connection.onclose(error => {
-            if (error) {
-                console.error('Game connection closed with an error', error);
-                toast.error('Utracono połączenie z serwerem');
-            }
+    connection.onclose(error => {
+        if (error) {
+            console.error('Game connection closed with an error', error);
+            toast.error('Utracono połączenie z serwerem');
+        }
 
-            emit(END);
-        });
+        emit(END);
+    });
 
-        return () => {
-            connection.stop();
-        };
-    }, buffers.expanding());
+    return () => {
+        connection.stop();
+    };
+}, buffers.expanding());
 
 function* connectToGameChatWatcher() {
     yield takeLatest(GameChatActionType.connect, connectToGameChatWorker);
@@ -153,8 +153,8 @@ function* invokeActionsWatcher(connection: HubConnection) {
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function* invokeActionsWorker(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     action: InvokeAction<string, any[], string, string>,
     connection: HubConnection,
 ) {

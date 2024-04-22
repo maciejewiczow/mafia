@@ -18,8 +18,8 @@ import {
 import { createRootReducer } from './reducers';
 import { rootSaga } from './rootSaga';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const composeEnhancers =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (isDevEnv && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
     compose;
 

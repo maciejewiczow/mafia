@@ -10,7 +10,7 @@ import * as chatSelectors from 'store/GameChat/Chat/selectors';
 import * as gameChatSelectors from 'store/GameChat/selectors';
 import { useAppDispatch } from 'store/hooks';
 import styled from 'styled-components';
-import Message from './Message';
+import { Message } from './Message';
 
 export interface ChatProps {
     className?: string;

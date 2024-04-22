@@ -23,7 +23,7 @@ export interface MessageProps {
     clasName?: string;
 }
 
-const Message: React.FC<MessageProps> = ({ message, clasName }) => {
+export const Message: React.FC<MessageProps> = ({ message, clasName }) => {
     const currentUser = useSelector(userSelectors.currentUser);
 
     if (message.messageType === MessageType.Announcement) {
@@ -54,5 +54,3 @@ const Message: React.FC<MessageProps> = ({ message, clasName }) => {
         </DefaultMessage>
     );
 };
-
-export default Message;
