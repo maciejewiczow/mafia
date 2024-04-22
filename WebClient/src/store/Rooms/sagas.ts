@@ -7,16 +7,26 @@ import { AppState } from 'store/constants';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import { PickAction } from 'store/utils';
-import { createRoomSuccess, getCurrentRoomSuccess, joinRoomSuccess } from './actions';
+import {
+    createRoomSuccess,
+    getCurrentRoomSuccess,
+    joinRoomSuccess,
+} from './actions';
 import { RoomsAction, RoomsActionType } from './constants';
 
 function* createRoomWatcher() {
     yield takeLatest(RoomsActionType.createRoom, createRoomWorker);
 }
 
-function* createRoomWorker({ name }: PickAction<RoomsAction, RoomsActionType.createRoom>) {
+function* createRoomWorker({
+    name,
+}: PickAction<RoomsAction, RoomsActionType.createRoom>) {
     try {
-        const result: AxiosResponse<GameRoom> = yield call(api.post, '/gameRooms', { name });
+        const result: AxiosResponse<GameRoom> = yield call(
+            api.post,
+            '/gameRooms',
+            { name },
+        );
 
         yield put(createRoomSuccess(result));
         yield put(replace('room'));
@@ -30,39 +40,66 @@ function* joinRoomWatcher() {
     yield takeLatest(RoomsActionType.joinRoom, joinRoomWorker);
 }
 
-function* joinRoomWorker(action: PickAction<RoomsAction, RoomsActionType.joinRoom>) {
+function* joinRoomWorker(
+    action: PickAction<RoomsAction, RoomsActionType.joinRoom>,
+) {
     try {
-        const room: AxiosResponse<GameRoom> = yield call(api.post, `/gameRooms/${action.roomId}/join`);
+        const room: AxiosResponse<GameRoom> = yield call(
+            api.post,
+            `/gameRooms/${action.roomId}/join`,
+        );
 
         yield put(joinRoomSuccess(room));
         yield put(replace('room'));
     } catch (error) {
         console.error('Joining room failed with error: ', error);
-        if (error instanceof Error) { toast.error(`Podczs dołączania do pokoju wystąpił błąd: ${error.message}`); }
+        if (error instanceof Error) {
+            toast.error(
+                `Podczs dołączania do pokoju wystąpił błąd: ${error.message}`,
+            );
+        }
     }
 }
 
 export function* getCurrentRoomWorker() {
-    const isUserInAnyRoom: string | undefined = yield select(userSelectors.currentUserRoom);
-    if (!isUserInAnyRoom) { return; }
+    const isUserInAnyRoom: string | undefined = yield select(
+        userSelectors.currentUserRoom,
+    );
+    if (!isUserInAnyRoom) {
+        return;
+    }
 
     try {
         put({ type: RoomsActionType.getCurrentRoom });
-        const room: AxiosResponse<GameRoom> = yield call(api.get, '/gameRooms/current');
+        const room: AxiosResponse<GameRoom> = yield call(
+            api.get,
+            '/gameRooms/current',
+        );
 
         yield put(getCurrentRoomSuccess(room));
-        const hasGameStarted: boolean | undefined = yield select(roomSelectors.hasCurrentGameStarted);
-        const path: string | undefined = yield select((state: AppState) => state.router.location?.pathname);
+        const hasGameStarted: boolean | undefined = yield select(
+            roomSelectors.hasCurrentGameStarted,
+        );
+        const path: string | undefined = yield select(
+            (state: AppState) => state.router.location?.pathname,
+        );
 
         if (path === '/') {
-            if (!hasGameStarted) { yield put(replace('room')); }
-            else { yield put(replace('game')); }
+            if (!hasGameStarted) {
+                yield put(replace('room'));
+            } else {
+                yield put(replace('game'));
+            }
         }
 
-        if (path === '/room' && hasGameStarted) { yield put(replace('game')); }
+        if (path === '/room' && hasGameStarted) {
+            yield put(replace('game'));
+        }
     } catch (error) {
         console.log('Current room request failed with error: ', error);
-        if (error instanceof Error) { toast.error(`Błąd rządania: ${error.message}`); }
+        if (error instanceof Error) {
+            toast.error(`Błąd rządania: ${error.message}`);
+        }
     }
 }
 
@@ -71,16 +108,28 @@ function* saveRoomOptionsWatcher() {
 }
 
 function* saveRoomOptionsWorker() {
-    const currentRoomId: string | undefined = yield select((state: AppState) => state.rooms.currentRoom?.id);
+    const currentRoomId: string | undefined = yield select(
+        (state: AppState) => state.rooms.currentRoom?.id,
+    );
 
-    if (!currentRoomId) { return; }
+    if (!currentRoomId) {
+        return;
+    }
 
-    const currentRoomOpts: GameOptions | undefined = yield select(roomSelectors.currentRoomOptions);
+    const currentRoomOpts: GameOptions | undefined = yield select(
+        roomSelectors.currentRoomOptions,
+    );
 
-    if (!currentRoomOpts) { return; }
+    if (!currentRoomOpts) {
+        return;
+    }
 
     try {
-        yield call(api.put, `/gameRooms/${currentRoomId}/options`, currentRoomOpts);
+        yield call(
+            api.put,
+            `/gameRooms/${currentRoomId}/options`,
+            currentRoomOpts,
+        );
         toast.success('Ustawienia zapisano pomyślnie');
     } catch (e) {
         toast.error('Przy zapisywaniu ustawień wystąpił błąd');

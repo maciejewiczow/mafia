@@ -6,7 +6,7 @@ import { getRooms, joinRoom } from 'store/Rooms/actions';
 import * as selectors from 'store/Rooms/selectors';
 import { currentUser as currentUserSelector } from 'store/User/selectors';
 import styled from 'styled-components';
-import {CreateRoom }from './CreateRoom';
+import { CreateRoom } from './CreateRoom';
 
 const Wrapper = styled.div`
     width: 100%;
@@ -20,7 +20,6 @@ const Empty = styled.div`
 
 const Header = styled.h3`
     margin: 12px 0 24px 0;
-
 `;
 
 const List = styled.div`
@@ -61,8 +60,9 @@ export const RoomList: React.FC<ClassProps> = ({ className }) => {
         dispatch(joinRoom(id));
     };
 
-    if (areRoomsLoading)
-        {return <Wrapper className={className}>Ładowanie pokoi...</Wrapper>;}
+    if (areRoomsLoading) {
+        return <Wrapper className={className}>Ładowanie pokoi...</Wrapper>;
+    }
 
     return (
         <Wrapper className={className}>
@@ -75,23 +75,48 @@ export const RoomList: React.FC<ClassProps> = ({ className }) => {
                     <HeaderItem>Nazwa gry</HeaderItem>
                     <HeaderItem>Uczestnicy</HeaderItem>
                     <HeaderItem />
-                    {rooms.map(({ id, name, currentPlayersCount, maxPlayers, hasGameStarted }) => (
-                        <React.Fragment key={id}>
-                            <div>{name} </div>
-                            <div>{currentPlayersCount}/{maxPlayers}</div>
-                            <div>
-                                {isUserLoggedIn && (
-                                    <>
-                                        {(currentPlayersCount < maxPlayers && !hasGameStarted) && (
-                                            <Button variant="outline-success" onClick={handleJoinClick(id)}>Dołącz</Button>
-                                        )}
-                                        {(currentPlayersCount >= maxPlayers) && <span>Pokój jest pełny</span>}
-                                        {hasGameStarted && <span>Gra już się rozpoczęła</span>}
-                                    </>
-                                )}
-                            </div>
-                        </React.Fragment>
-                    ))}
+                    {rooms.map(
+                        ({
+                            id,
+                            name,
+                            currentPlayersCount,
+                            maxPlayers,
+                            hasGameStarted,
+                        }) => (
+                            <React.Fragment key={id}>
+                                <div>{name} </div>
+                                <div>
+                                    {currentPlayersCount}/{maxPlayers}
+                                </div>
+                                <div>
+                                    {isUserLoggedIn && (
+                                        <>
+                                            {currentPlayersCount < maxPlayers &&
+                                                !hasGameStarted && (
+                                                    <Button
+                                                        variant="outline-success"
+                                                        onClick={handleJoinClick(
+                                                            id,
+                                                        )}
+                                                    >
+                                                        Dołącz
+                                                    </Button>
+                                                )}
+                                            {currentPlayersCount >=
+                                                maxPlayers && (
+                                                <span>Pokój jest pełny</span>
+                                            )}
+                                            {hasGameStarted && (
+                                                <span>
+                                                    Gra już się rozpoczęła
+                                                </span>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            </React.Fragment>
+                        ),
+                    )}
                 </List>
             )}
         </Wrapper>

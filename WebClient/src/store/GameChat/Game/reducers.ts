@@ -2,12 +2,12 @@ import { produce } from 'immer';
 import { Reducer } from 'redux';
 import { RoomsAction, RoomsActionType } from 'store/Rooms/constants';
 import { GameAction, GameActionType } from './constants';
-import { initialGameState, GameStateInStore } from './store';
+import { GameStateInStore,initialGameState } from './store';
 
-export const gameReducer: Reducer<GameStateInStore, GameAction | RoomsAction> = (
-    state = initialGameState,
-    action,
-) => {
+export const gameReducer: Reducer<
+    GameStateInStore,
+    GameAction | RoomsAction
+> = (state = initialGameState, action) => {
     switch (action.type) {
         case GameActionType.newVote:
             return produce(state, draft => {
@@ -16,8 +16,7 @@ export const gameReducer: Reducer<GameStateInStore, GameAction | RoomsAction> = 
 
         case GameActionType.votingResult:
             return produce(state, draft => {
-                if (draft)
-                    draft.voteState = [];
+                if (draft) {draft.voteState = [];}
             });
 
         case GameActionType.stateUpdate:

@@ -39,11 +39,12 @@ export const Participants = styled.div`
 
 export const Participant = styled.div``;
 
-export const ParticipantName = styled.span<{isHighlighted?: boolean}>`
-    ${({ isHighlighted }) => isHighlighted && css`
-        color: #b50808;
-        font-weight: bold;
-    `}
+export const ParticipantName = styled.span<{ isHighlighted?: boolean }>`
+    ${({ isHighlighted }) => isHighlighted &&
+        css`
+            color: #b50808;
+            font-weight: bold;
+        `}
 `;
 
 export const Badge = styled.span`

@@ -18,7 +18,13 @@ export interface AppState {
     gameChat: GameChatState;
 }
 
-export type AppAction = RoomsAction | UserAction | GameChatAction | GameAction | ChatAction | UnknownAction;
+export type AppAction =
+    | RoomsAction
+    | UserAction
+    | GameChatAction
+    | GameAction
+    | ChatAction
+    | UnknownAction;
 
 export type AxiosMiddlewareOptions = Partial<{
     errorSuffix: string;

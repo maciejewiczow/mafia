@@ -18,33 +18,34 @@ export enum GameActionType {
     gameStarted = 'game/GAME_STARTED',
 }
 
-export type GameAction = {
-    type: GameActionType.startGame;
-} | (
-        InvokeAction<
-            GameActionType.invokeVote,
-            [string /* votedUserId */]
-        >
-    ) | (
-        InvokeActionBundle<
-            GameActionType.invokeStartGame,
-            GameActionType.invokeStartGameSuccess,
-            GameActionType.invokeStartGameFail,
-            undefined,
-            GameState
-        >
-    ) | {
-        type: GameActionType.newVote;
-        vote: VoteState;
-    } | {
-        type: GameActionType.stateUpdate;
-        state: GameState;
-    } | {
-        type: GameActionType.gameEnded;
-        winnerRoleName: string;
-    } | {
-        type: GameActionType.votingResult;
-        votedUserId: string;
-    } | {
-        type: GameActionType.gameStarted;
-    };
+export type GameAction =
+    | {
+          type: GameActionType.startGame;
+      }
+    | InvokeAction<GameActionType.invokeVote, [string /* votedUserId */]>
+    | InvokeActionBundle<
+          GameActionType.invokeStartGame,
+          GameActionType.invokeStartGameSuccess,
+          GameActionType.invokeStartGameFail,
+          undefined,
+          GameState
+      >
+    | {
+          type: GameActionType.newVote;
+          vote: VoteState;
+      }
+    | {
+          type: GameActionType.stateUpdate;
+          state: GameState;
+      }
+    | {
+          type: GameActionType.gameEnded;
+          winnerRoleName: string;
+      }
+    | {
+          type: GameActionType.votingResult;
+          votedUserId: string;
+      }
+    | {
+          type: GameActionType.gameStarted;
+      };

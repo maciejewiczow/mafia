@@ -13,22 +13,22 @@ export enum UserActionType {
     createUserRequestFail = 'createUser/REQUEST_FAIL',
 }
 
-export type UserAction = (
-    RequestActionBundle<
-        UserActionType.getCurrentUser,
-        UserActionType.getCurrentUserSuccess,
-        UserActionType.getCurrentUserFailed,
-        never,
-        User
-    > |
-    RequestActionBundle<
-        UserActionType.createUserRequest,
-        UserActionType.createUserRequestSuccess,
-        UserActionType.createUserRequestFail,
-        CreateUserRequest,
-        CreateUserResponse
-    > | {
-        type: UserActionType.createUser;
-        userName: string;
-    }
-);
+export type UserAction =
+    | RequestActionBundle<
+          UserActionType.getCurrentUser,
+          UserActionType.getCurrentUserSuccess,
+          UserActionType.getCurrentUserFailed,
+          never,
+          User
+      >
+    | RequestActionBundle<
+          UserActionType.createUserRequest,
+          UserActionType.createUserRequestSuccess,
+          UserActionType.createUserRequestFail,
+          CreateUserRequest,
+          CreateUserResponse
+      >
+    | {
+          type: UserActionType.createUser;
+          userName: string;
+      };

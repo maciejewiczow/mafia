@@ -25,31 +25,36 @@ import { Settings } from './Settings';
 export const GameRoomView: React.FC = () => {
     const dispatch = useAppDispatch();
     const room = useSelector(roomSelectors.currentRoom);
-    const isCurrentRoomLoading = useSelector(roomSelectors.isCurrentRoomLoading);
+    const isCurrentRoomLoading = useSelector(
+        roomSelectors.isCurrentRoomLoading,
+    );
     const currentUser = useSelector(userSelectors.currentUser);
-    const isConnectedToGameChat = useSelector(gameChatSelectors.isConnectedToGameChat);
-    const isConnectingToGameChat = useSelector(gameChatSelectors.isConnectingToGameChat);
+    const isConnectedToGameChat = useSelector(
+        gameChatSelectors.isConnectedToGameChat,
+    );
+    const isConnectingToGameChat = useSelector(
+        gameChatSelectors.isConnectingToGameChat,
+    );
 
     const [areSettingsOpen, setAreSettingsOpen] = useState(false);
 
     useEffect(() => {
-        if (!isConnectingToGameChat && !isConnectedToGameChat && room)
-            {dispatch(connectToGameChat());}
-    }, [
-        dispatch,
-        isConnectedToGameChat,
-        isConnectingToGameChat,
-        room,
-    ]);
+        if (!isConnectingToGameChat && !isConnectedToGameChat && room) {
+            dispatch(connectToGameChat());
+        }
+    }, [dispatch, isConnectedToGameChat, isConnectingToGameChat, room]);
 
-    if (!room && !isCurrentRoomLoading)
-        {return <Navigate to="/" />;}
+    if (!room && !isCurrentRoomLoading) {
+        return <Navigate to="/" />;
+    }
 
-    if (!room)
-        {return <div>Loading room...</div>;}
+    if (!room) {
+        return <div>Loading room...</div>;
+    }
 
-    if (room.hasGameStarted && !room.hasGameEnded)
-        {return <Navigate to="/game" />;}
+    if (room.hasGameStarted && !room.hasGameEnded) {
+        return <Navigate to="/game" />;
+    }
 
     const handleStartGameClick = () => {
         dispatch(startGame());
@@ -59,13 +64,21 @@ export const GameRoomView: React.FC = () => {
         <ViewWrapper>
             <Header>
                 {room.name}
-                {(room.owner === currentUser?.id && !room.hasGameEnded) && (
+                {room.owner === currentUser?.id && !room.hasGameEnded && (
                     <StartGameButtonWrapper>
                         <Button
                             variant="primary"
                             onClick={handleStartGameClick}
-                            disabled={!isConnectedToGameChat || isConnectingToGameChat || room.participants.length < 3}
-                            title={room.participants.length < 3 ? 'Wymagane jest minimum 3 graczy' : ''}
+                            disabled={
+                                !isConnectedToGameChat ||
+                                isConnectingToGameChat ||
+                                room.participants.length < 3
+                            }
+                            title={
+                                room.participants.length < 3
+                                    ? 'Wymagane jest minimum 3 graczy'
+                                    : ''
+                            }
                         >
                             Rozpocznij grę
                         </Button>
@@ -81,18 +94,16 @@ export const GameRoomView: React.FC = () => {
                     <h3>Uczestnicy gry</h3>
                     {room.participantsWithNames.map(user => (
                         <Participant key={user.id}>
-                            {user.name}
-                            {' '}
-                            {(user.id === currentUser?.id) && <Badge>(ty)</Badge>}
-                            {' '}
-                            {(user.id === room.owner) && <Badge>(właściel)</Badge>}
+                            {user.name}{' '}
+                            {user.id === currentUser?.id && <Badge>(ty)</Badge>}{' '}
+                            {user.id === room.owner && (
+                                <Badge>(właściel)</Badge>
+                            )}
                         </Participant>
                     ))}
                 </ParticipantsWrapper>
                 <ChatArea chatType={ChatTypeEnum.General} />
-                {areSettingsOpen && (
-                    <Settings />
-                )}
+                {areSettingsOpen && <Settings />}
             </ContentWrapper>
         </ViewWrapper>
     );

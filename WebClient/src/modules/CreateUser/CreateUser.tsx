@@ -38,23 +38,35 @@ export const CreateUser: React.FC<ClassProps> = ({ className }) => {
         <Wrapper className={className}>
             {isLoading ? (
                 <div>Ładowanie...</div>
+            ) : currentUser ? (
+                <>
+                    <div>Twój nick to </div>
+                    <h2>{currentUser?.name}</h2>
+                </>
             ) : (
-                currentUser ? (
-                    <>
-                        <div>Twój nick to </div>
-                        <h2>{currentUser?.name}</h2>
-                    </>
-                ) : (
-                    <>
-                        <h3>Wybierz nick</h3>
-                        <Form action="" onSubmit={handleSubmit}>
-                            <InputGroup>
-                                <Form.Control type="text" placeholder="Twój nick" value={userName} onChange={e => setUserName(e.target.value)} required />
-                                <Button variant="primary" type="submit">Ok</Button>
-                            </InputGroup>
-                        </Form>
-                    </>
-                )
+                <>
+                    <h3>Wybierz nick</h3>
+                    <Form
+                        action=""
+                        onSubmit={handleSubmit}
+                    >
+                        <InputGroup>
+                            <Form.Control
+                                type="text"
+                                placeholder="Twój nick"
+                                value={userName}
+                                onChange={e => setUserName(e.target.value)}
+                                required
+                            />
+                            <Button
+                                variant="primary"
+                                type="submit"
+                            >
+                                Ok
+                            </Button>
+                        </InputGroup>
+                    </Form>
+                </>
             )}
         </Wrapper>
     );

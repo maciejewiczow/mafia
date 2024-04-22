@@ -29,12 +29,32 @@ export const CreateRoom: React.FC = () => {
     return (
         <Wrapper>
             {isCollapsed ? (
-                <Button variant="primary" onClick={() => setIsCollapsed(false)}>Stwórz grę &nbsp;<FaPlus /></Button>
+                <Button
+                    variant="primary"
+                    onClick={() => setIsCollapsed(false)}
+                >
+                    Stwórz grę &nbsp;
+                    <FaPlus />
+                </Button>
             ) : (
-                <MyForm action="" onSubmit={handleSubmit}>
+                <MyForm
+                    action=""
+                    onSubmit={handleSubmit}
+                >
                     <InputGroup>
-                        <Form.Control type="text" placeholder="Nazwa gry" value={roomName} onChange={e => setRoomName(e.target.value)} required />
-                        <Button variant="primary" type="submit"><CgEnter /></Button>
+                        <Form.Control
+                            type="text"
+                            placeholder="Nazwa gry"
+                            value={roomName}
+                            onChange={e => setRoomName(e.target.value)}
+                            required
+                        />
+                        <Button
+                            variant="primary"
+                            type="submit"
+                        >
+                            <CgEnter />
+                        </Button>
                     </InputGroup>
                 </MyForm>
             )}

@@ -1,5 +1,5 @@
-import { Chat } from 'modules';
 import { FiSettings } from 'react-icons/fi';
+import { Chat } from 'modules';
 import styled, { css } from 'styled-components';
 
 export const Header = styled.header`
@@ -17,21 +17,23 @@ export const Header = styled.header`
     grid-area: header;
 `;
 
-export const ContentWrapper = styled.div<{areSettingsOpen?: boolean}>`
+export const ContentWrapper = styled.div<{ areSettingsOpen?: boolean }>`
     grid-area: body;
 
     padding: 0 12px;
     padding-bottom: 8px;
     display: grid;
     grid-template-columns: 1fr 2fr 22%;
-    grid-auto-rows: /* minmax(min-content, max-content) */1fr;
+    grid-auto-rows: /* minmax(min-content, max-content) */ 1fr;
     grid-gap: 8px;
 
-    ${({ areSettingsOpen }) => (areSettingsOpen ? css`
-        grid-template-areas: 'participants chat settings';
-    ` : css`
-        grid-template-areas: 'participants chat chat';
-    `)}
+    ${({ areSettingsOpen }) => (areSettingsOpen
+            ? css`
+                  grid-template-areas: 'participants chat settings';
+              `
+            : css`
+                  grid-template-areas: 'participants chat chat';
+              `)}
 `;
 
 export const ParticipantsWrapper = styled.div`

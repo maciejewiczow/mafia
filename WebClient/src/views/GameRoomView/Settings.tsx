@@ -18,8 +18,9 @@ export const Settings: React.FC = () => {
         dispatch(saveGameOptions());
     };
 
-    if (!currentRoomOpts)
-        {return null;}
+    if (!currentRoomOpts) {
+        return null;
+    }
 
     return (
         <SettingsWrapper>
@@ -32,7 +33,12 @@ export const Settings: React.FC = () => {
                         min="3"
                         step="1"
                         value={currentRoomOpts.maxPlayers}
-                        onChange={e => dispatch(updateGameOptions({ maxPlayers: +e.target.value }))}
+                        onChange={e => dispatch(
+                                updateGameOptions({
+                                    maxPlayers: +e.target.value,
+                                }),
+                            )
+                        }
                     />
                 </Form.Group>
                 <Form.Group controlId="mafiosoCount">
@@ -42,14 +48,22 @@ export const Settings: React.FC = () => {
                         min="1"
                         step="1"
                         value={currentRoomOpts.mafiosoCount}
-                        onChange={e => dispatch(updateGameOptions({ mafiosoCount: +e.target.value }))}
+                        onChange={e => dispatch(
+                                updateGameOptions({
+                                    mafiosoCount: +e.target.value,
+                                }),
+                            )
+                        }
                     />
                 </Form.Group>
                 <Form.Group controlId="phaseDuration">
                     <Form.Label>Długość rundy</Form.Label>
                     <DurationPicker
                         value={currentRoomOpts.phaseDuration}
-                        onChange={duration => dispatch(updateGameOptions({ phaseDuration: duration }))}
+                        onChange={duration => dispatch(
+                                updateGameOptions({ phaseDuration: duration }),
+                            )
+                        }
                     />
                 </Form.Group>
                 <Form.Group controlId="isPublic">
@@ -57,7 +71,12 @@ export const Settings: React.FC = () => {
                         type="checkbox"
                         checked={currentRoomOpts.isPublic}
                         label="Pokój publiczny"
-                        onChange={e => dispatch(updateGameOptions({ isPublic: e.target.checked }))}
+                        onChange={e => dispatch(
+                                updateGameOptions({
+                                    isPublic: e.target.checked,
+                                }),
+                            )
+                        }
                     />
                 </Form.Group>
                 <Form.Group controlId="votesVisible">
@@ -65,10 +84,20 @@ export const Settings: React.FC = () => {
                         type="checkbox"
                         checked={currentRoomOpts.areVotesVisible}
                         label="Głosy widoczne dla innych graczy"
-                        onChange={e => dispatch(updateGameOptions({ areVotesVisible: e.target.checked }))}
+                        onChange={e => dispatch(
+                                updateGameOptions({
+                                    areVotesVisible: e.target.checked,
+                                }),
+                            )
+                        }
                     />
                 </Form.Group>
-                <Button type="submit" variant="outline-primary">Zapisz</Button>
+                <Button
+                    type="submit"
+                    variant="outline-primary"
+                >
+                    Zapisz
+                </Button>
             </Form>
         </SettingsWrapper>
     );

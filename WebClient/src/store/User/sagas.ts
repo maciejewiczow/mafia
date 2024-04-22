@@ -10,15 +10,23 @@ function* createUserWatcher() {
     yield takeLatest(UserActionType.createUser, createUserWorker);
 }
 
-function* createUserWorker({ userName }: PickAction<UserAction, UserActionType.createUser>) {
+function* createUserWorker({
+    userName,
+}: PickAction<UserAction, UserActionType.createUser>) {
     try {
-        const token: AxiosResponse<CreateUserResponse> = yield call(api.post, '/users', { userName });
+        const token: AxiosResponse<CreateUserResponse> = yield call(
+            api.post,
+            '/users',
+            { userName },
+        );
         yield call(setTokens, token.data);
 
         yield put(getCurrentUser());
     } catch (e) {
         console.error('User creation failed', e);
-        if (e instanceof Error) { toast.error(`Błąd rządania: ${e.message}`); }
+        if (e instanceof Error) {
+            toast.error(`Błąd rządania: ${e.message}`);
+        }
     }
 }
 

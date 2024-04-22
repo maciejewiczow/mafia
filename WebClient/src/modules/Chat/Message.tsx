@@ -1,9 +1,9 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useSelector } from 'react-redux';
+import { MessageInStoreWithUserName } from 'store/GameChat/Chat/selectors';
 import { MessageType } from 'store/GameChat/Chat/store';
 import * as userSelectors from 'store/User/selectors';
-import { MessageInStoreWithUserName } from 'store/GameChat/Chat/selectors';
+import styled from 'styled-components';
 
 const DefaultMessage = styled.div``;
 
@@ -29,7 +29,10 @@ const Message: React.FC<MessageProps> = ({ message, clasName }) => {
     if (message.messageType === MessageType.Announcement) {
         const { sentAt, content } = message;
         return (
-            <AnnouncementMessage className={clasName} title={new Date(sentAt).toLocaleString()}>
+            <AnnouncementMessage
+                className={clasName}
+                title={new Date(sentAt).toLocaleString()}
+            >
                 {content}
             </AnnouncementMessage>
         );
@@ -37,11 +40,17 @@ const Message: React.FC<MessageProps> = ({ message, clasName }) => {
 
     const { sentAt, userId, userName, content } = message;
     return (
-        <DefaultMessage className={clasName} title={new Date(sentAt).toLocaleString()}>
+        <DefaultMessage
+            className={clasName}
+            title={new Date(sentAt).toLocaleString()}
+        >
             <DateTag>[{new Date(sentAt).toLocaleTimeString()}] </DateTag>
-            {
-                (userId === currentUser?.id) ? (<b>{currentUser.name}</b>) : (userName || userId)
-            }: {content}
+            {userId === currentUser?.id ? (
+                <b>{currentUser.name}</b>
+            ) : (
+                userName || userId
+            )}
+            : {content}
         </DefaultMessage>
     );
 };

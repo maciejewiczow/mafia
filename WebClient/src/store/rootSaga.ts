@@ -16,7 +16,10 @@ function* initSaga() {
 
     if (token !== null) {
         try {
-            const result: AxiosResponse<User> = yield call(api.get, '/Users/current');
+            const result: AxiosResponse<User> = yield call(
+                api.get,
+                '/Users/current',
+            );
             yield put(getCurrentUserSuccess(result));
         } catch (err) {
             console.log('Get current user failed with error', err);

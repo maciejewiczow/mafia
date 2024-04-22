@@ -6,15 +6,17 @@ export enum ChatActionType {
     recieveMessages = 'chat/MESSAGE_RECIEVE',
 }
 
-export type ChatAction = {
-    type: ChatActionType.recieveMessages;
-    messages: Message[];
-} | InvokeAction<
-    ChatActionType.sendMessage,
-    [
-        {
-            chatType: ChatTypeEnum;
-            content: string;
-        },
-    ]
->;
+export type ChatAction =
+    | {
+          type: ChatActionType.recieveMessages;
+          messages: Message[];
+      }
+    | InvokeAction<
+          ChatActionType.sendMessage,
+          [
+              {
+                  chatType: ChatTypeEnum;
+                  content: string;
+              },
+          ]
+      >;

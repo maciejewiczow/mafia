@@ -1,8 +1,12 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef,useState } from 'react';
 import dayjs from 'dayjs';
 
-export const useCountdown = (to: string | number | Date | dayjs.Dayjs = new Date()) => {
-    const [remaining, setRemaining] = useState<number>(dayjs(to).diff(new Date(), 'millisecond'));
+export const useCountdown = (
+    to: string | number | Date | dayjs.Dayjs = new Date(),
+) => {
+    const [remaining, setRemaining] = useState<number>(
+        dayjs(to).diff(new Date(), 'millisecond'),
+    );
     const intervalRef = useRef<NodeJS.Timeout>();
 
     useEffect(() => {
@@ -14,12 +18,10 @@ export const useCountdown = (to: string | number | Date | dayjs.Dayjs = new Date
     }, [to]);
 
     useEffect(() => {
-        if (remaining <= 0)
-            clearInterval(intervalRef.current);
+        if (remaining <= 0) {clearInterval(intervalRef.current);}
     }, [remaining]);
 
-    if (isNaN(remaining))
-        return 0;
+    if (isNaN(remaining)) {return 0;}
 
     return Math.max(remaining, 0);
 };

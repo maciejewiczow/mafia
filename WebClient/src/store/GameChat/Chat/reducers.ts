@@ -3,7 +3,12 @@ import { Reducer } from 'redux';
 import { objectHasOwnProperty } from 'store/utils';
 import { GameChatAction, GameChatActionType } from '../constants';
 import { ChatAction, ChatActionType } from './constants';
-import { ChatsState, initialChatState, MessageInStore, MessageType } from './store';
+import {
+    ChatsState,
+    initialChatState,
+    MessageInStore,
+    MessageType,
+} from './store';
 
 export const chatsReducer: Reducer<ChatsState, ChatAction | GameChatAction> = (
     state = initialChatState,

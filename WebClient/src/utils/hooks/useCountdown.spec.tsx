@@ -1,14 +1,15 @@
-import dayjs from 'dayjs';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import FakeTimers from '@sinonjs/fake-timers';
-
 import { act } from 'react-dom/test-utils';
+import FakeTimers from '@sinonjs/fake-timers';
+import { render, screen } from '@testing-library/react';
+import dayjs from 'dayjs';
 import { useCountdown } from './useCountdown';
 
 const testId = 'idididi';
 
-const FakeComponent: React.FC<{to?: string | number | Date | dayjs.Dayjs }> = ({ to }) => {
+const FakeComponent: React.FC<{
+    to?: string | number | Date | dayjs.Dayjs;
+}> = ({ to }) => {
     const countdown = useCountdown(to);
 
     return <span data-testid={testId}>{countdown}</span>;

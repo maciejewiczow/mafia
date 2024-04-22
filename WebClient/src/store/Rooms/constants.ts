@@ -17,35 +17,38 @@ export enum RoomsActionType {
     saveRoomSettings = 'rooms/SAVE_SETTINGS',
 }
 
-export type RoomsAction = RequestActionBundle<
-    RoomsActionType.roomsRequest,
-    RoomsActionType.roomsRequestSuccess,
-    RoomsActionType.roomsRequestFailed,
-    undefined,
-    RoomsResponse
-> | RequestActionBundle<
-    RoomsActionType.createRoomRequest,
-    RoomsActionType.createRoomRequestSuccess,
-    RoomsActionType.createRoomRequestFailed,
-    undefined,
-    GameRoom
-> | {
-    type: RoomsActionType.createRoom;
-    name: string;
-} | {
-    type: RoomsActionType.joinRoom;
-    roomId: string;
-} | {
-    type: RoomsActionType.getCurrentRoom;
-} | ResponseSuccessAction<
-    RoomsActionType.joinRoomSuccess,
-    GameRoom
-> | ResponseSuccessAction<
-    RoomsActionType.getCurrentRoomSuccess,
-    GameRoom
-> | {
-    type: RoomsActionType.updateRoomSettings;
-    options: Partial<GameOptions>;
-} | {
-    type: RoomsActionType.saveRoomSettings;
-};
+export type RoomsAction =
+    | RequestActionBundle<
+          RoomsActionType.roomsRequest,
+          RoomsActionType.roomsRequestSuccess,
+          RoomsActionType.roomsRequestFailed,
+          undefined,
+          RoomsResponse
+      >
+    | RequestActionBundle<
+          RoomsActionType.createRoomRequest,
+          RoomsActionType.createRoomRequestSuccess,
+          RoomsActionType.createRoomRequestFailed,
+          undefined,
+          GameRoom
+      >
+    | {
+          type: RoomsActionType.createRoom;
+          name: string;
+      }
+    | {
+          type: RoomsActionType.joinRoom;
+          roomId: string;
+      }
+    | {
+          type: RoomsActionType.getCurrentRoom;
+      }
+    | ResponseSuccessAction<RoomsActionType.joinRoomSuccess, GameRoom>
+    | ResponseSuccessAction<RoomsActionType.getCurrentRoomSuccess, GameRoom>
+    | {
+          type: RoomsActionType.updateRoomSettings;
+          options: Partial<GameOptions>;
+      }
+    | {
+          type: RoomsActionType.saveRoomSettings;
+      };

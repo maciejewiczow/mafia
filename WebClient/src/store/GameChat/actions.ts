@@ -3,7 +3,10 @@ import { PickAction } from 'store';
 import { MessageType } from './Chat/store';
 import { GameChatAction, GameChatActionType } from './constants';
 
-export const memberConnected = (user: User, chatType: ChatTypeEnum): PickAction<GameChatAction, GameChatActionType.memberConnected> => ({
+export const memberConnected = (
+    user: User,
+    chatType: ChatTypeEnum,
+): PickAction<GameChatAction, GameChatActionType.memberConnected> => ({
     type: GameChatActionType.memberConnected,
     user,
     message: {
@@ -15,7 +18,10 @@ export const memberConnected = (user: User, chatType: ChatTypeEnum): PickAction<
     },
 });
 
-export const memberDisconnected = (user: User, chatType: ChatTypeEnum): PickAction<GameChatAction, GameChatActionType.memberDisconnected> => ({
+export const memberDisconnected = (
+    user: User,
+    chatType: ChatTypeEnum,
+): PickAction<GameChatAction, GameChatActionType.memberDisconnected> => ({
     type: GameChatActionType.memberDisconnected,
     user,
     message: {
@@ -27,7 +33,10 @@ export const memberDisconnected = (user: User, chatType: ChatTypeEnum): PickActi
     },
 });
 
-export const invokeAddMeToGroups = (): PickAction<GameChatAction, GameChatActionType.invokeAddMeToGroups> => ({
+export const invokeAddMeToGroups = (): PickAction<
+    GameChatAction,
+    GameChatActionType.invokeAddMeToGroups
+> => ({
     type: GameChatActionType.invokeAddMeToGroups,
     successActionType: undefined,
     errorActionType: undefined,
@@ -35,11 +44,17 @@ export const invokeAddMeToGroups = (): PickAction<GameChatAction, GameChatAction
     methodName: 'AddMeToGroupsOnGameStart',
 });
 
-export const callAddMeToGhostGroup = (): PickAction<GameChatAction, GameChatActionType.callAddMeToGhostGroup> => ({
+export const callAddMeToGhostGroup = (): PickAction<
+    GameChatAction,
+    GameChatActionType.callAddMeToGhostGroup
+> => ({
     type: GameChatActionType.callAddMeToGhostGroup,
 });
 
-export const invokeAddMeToGhostGroup = (): PickAction<GameChatAction, GameChatActionType.invokeAddMeToGhostGroup> => ({
+export const invokeAddMeToGhostGroup = (): PickAction<
+    GameChatAction,
+    GameChatActionType.invokeAddMeToGhostGroup
+> => ({
     type: GameChatActionType.invokeAddMeToGhostGroup,
     isInvokeAction: true,
     methodName: 'AddMeToGhostGroup',
@@ -47,10 +62,16 @@ export const invokeAddMeToGhostGroup = (): PickAction<GameChatAction, GameChatAc
     successActionType: undefined,
 });
 
-export const connectToGameChat = (): PickAction<GameChatAction, GameChatActionType.connect> => ({
+export const connectToGameChat = (): PickAction<
+    GameChatAction,
+    GameChatActionType.connect
+> => ({
     type: GameChatActionType.connect,
 });
 
-export const connectToGameChatSuccess = (): PickAction<GameChatAction, GameChatActionType.connectSuccess> => ({
+export const connectToGameChatSuccess = (): PickAction<
+    GameChatAction,
+    GameChatActionType.connectSuccess
+> => ({
     type: GameChatActionType.connectSuccess,
 });

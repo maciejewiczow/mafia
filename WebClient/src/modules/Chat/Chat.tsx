@@ -53,14 +53,16 @@ export const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
     const scrollAreaRef = useRef<HTMLDivElement>(null);
 
     useLayoutEffect(() => {
-        if (!scrollAreaRef.current)
-            {return;}
+        if (!scrollAreaRef.current) {
+            return;
+        }
 
         const el = scrollAreaRef.current;
 
         // scroll is at the bottom
-        if (Math.abs((el.scrollHeight - el.scrollTop) - el.clientHeight) < 30)
-            {el.scrollTop = el.scrollHeight;}
+        if (Math.abs(el.scrollHeight - el.scrollTop - el.clientHeight) < 30) {
+            el.scrollTop = el.scrollHeight;
+        }
     }, [messages]);
 
     const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
@@ -73,14 +75,23 @@ export const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
         <ChatWrapper className={className}>
             <ChatHeader>{chatType} chat</ChatHeader>
             {!isConnected ? (
-                (isConnecting && <div>Connecting to chat...</div>) || <div>Not connected to chat</div>
+                (isConnecting && <div>Connecting to chat...</div>) || (
+                    <div>Not connected to chat</div>
+                )
             ) : (
                 <>
                     <MessagesWrapper ref={scrollAreaRef}>
                         {!messages?.length ? (
-                            <NoMessages>Nikt jeszcze nic nie napisał w tym chacie</NoMessages>
+                            <NoMessages>
+                                Nikt jeszcze nic nie napisał w tym chacie
+                            </NoMessages>
                         ) : (
-                            messages.map(m => <Message message={m} key={m.id} />)
+                            messages.map(m => (
+                                <Message
+                                    message={m}
+                                    key={m.id}
+                                />
+                            ))
                         )}
                     </MessagesWrapper>
                     <MessageFormWrapper>
@@ -90,10 +101,16 @@ export const Chat: React.FC<ChatProps> = ({ chatType, className }) => {
                                     type="text"
                                     placeholder="Napisz coś..."
                                     value={currentMessageContent}
-                                    onChange={e => setCurrentMessageContent(e.target.value)}
+                                    onChange={e => setCurrentMessageContent(e.target.value)
+                                    }
                                     required
                                 />
-                                <Button variant="secondary" type="submit"><AiOutlineSend /></Button>
+                                <Button
+                                    variant="secondary"
+                                    type="submit"
+                                >
+                                    <AiOutlineSend />
+                                </Button>
                             </InputGroup>
                         </Form>
                     </MessageFormWrapper>

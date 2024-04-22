@@ -1,5 +1,4 @@
-import { createDispatchHook } from 'react-redux';
-import { createSelectorHook, UseSelector } from 'react-redux';
+import { createDispatchHook , createSelectorHook, UseSelector } from 'react-redux';
 import { AppAction, AppState } from './constants';
 
 export const useAppSelector = createSelectorHook() as UseSelector<AppState>;

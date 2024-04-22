@@ -9,10 +9,10 @@ import {
     initialChatConnectingState,
 } from './store';
 
-const gameChatConnectedReducer: Reducer<GameChatConnectedState, GameChatAction> = (
-    state = initialChatConnectedState,
-    action,
-) => {
+const gameChatConnectedReducer: Reducer<
+    GameChatConnectedState,
+    GameChatAction
+> = (state = initialChatConnectedState, action) => {
     switch (action.type) {
         case GameChatActionType.connect:
             return false;
@@ -25,10 +25,10 @@ const gameChatConnectedReducer: Reducer<GameChatConnectedState, GameChatAction> 
     }
 };
 
-const gameChatConnectingReducer: Reducer<GameChatConnectingState, GameChatAction> = (
-    state = initialChatConnectingState,
-    action,
-) => {
+const gameChatConnectingReducer: Reducer<
+    GameChatConnectingState,
+    GameChatAction
+> = (state = initialChatConnectingState, action) => {
     switch (action.type) {
         case GameChatActionType.connect:
             return true;
