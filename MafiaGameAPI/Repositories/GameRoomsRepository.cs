@@ -197,6 +197,7 @@ namespace MafiaGameAPI.Repositories
                 throw;
             }
         }
+
         private async Task<UserProjection> GetUserById(String userId)
         {
             var project = new BsonDocument
@@ -205,6 +206,7 @@ namespace MafiaGameAPI.Repositories
                 { "name", 1 },
                 { "roomId", 1 },
             };
+
             return await _usersCollection
                 .Find(Builders<User>.Filter.Eq("_id", ObjectId.Parse(userId)))
                 .Project<UserProjection>(project)
