@@ -1,4 +1,4 @@
-import { useEffect, useRef,useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import dayjs from 'dayjs';
 
 export const useCountdown = (
@@ -18,10 +18,14 @@ export const useCountdown = (
     }, [to]);
 
     useEffect(() => {
-        if (remaining <= 0) {clearInterval(intervalRef.current);}
+        if (remaining <= 0) {
+            clearInterval(intervalRef.current);
+        }
     }, [remaining]);
 
-    if (isNaN(remaining)) {return 0;}
+    if (isNaN(remaining)) {
+        return 0;
+    }
 
     return Math.max(remaining, 0);
 };
