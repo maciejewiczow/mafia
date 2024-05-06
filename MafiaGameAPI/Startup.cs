@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using MafiaGameAPI.Helpers;
 using Microsoft.AspNetCore.SignalR;
+using System.Net.Http;
 
 namespace MafiaGameAPI
 {
@@ -66,7 +67,7 @@ namespace MafiaGameAPI
                         {
                             var path = context.HttpContext.Request.Path;
 
-                            if ((path.StartsWithSegments("/hubs")))
+                            if (path.StartsWithSegments("/hubs"))
                             {
                                 context.Token = context.Request.Query["access_token"].ToString();
                             }
@@ -101,7 +102,33 @@ namespace MafiaGameAPI
                     }
 
                     opts.TokenValidationParameters.IssuerSigningKey.KeyId = "RefreshTokenKey";
+                })
+                .AddJwtBearer(nameof(TokenType.TurnCallbackToken), opts =>
+                {
+                    opts.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        ClockSkew = TimeSpan.FromMinutes(5),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("TurnFunction:CallbackTokenSignature"))),
+                        ValidateLifetime = true,
+                        RequireSignedTokens = true,
+                    };
+
+                    if (_env.IsDevelopment())
+                    {
+                        opts.RequireHttpsMetadata = false;
+                        opts.TokenValidationParameters.ValidateIssuer = false;
+                        opts.TokenValidationParameters.ValidateAudience = false;
+                    }
+
+                    opts.TokenValidationParameters.IssuerSigningKey.KeyId = "CallbackTokenKey";
                 });
+
+            services.AddHttpClient<HttpClient>("TurnFunction", client =>
+            {
+                client.BaseAddress = new Uri(Configuration.GetValue<String>("TurnFunction:BaseAddress"));
+                client.DefaultRequestHeaders.Add("x-functions-key", Configuration.GetValue<String>("TurnFunction:FunctionKey"));
+            });
 
             services.AddAuthorization(opts =>
             {
@@ -119,6 +146,15 @@ namespace MafiaGameAPI
                         .RequireClaim("type", TokenType.RefreshToken.ToString())
                         .Build()
                 );
+
+                opts.AddPolicy(
+                    nameof(TokenType.TurnCallbackToken),
+                    new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .AddAuthenticationSchemes(nameof(TokenType.TurnCallbackToken))
+                        .RequireClaim("type", TokenType.TurnCallbackToken.ToString())
+                        .Build()
+                );
             });
 
             if (_env.IsDevelopment())
@@ -133,6 +169,7 @@ namespace MafiaGameAPI
                                 .AllowAnyHeader()
                     );
                 });
+                services.AddSwaggerGen();
             }
 
             services.AddControllers()
@@ -203,6 +240,8 @@ namespace MafiaGameAPI
             if (env.IsDevelopment())
             {
                 app.UseCors(FrontendOrigin);
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseAuthentication();

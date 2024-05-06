@@ -9,5 +9,6 @@ namespace MafiaGameAPI.Services
     {
         Task<NewUserTokenResponse> CreateUserAndGenerateTokensAsync(CreateUserDTO dto);
         TokenResponse CreateNewAccessToken(String userId);
+        String GenerateCallbackToken(String roomId, String stateId);
     }
 }

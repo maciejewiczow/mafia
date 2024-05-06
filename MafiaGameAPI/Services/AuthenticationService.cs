@@ -30,14 +30,14 @@ namespace MafiaGameAPI.Services
             var accessTokenConfig = _configuration.GetSection("AccessToken");
             var refreshTokenConfig = _configuration.GetSection("RefreshToken");
 
-            var accessToken = generateToken(
+            var accessToken = GenerateToken(
                 accessTokenConfig["Signature"],
                 accessTokenConfig["LifeSpan"],
                 user.Id.ToString(),
                 TokenType.AccessToken
             );
 
-            var refreshToken = generateToken(
+            var refreshToken = GenerateToken(
                 refreshTokenConfig["Signature"],
                 refreshTokenConfig["LifeSpan"],
                 user.Id.ToString(),
@@ -56,7 +56,7 @@ namespace MafiaGameAPI.Services
         {
             var accessTokenConfig = _configuration.GetSection("AccessToken");
 
-            var accessToken = generateToken(
+            var accessToken = GenerateToken(
                 accessTokenConfig["Signature"],
                 accessTokenConfig["LifeSpan"],
                 userId,
@@ -70,7 +70,7 @@ namespace MafiaGameAPI.Services
             };
         }
 
-        private String generateToken(String keyString, String ttl, String userId, TokenType type)
+        private String GenerateToken(String keyString, String ttl, String userId, TokenType type)
         {
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyString));
 
@@ -94,6 +94,28 @@ namespace MafiaGameAPI.Services
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(token);
+        }
+
+        public String GenerateCallbackToken(String roomId, String stateId)
+        {
+            var keyString = _configuration.GetValue<String>("TurnFunction:CallbackTokenSignature");
+            var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(keyString));
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim("roomId", roomId),
+                    new Claim("stateId", stateId),
+                    new Claim("type", TokenType.TurnCallbackToken.ToString())
+                }),
+                SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256Signature),
+                IssuedAt = DateTime.UtcNow
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            return tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
         }
     }
 }

@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using MafiaGameAPI.Enums;
@@ -10,6 +13,7 @@ using MafiaGameAPI.Models;
 using MafiaGameAPI.Models.UserGameStates;
 using MafiaGameAPI.Repositories;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Configuration;
 
 namespace MafiaGameAPI.Services
 {
@@ -19,18 +23,27 @@ namespace MafiaGameAPI.Services
         private readonly IGameRoomsRepository _gameRoomsRepository;
         private readonly IHubContext<GameChatHub, IGameChatClient> _context;
         private readonly IValidationHelper _validationHelper;
+        private readonly IAuthenticationService authenticationService;
+        private readonly IHttpClientFactory clientFactory;
+        private readonly IConfiguration configuration;
 
         public GameService(
             IGameRepository gameRepository,
             IGameRoomsRepository gameRoomsRepository,
             IHubContext<GameChatHub, IGameChatClient> context,
-            IValidationHelper validationHelper
+            IValidationHelper validationHelper,
+            IAuthenticationService authService,
+            IHttpClientFactory factory,
+            IConfiguration config
         )
         {
             _gameRepository = gameRepository;
             _gameRoomsRepository = gameRoomsRepository;
             _context = context;
             _validationHelper = validationHelper;
+            authenticationService = authService;
+            clientFactory = factory;
+            configuration = config;
         }
 
         private async Task<bool> HasGameEnded(String roomId)
@@ -103,8 +116,10 @@ namespace MafiaGameAPI.Services
             {
                 throw new HubException("User not authorized to start game!");
             }
+
             var room = await _gameRoomsRepository.GetRoomById(roomId);
             var votingStartDate = DateTime.Now;
+
             GameState state = new GameNightState(room)
             {
                 Id = IdentifiersHelper.CreateGuidString(),
@@ -114,8 +129,7 @@ namespace MafiaGameAPI.Services
                 VotingEnd = votingStartDate.Add(room.GameOptions.PhaseDuration)
             };
 
-            // FIXME: jak będzie wyjątek to sie wszystko popsuje
-            _ = Task.Run(() => RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id));
+            await RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id);
 
             state.ChangePhase();
             await _gameRepository.ChangePhase(roomId, state);
@@ -123,17 +137,16 @@ namespace MafiaGameAPI.Services
             return state;
         }
 
-        public async Task ChangePhase(String roomId, GameState newState)
+        private async Task ChangePhase(String roomId, GameState newState)
         {
             GameOptions options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
             await _gameRepository.ChangePhase(roomId, newState);
 
-            if (!(await HasGameEnded(roomId)))
+            if (!await HasGameEnded(roomId))
             {
                 await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateGameStateAsync(newState);
 
-                // FIXME: jak będzie wyjątek to sie wszystko popsuje
-                _ = Task.Run(() => RunPhase(roomId, options.PhaseDuration, newState.Id));
+                await RunPhase(roomId, options.PhaseDuration, newState.Id);
             }
         }
 
@@ -162,7 +175,7 @@ namespace MafiaGameAPI.Services
             return voteState;
         }
 
-        public async Task<GameState> VotingAction(String roomId)
+        private async Task<GameState> VotingAction(String roomId)
         {
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
             if (room.CurrentGameState.VoteState.Count != 0)
@@ -185,18 +198,31 @@ namespace MafiaGameAPI.Services
             return room.CurrentGameState;
         }
 
-        public async Task<GameState> GetCurrentState(String roomId)
+        private async Task RunPhase(String roomId, TimeSpan phaseDuration, String stateId)
         {
-            return await _gameRepository.GetCurrentState(roomId);
+            using var client = clientFactory.CreateClient("TurnFunction");
+
+            var token = authenticationService.GenerateCallbackToken(roomId, stateId);
+
+            using var jsonContent = new StringContent(
+                JsonSerializer.Serialize(new
+                {
+                    callbackToken = token,
+                    callbackUrl = configuration.GetValue<String>("TurnFunction:CallbackUrl"),
+                    turnEnd = DateTime.Now + phaseDuration,
+                }),
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            await client.PostAsync("/api/start-turn-timer", jsonContent);
         }
 
-        private async Task RunPhase(String roomId, TimeSpan timeSpan, String stateId)
+        public async Task ChangeTurn(String roomId, String stateId)
         {
-            Thread.Sleep(timeSpan);
-
             GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
 
-            if (stateId.Equals(room.CurrentGameState.Id))
+            if (stateId.Equals(room.CurrentGameState.Id) && !await HasGameEnded(roomId))
             {
                 await VotingAction(roomId);
             }
