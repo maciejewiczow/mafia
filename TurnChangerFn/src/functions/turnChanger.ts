@@ -77,6 +77,7 @@ const turnChangerHttpStart: HttpHandler = async (
             return new HttpResponse({
                 status: 400,
                 body: e.toString(),
+                headers: [['Content-Type', 'application/json']],
             });
         }
 
@@ -84,6 +85,7 @@ const turnChangerHttpStart: HttpHandler = async (
             return new HttpResponse({
                 status: 400,
                 body: 'Invalid JSON input',
+                headers: [['Content-Type', 'text/plain']],
             });
         }
 
