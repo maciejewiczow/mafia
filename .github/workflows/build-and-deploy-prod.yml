@@ -48,6 +48,9 @@ jobs:
   build-api:
     name: Build API
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./MafiaGameAPI
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -56,14 +59,13 @@ jobs:
         with:
           dotnet-version: '3.1.x'
       - name: Restore deps
-        working-directory: ./MafiaGameAPI
         run: dotnet restore --locked-mode
       - name: Build with dotnet
-        run: dotnet build ./MafiaGameAPI.csproj /property:GenerateFullPaths=true --configuration Release
-        working-directory: ./MafiaGameAPI
+        run: dotnet build -c Release
       - name: dotnet publish
-        run: dotnet publish ./MafiaGameAPI.csproj /property:GenerateFullPaths=true -c Release -o ./out
-        working-directory: ./MafiaGameAPI
+        run: dotnet publish -c Release -o ./out
+      - name: Test
+        run: ls -la ./out
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
@@ -89,12 +91,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: mafia-game-api
-          path: /app/api
+          path: ./app/api
       - name: Deploy to App Service
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ needs.infrastructure.outputs.apiAppName }}
-          package: /app/api
+          package: ./app/api
 
   build-functions:
     name: Build Azure Functions
@@ -141,12 +143,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: mafia-functions
-          path: /app/functions
+          path: ./app/functions
       - name: 'Publish azure functions'
         uses: Azure/functions-action@v1
         with:
           app-name: ${{ needs.infrastructure.outputs.functionAppName }}
-          package: /app/functions
+          package: ./app/functions
       # TODO: Add replacing the function token in api appsettings
 
   build-frontend:
@@ -194,11 +196,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: mafia-frontend
-          path: /app/frontend
+          path: ./app/frontend
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
             azure_static_web_apps_api_token: ${{ secrets.SAS_DEPLOYMENT_TOKEN }}
             action: upload
-            app_location: /app/frontend
+            app_location: ./app/frontend
 
