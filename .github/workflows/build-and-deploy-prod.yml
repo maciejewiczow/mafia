@@ -174,7 +174,7 @@ jobs:
         run: npm ci
       - name: Build app
         env:
-          REACT_APP_API_URL: ${{ needs.infrastructure.outputs.apiUrl }}
+          REACT_APP_API_URL: https://${{ needs.infrastructure.outputs.apiUrl }}
         run: npm run build
       - name: Npm prune
         run: npm prune --production
