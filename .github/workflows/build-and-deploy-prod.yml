@@ -9,6 +9,10 @@ permissions:
   id-token: write
   contents: read
 
+concurrency:
+  cancel-in-progress: true
+  group: production-deploy
+
 jobs:
   infrastructure:
     name: Deploy infrastructure
@@ -19,6 +23,7 @@ jobs:
     outputs:
       functionAppName: ${{ steps.deploy.outputs.functionAppName }}
       apiAppName: ${{ steps.deploy.outputs.apiAppName }}
+      apiUrl: ${{ steps.deploy.outputs.appUrl }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -153,6 +158,7 @@ jobs:
   build-frontend:
     name: Build frontend
     runs-on: ubuntu-latest
+    needs: infrastructure
     defaults:
       run:
         working-directory: ./WebClient
@@ -167,6 +173,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Build app
+        env:
+          REACT_APP_API_URL: ${{ needs.infrastructure.outputs.apiUrl }}
         run: npm run build
       - name: Npm prune
         run: npm prune --production
@@ -182,7 +190,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy frontend
     needs:
-      - infrastructure
       - build-frontend
       - deploy-api
       - deploy-functions

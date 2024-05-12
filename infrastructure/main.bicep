@@ -1,20 +1,20 @@
 @secure()
 param swaPassword string
-
+param location string = resourceGroup().location
 param apiAccessTokenLifeSpan string = '00:20:00'
 
 module database 'database.bicep' = {
   name: '${deployment().name}-mongo'
   params: {
     databaseName: 'mafia'
-    region: resourceGroup().location
+    region: location
   }
 }
 
 module functions 'functions.bicep' = {
   name: '${deployment().name}-functions'
   params: {
-    appInsightsLocation: resourceGroup().location
+    appInsightsLocation: location
   }
 }
 
@@ -38,7 +38,6 @@ module staticWebApp 'frontend.bicep' = {
     name: 'mafia-swa'
     password: swaPassword
     apiResourceId: api.outputs.appServiceId
-    apiUrl: '${api.outputs.appServiceUrl}/api'
   }
   dependsOn: [
     api
@@ -48,3 +47,4 @@ module staticWebApp 'frontend.bicep' = {
 output functionAppName string = functions.outputs.appName
 output apiAppName string = api.outputs.appServiceName
 output appUrl string = staticWebApp.outputs.appUrl
+output apiUrl string = 'https://${api.outputs.appServiceUrl}/api'
