@@ -147,7 +147,7 @@ jobs:
         uses: azure/cli@v2
         with:
           inlineScript: |
-            key = az functionapp function keys list -g Mafia -n ${{ needs.infrastructure.outputs.functionAppName }} --function-name turnChangerHttpStart | jq -r '.default'
+            key=`az functionapp function keys list -g Mafia -n ${{ needs.infrastructure.outputs.functionAppName }} --function-name turnChangerHttpStart | jq -r '.default'`
             az webapp config appsettings set -g Mafia -n ${{ needs.infrastructure.outputs.apiAppName }} --settings TurnFunction__FunctionKey=$key
 
   build-frontend:
