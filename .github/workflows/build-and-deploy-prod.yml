@@ -149,7 +149,7 @@ jobs:
       # TODO: Add replacing the function token in api appsettings
 
   build-frontend:
-    name: Build frontent
+    name: Build frontend
     runs-on: ubuntu-latest
     defaults:
       run:
