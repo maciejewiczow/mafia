@@ -5,6 +5,7 @@ on:
 
 name: Build and deploy production
 
+
 permissions:
   id-token: write
   contents: read
