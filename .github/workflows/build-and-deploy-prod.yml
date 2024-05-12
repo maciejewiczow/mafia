@@ -56,13 +56,13 @@ jobs:
         run: dotnet build ./MafiaGameAPI.csproj /property:GenerateFullPaths=true --configuration Release
         working-directory: ./MafiaGameAPI
       - name: dotnet publish
-        run: dotnet publish ./MafiaGameAPI.csproj /property:GenerateFullPaths=true -c Release -o /app/api
+        run: dotnet publish ./MafiaGameAPI.csproj /property:GenerateFullPaths=true -c Release -o ./out
         working-directory: ./MafiaGameAPI
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: mafia-game-api
-          path: /app/api
+          path: ./out
 
   deploy-api:
     name: Deploy API
