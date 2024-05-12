@@ -5,6 +5,10 @@ on:
 
 name: Build and deploy production
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   infrastructure:
     name: Deploy infrastructure
