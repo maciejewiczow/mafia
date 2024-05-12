@@ -1,0 +1,190 @@
+on:
+  push:
+    branches:
+      - master
+
+name: Build and deploy production
+
+jobs:
+  infrastructure:
+    name: Deploy infrastructure
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ steps.deploy.outputs.appUrl.value }}
+    outputs:
+      functionAppName: ${{ steps.deploy.outputs.functionAppName.value }}
+      apiAppName: ${{ steps.deploy.outputs.apiAppName.value }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Deploy Bicep
+        id: deploy
+        uses: azure/arm-deploy@v1
+        with:
+          scope: resourcegroup
+          deploymentName: Production
+          resourceGroupName: Mafia
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          template: ./infrastructure/main.bicep
+          parameters: swaPassword=${{ secrets.SWA_PASSWORD }} dbAdminPassword=${{ secrets.DB_ADMIN_PASSSWORD }} dbAdminUsername=${{ secrets.DB_ADMIN_USERNAME }}
+
+  build-api:
+    name: Build API
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '3.1.x'
+      - name: Restore deps
+        working-directory: ./MafiaGameAPI
+        run: dotnet restore --locked-mode
+      - name: Build with dotnet
+        run: dotnet build ./MafiaGameAPI.csproj /property:GenerateFullPaths=true --configuration Release
+        working-directory: ./MafiaGameAPI
+      - name: dotnet publish
+        run: dotnet publish ./MafiaGameAPI.csproj /property:GenerateFullPaths=true -c Release -o /app/api
+        working-directory: ./MafiaGameAPI
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: mafia-game-api
+          path: /app/api
+
+  deploy-api:
+    name: Deploy API
+    runs-on: ubuntu-latest
+    needs:
+      - build-api
+      - infrastructure
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: mafia-game-api
+          path: /app/api
+      - name: Deploy to App Service
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ needs.infrastructure.outputs.apiAppName }}
+          package: /app/api
+
+  build-functions:
+    name: Build Azure Functions
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./TurnChangerFn
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache-dependency-path: ./TurnChangerFn/package-lock.json
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build app
+        run: npm run build
+      - name: Npm prune
+        run: npm prune --production
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: mafia-functions
+          path: ./TurnChangerFn
+
+  deploy-functions:
+    runs-on: ubuntu-latest
+    name: Deploy Azure Functions
+    needs:
+      - infrastructure
+      - build-functions
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: mafia-functions
+          path: /app/functions
+      - name: 'Publish azure functions'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ needs.infrastructure.outputs.functionAppName }}
+          package: /app/functions
+      # TODO: Add replacing the function token in api appsettings
+
+  build-frontend:
+    name: Build frontent
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./WebClient
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache-dependency-path: ./WebClient/package-lock.json
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Build app
+        run: npm run build
+      - name: Npm prune
+        run: npm prune --production
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: mafia-frontend
+          path: ./WebClient/build
+
+  deploy-frontend:
+    environment:
+      name: production
+    runs-on: ubuntu-latest
+    name: Deploy frontend
+    needs:
+      - infrastructure
+      - build-frontend
+    steps:
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: mafia-frontend
+          path: /app/frontend
+      - name: Deploy
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+            azure_static_web_apps_api_token: ${{ secrets.SAS_DEPLOYMENT_TOKEN }}
+            action: upload
+            app_location: /app/frontend
+

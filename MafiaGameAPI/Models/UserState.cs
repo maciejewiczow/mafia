@@ -1,13 +1,13 @@
-using System;
 using MafiaGameAPI.Enums;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
-namespace MafiaGameAPI.Models 
+namespace MafiaGameAPI.Models
 {
-	public class UserState 
-	{
-		public User User { get; set; }
-		public RoleEnum Role { get; set; }
-
-	}
-
+    public class UserState
+    {
+        public string UserId { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
+        public RoleEnum Role { get; set; }
+    }
 }

@@ -1,0 +1,62 @@
+{
+    "folders": [
+        {
+            "path": "..\\WebClient"
+        },
+        {
+            "path": "..\\MafiaGameAPI"
+        },
+        {
+            "path": "../TurnChangerFn"
+        },
+        {
+            "path": "..",
+            "name": "Root"
+        }
+    ],
+    "settings": {
+        "gitlens.currentLine.enabled": true,
+        "typescript.tsdk": "node_modules\\typescript\\lib",
+        "files.insertFinalNewline": true,
+        "files.exclude": {
+            "**/node_modules": true
+        },
+        "todohighlight.keywords": [
+            {
+                "text": "API-FIX:",
+                "backgroundColor": "#f80",
+                "color": "#fff",
+                "overviewRulerColor": "#f80"
+            }
+        ],
+        "todo-tree.general.tags": [
+            "BUG",
+            "HACK",
+            "FIXME",
+            "TODO",
+            "XXX",
+            "API-FIX"
+        ],
+        "todo-tree.highlights.customHighlight": {
+            "API-FIX": {
+                "icon": "server"
+            },
+            "BUG": {
+                "icon": "bug"
+            },
+            "FIXME": {
+                "icon": "flame"
+            }
+        },
+        "omnisharp.useEditorFormattingSettings": false,
+        "debug.internalConsoleOptions": "neverOpen",
+        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+        "[csharp]": {
+            "editor.defaultFormatter": "ms-dotnettools.csharp"
+        },
+        "[bicep]": {
+            "editor.defaultFormatter": "ms-azuretools.vscode-bicep"
+        },
+
+    }
+}
