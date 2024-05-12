@@ -23,7 +23,7 @@ jobs:
     outputs:
       functionAppName: ${{ steps.deploy.outputs.functionAppName }}
       apiAppName: ${{ steps.deploy.outputs.apiAppName }}
-      apiUrl: ${{ steps.deploy.outputs.appUrl }}
+      apiUrl: ${{ steps.deploy.outputs.apiUrl }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
