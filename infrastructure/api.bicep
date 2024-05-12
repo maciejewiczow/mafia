@@ -18,9 +18,6 @@ param accessTokenLifeSpan string = '00:20:00'
 param turnFunctionUrl string
 
 param mongoDbConnectionString string
-param mongoDbUsername string
-@secure()
-param mongoDbPassword string
 
 @description('App Service Plan name')
 var appServicePlanName = 'App-${uniqueRGString}'
@@ -63,11 +60,7 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2023-12-01' = {
     TurnFunction__FunctionKey: ''
     TurnFunction__CallbackTokenSignature: guid(resourceGroup().id, deployment().name, 'turn-function-token')
     TurnFunction__CallbackUrl: 'https://${appService.properties.defaultHostName}/api/TurnCallback'
-    ConnectionStrings__Mongo__Base: replace(
-      mongoDbConnectionString,
-      '<user>:<password>',
-      '${mongoDbUsername}:${mongoDbPassword}'
-    )
+    ConnectionStrings__Mongo__Base: mongoDbConnectionString
   }
 }
 

@@ -1,16 +1,13 @@
 @secure()
 param swaPassword string
-@secure()
-param dbAdminPassword string
-param dbAdminUsername string
 
 param apiAccessTokenLifeSpan string = '00:20:00'
 
 module database 'database.bicep' = {
   name: '${deployment().name}-mongo'
   params: {
-    adminPassword: dbAdminPassword
-    adminUsername: dbAdminUsername
+    databaseName: 'mafia'
+    region: resourceGroup().location
   }
 }
 
@@ -28,8 +25,6 @@ module api 'api.bicep' = {
     accessTokenLifeSpan: apiAccessTokenLifeSpan
     turnFunctionUrl: functions.outputs.url
     mongoDbConnectionString: database.outputs.connectionString
-    mongoDbPassword: dbAdminPassword
-    mongoDbUsername: dbAdminUsername
   }
   dependsOn: [
     functions

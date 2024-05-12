@@ -37,7 +37,7 @@ jobs:
           resourceGroupName: Mafia
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           template: ./infrastructure/main.bicep
-          parameters: swaPassword=${{ secrets.SWA_PASSWORD }} dbAdminPassword=${{ secrets.DB_ADMIN_PASSSWORD }} dbAdminUsername=${{ secrets.DB_ADMIN_USERNAME }}
+          parameters: swaPassword=${{ secrets.SWA_PASSWORD }}
 
   build-api:
     name: Build API
