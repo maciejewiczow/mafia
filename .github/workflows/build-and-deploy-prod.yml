@@ -43,6 +43,7 @@ jobs:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           template: ./infrastructure/main.bicep
           parameters: swaPassword=${{ secrets.SWA_PASSWORD }}
+          failOnStdErr: false
 
   build-api:
     name: Build API
