@@ -8,6 +8,10 @@
         },
         {
             "path": "../TurnChangerFn"
+        },
+        {
+            "path": "..",
+            "name": "Root"
         }
     ],
     "settings": {
@@ -49,6 +53,9 @@
         "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
         "[csharp]": {
             "editor.defaultFormatter": "ms-dotnettools.csharp"
+        },
+        "[bicep]": {
+            "editor.defaultFormatter": "ms-azuretools.vscode-bicep"
         },
 
     }
