@@ -65,5 +65,5 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2023-12-01' = {
 }
 
 output appServiceId string = appService.id
-output appServiceUrl string = 'https://${appService.properties.defaultHostName}'
+output appServiceUrl string = appService.properties.defaultHostName
 output appServiceName string = appService.name
