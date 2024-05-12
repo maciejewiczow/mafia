@@ -10,7 +10,7 @@ jobs:
     name: Deploy infrastructure
     runs-on: ubuntu-latest
     environment:
-      name: Production
+      name: production
       url: ${{ steps.deploy.outputs.appUrl.value }}
     outputs:
       functionAppName: ${{ steps.deploy.outputs.functionAppName.value }}
@@ -162,6 +162,8 @@ jobs:
           path: ./WebClient/build
 
   deploy-frontend:
+    environment:
+      name: production
     runs-on: ubuntu-latest
     name: Deploy frontend
     needs:
