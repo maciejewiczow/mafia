@@ -210,8 +210,7 @@ namespace MafiaGameAPI
 
             services.AddScoped<IMongoClient>(m =>
             {
-                var camelCaseConvention = new ConventionPack { new CamelCaseElementNameConvention() };
-                ConventionRegistry.Register("CamelCase", camelCaseConvention, type => true);
+                ConventionRegistry.Register("CamelCase", new ConventionPack { new CamelCaseElementNameConvention() }, type => true);
 
                 var section = Configuration.GetSection("ConnectionStrings:Mongo");
                 var user = section["Username"];

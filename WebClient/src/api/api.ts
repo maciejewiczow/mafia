@@ -16,11 +16,12 @@ interface AccessTokenInStorage {
 }
 
 export const api = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: process.env.REACT_APP_API_URL,
     responseType: 'json',
 });
 
-const storage = sessionStorage;
+const storage =
+    process.env.NODE_ENV !== 'production' ? sessionStorage : localStorage;
 
 export const getAccessToken = async (): Promise<string | null> => {
     const accesTokenString = storage.getItem(accessTokenKey);
