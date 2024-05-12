@@ -133,6 +133,7 @@ jobs:
         with:
           app-name: ${{ needs.infrastructure.outputs.functionAppName }}
           package: /app/functions
+      # TODO: Add replacing the function token in api appsettings
 
   build-frontend:
     name: Build frontent
