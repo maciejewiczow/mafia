@@ -67,6 +67,8 @@ jobs:
   deploy-api:
     name: Deploy API
     runs-on: ubuntu-latest
+    environment:
+      name: production
     needs:
       - build-api
       - infrastructure
@@ -117,6 +119,8 @@ jobs:
   deploy-functions:
     runs-on: ubuntu-latest
     name: Deploy Azure Functions
+    environment:
+      name: production
     needs:
       - infrastructure
       - build-functions
