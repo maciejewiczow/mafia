@@ -171,15 +171,16 @@ namespace MafiaGameAPI
                     opts.PayloadSerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 });
 
-            if (_env.IsDevelopment())
+            builder.AddHubOptions<GameChatHub>(opts =>
             {
-                builder.AddHubOptions<GameChatHub>(opts =>
+                opts.ClientTimeoutInterval = TimeSpan.MaxValue;
+
+                if (_env.IsDevelopment())
                 {
                     opts.EnableDetailedErrors = true;
-                    opts.ClientTimeoutInterval = TimeSpan.MaxValue;
                     opts.HandshakeTimeout = TimeSpan.MaxValue;
-                });
-            }
+                }
+            });
 
             services.AddScoped<IChatService, ChatService>();
             services.AddScoped<IGameRoomsService, GameRoomsService>();
