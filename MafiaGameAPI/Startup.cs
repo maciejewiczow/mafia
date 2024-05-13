@@ -50,15 +50,10 @@ namespace MafiaGameAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("AccessToken:Signature"))),
                         ValidateLifetime = true,
                         RequireSignedTokens = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                     };
-
-                    if (_env.IsDevelopment())
-                    {
-                        opts.RequireHttpsMetadata = false;
-                        opts.TokenValidationParameters.ValidateIssuer = false;
-                        opts.TokenValidationParameters.ValidateAudience = false;
-                    }
-
+                    opts.RequireHttpsMetadata = false;
                     opts.TokenValidationParameters.IssuerSigningKey.KeyId = "AccessTokenKey";
 
                     opts.Events = new JwtBearerEvents
@@ -90,17 +85,12 @@ namespace MafiaGameAPI
                         ValidateIssuerSigningKey = true,
                         ClockSkew = TimeSpan.FromMinutes(5),
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("RefreshToken:Signature"))),
-                        ValidateLifetime = false,
+                        ValidateLifetime = true,
                         RequireSignedTokens = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                     };
-
-                    if (_env.IsDevelopment())
-                    {
-                        opts.RequireHttpsMetadata = false;
-                        opts.TokenValidationParameters.ValidateIssuer = false;
-                        opts.TokenValidationParameters.ValidateAudience = false;
-                    }
-
+                    opts.RequireHttpsMetadata = false;
                     opts.TokenValidationParameters.IssuerSigningKey.KeyId = "RefreshTokenKey";
                 })
                 .AddJwtBearer(nameof(TokenType.TurnCallbackToken), opts =>
@@ -112,15 +102,10 @@ namespace MafiaGameAPI
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(Configuration.GetValue<String>("TurnFunction:CallbackTokenSignature"))),
                         ValidateLifetime = true,
                         RequireSignedTokens = true,
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
                     };
-
-                    if (_env.IsDevelopment())
-                    {
-                        opts.RequireHttpsMetadata = false;
-                        opts.TokenValidationParameters.ValidateIssuer = false;
-                        opts.TokenValidationParameters.ValidateAudience = false;
-                    }
-
+                    opts.RequireHttpsMetadata = false;
                     opts.TokenValidationParameters.IssuerSigningKey.KeyId = "CallbackTokenKey";
                 });
 
