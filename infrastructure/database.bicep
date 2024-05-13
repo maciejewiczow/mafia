@@ -1,69 +1,57 @@
-@description('Cosmos DB account name')
-param accountName string = 'mongodb-${uniqueString(resourceGroup().id)}'
+@description('Name for the container group')
+param name string = 'mongocontainergroup'
 
-@description('Location for the Cosmos DB account.')
-var location = resourceGroup().location
+@description('Location for all resources.')
+param location string = resourceGroup().location
 
-@description('The primary replica region for the Cosmos DB account.')
-param region string
+@secure()
+param databasePassword string
+param databaseUsername string
 
-@description('Specifies the MongoDB server version to use.')
-@allowed([
-  '3.2'
-  '3.6'
-  '4.0'
-  '4.2'
-])
-param serverVersion string = '4.2'
+@description('Port to open on the container and the public IP address.')
+param port int = 27017
 
-@description('The name for the Mongo DB database')
-param databaseName string
-
-@description('Maximum autoscale throughput for the database shared with up to 25 collections')
-@minValue(1000)
-@maxValue(1000000)
-param sharedAutoscaleMaxThroughput int = 1000
-
-resource account 'Microsoft.DocumentDB/databaseAccounts@2023-11-15' = {
-  name: toLower(accountName)
+resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01' = {
+  name: name
   location: location
-  kind: 'MongoDB'
   properties: {
-    consistencyPolicy: {
-      defaultConsistencyLevel: 'Eventual'
-    }
-    locations: [
+    containers: [
       {
-        locationName: region
-        failoverPriority: 0
-        isZoneRedundant: false
-      }
-    ]
-    databaseAccountOfferType: 'Standard'
-    enableAutomaticFailover: true
-    apiProperties: {
-      serverVersion: serverVersion
-    }
-    capabilities: [
-      {
-        name: 'DisableRateLimitingResponses'
-      }
-    ]
-  }
-  resource database 'mongodbDatabases@2022-05-15' = {
-    name: databaseName
-    properties: {
-      resource: {
-        id: databaseName
-      }
-      options: {
-        autoscaleSettings: {
-          maxThroughput: sharedAutoscaleMaxThroughput
+        name: name
+        properties: {
+          image: 'mongo:7.0.9'
+          ports: [
+            {
+              port: port
+              protocol: 'TCP'
+            }
+          ]
+          environmentVariables: [
+            { name: 'MONGO_INITDB_ROOT_USERNAME', value: databaseUsername }
+            { name: 'MONGO_INITDB_ROOT_PASSWORD', secureValue: databasePassword }
+          ]
+          resources: {
+            requests: {
+              cpu: 1
+              memoryInGB: 2
+            }
+          }
         }
       }
+    ]
+    osType: 'Linux'
+    restartPolicy: 'OnFailure'
+    ipAddress: {
+      type: 'Private'
+      ports: [
+        {
+          port: port
+          protocol: 'TCP'
+        }
+      ]
     }
   }
 }
 
 #disable-next-line outputs-should-not-contain-secrets
-output connectionString string = account.listConnectionStrings().connectionStrings[0].connectionString
+output connectionString string = 'mongodb://${databaseUsername}:${databasePassword}@${containerGroup.properties.ipAddress}:${port}/?readPreference=primary&ssl=true'
