@@ -108,7 +108,7 @@ const getTokenOrThrow = async () => {
 function* connectToGameChatWorker() {
     try {
         const connection = new HubConnectionBuilder()
-            .withUrl('http://localhost:5000/hubs/gameChat', {
+            .withUrl(`${process.env.REACT_APP_API_URL}/hubs/gameChat`, {
                 accessTokenFactory: getTokenOrThrow,
             })
             .configureLogging(LogLevel.Information)

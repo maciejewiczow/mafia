@@ -235,7 +235,7 @@ namespace MafiaGameAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<GameChatHub>("/hubs/gameChat");
+                endpoints.MapHub<GameChatHub>("/api/hubs/gameChat");
             });
         }
     }
