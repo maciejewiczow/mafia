@@ -12,15 +12,13 @@ param storageAccountType string = 'Standard_LRS'
 @description('Location for all resources.')
 param location string = resourceGroup().location
 
-@description('Location for Application Insights')
-param appInsightsLocation string
+param appInsightsKey string
 
 @description('The language worker runtime to load in the function app.')
 var runtime = 'node'
 
 var functionAppName = '${appName}-function'
 var hostingPlanName = '${appName}-hostingPlan'
-var applicationInsightsName = '${appName}-ai'
 var storageAccountName = 'azfnsstrg${uniqueString(resourceGroup().id)}'
 var functionWorkerRuntime = runtime
 
@@ -80,7 +78,7 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
         }
         {
           name: 'APPINSIGHTS_INSTRUMENTATIONKEY'
-          value: applicationInsights.properties.InstrumentationKey
+          value: appInsightsKey
         }
         {
           name: 'FUNCTIONS_WORKER_RUNTIME'
@@ -91,16 +89,6 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
       minTlsVersion: '1.2'
     }
     httpsOnly: true
-  }
-}
-
-resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
-  name: applicationInsightsName
-  location: appInsightsLocation
-  kind: 'web'
-  properties: {
-    Application_Type: 'web'
-    Request_Source: 'rest'
   }
 }
 

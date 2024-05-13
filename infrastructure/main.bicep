@@ -3,6 +3,16 @@ param swaPassword string
 param location string = resourceGroup().location
 param apiAccessTokenLifeSpan string = '00:20:00'
 
+resource applicationInsights 'Microsoft.Insights/components@2020-02-02' = {
+  name: '${deployment().name}-appinsigts'
+  location: location
+  kind: 'web'
+  properties: {
+    Application_Type: 'web'
+    Request_Source: 'rest'
+  }
+}
+
 module database 'database.bicep' = {
   name: '${deployment().name}-mongo'
   params: {
@@ -14,7 +24,7 @@ module database 'database.bicep' = {
 module functions 'functions.bicep' = {
   name: '${deployment().name}-functions'
   params: {
-    appInsightsLocation: location
+    appInsightsKey: applicationInsights.properties.InstrumentationKey
   }
 }
 
@@ -25,6 +35,7 @@ module api 'api.bicep' = {
     accessTokenLifeSpan: apiAccessTokenLifeSpan
     turnFunctionUrl: functions.outputs.url
     mongoDbConnectionString: database.outputs.connectionString
+    appInsightsKey: applicationInsights.properties.InstrumentationKey
   }
   dependsOn: [
     functions
