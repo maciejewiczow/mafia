@@ -84,7 +84,7 @@ export function* getCurrentRoomWorker() {
             (state: AppState) => state.router.location?.pathname,
         );
 
-        if (path === '/') {
+        if (!path || path === '/') {
             if (!hasGameStarted) {
                 yield put(replace('room'));
             } else {
