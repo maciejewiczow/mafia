@@ -19,6 +19,7 @@ param turnFunctionUrl string
 
 param mongoDbConnectionString string
 param appInsightsKey string
+param appInsigtsConnnectionString string
 
 @description('App Service Plan name')
 var appServicePlanName = 'App-${uniqueRGString}'
@@ -63,6 +64,7 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2023-12-01' = {
     TurnFunction__CallbackUrl: 'https://${appService.properties.defaultHostName}/api/TurnCallback'
     ConnectionStrings__Mongo__Base: mongoDbConnectionString
     APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsKey
+    APPLICATIONINSIGHTS_CONNECTION_STRING: appInsigtsConnnectionString
   }
 }
 

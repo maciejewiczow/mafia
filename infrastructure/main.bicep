@@ -36,6 +36,7 @@ module api 'api.bicep' = {
     turnFunctionUrl: functions.outputs.url
     mongoDbConnectionString: database.outputs.connectionString
     appInsightsKey: applicationInsights.properties.InstrumentationKey
+    appInsigtsConnnectionString: applicationInsights.properties.ConnectionString
   }
   dependsOn: [
     functions
