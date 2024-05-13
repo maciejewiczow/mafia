@@ -6,8 +6,8 @@ param apiAccessTokenLifeSpan string = '00:20:00'
 module database 'database.bicep' = {
   name: '${deployment().name}-mongo'
   params: {
-    databaseUsername: uniqueString(resourceGroup().id)
-    databasePassword: uniqueString(resourceGroup().id)
+    databaseUsername: uniqueString(resourceGroup().id, 'username')
+    databasePassword: uniqueString(resourceGroup().id, 'password')
   }
 }
 

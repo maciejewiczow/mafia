@@ -54,4 +54,4 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01'
 }
 
 #disable-next-line outputs-should-not-contain-secrets
-output connectionString string = 'mongodb://${databaseUsername}:${databasePassword}@${containerGroup.properties.ipAddress}:${port}/?readPreference=primary&ssl=true'
+output connectionString string = 'mongodb://${databaseUsername}:${databasePassword}@${containerGroup.properties.ipAddress.ip}:${port}/?readPreference=primary&ssl=true'
