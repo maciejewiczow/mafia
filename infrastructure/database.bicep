@@ -42,7 +42,7 @@ resource containerGroup 'Microsoft.ContainerInstance/containerGroups@2023-05-01'
     osType: 'Linux'
     restartPolicy: 'OnFailure'
     ipAddress: {
-      type: 'Private'
+      type: 'Public'
       ports: [
         {
           port: port

@@ -45,6 +45,14 @@ jobs:
           template: ./infrastructure/main.bicep
           parameters: swaPassword=${{ secrets.SWA_PASSWORD }}
           failOnStdErr: false
+      - name: Update repo website
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: https://api.github.com/repos/${{github.repository}}
+          customHeaders: '{"X-GitHub-Api-Version": "2022-11-28", "Accept": "application/vnd.github+json"}'
+          bearerToken: ${{github.token}}
+          method: PATCH
+          data: '{"homepage":"${{ steps.deploy.outputs.appUrl }}"}'
 
   build-api:
     name: Build API
