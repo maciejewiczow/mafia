@@ -167,7 +167,6 @@ jobs:
   build-frontend:
     name: Build frontend
     runs-on: ubuntu-latest
-    needs: infrastructure
     defaults:
       run:
         working-directory: ./WebClient
@@ -200,6 +199,7 @@ jobs:
     name: Deploy frontend
     needs:
       - build-frontend
+      - infrastructure
       - deploy-api
       - deploy-functions
     steps:
