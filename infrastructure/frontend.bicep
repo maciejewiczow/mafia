@@ -37,3 +37,5 @@ resource frontend 'Microsoft.Web/staticSites@2023-12-01' = {
 }
 
 output appUrl string = 'https://${frontend.properties.defaultHostname}'
+#disable-next-line outputs-should-not-contain-secrets
+output deploySecret string = frontend.listSecrets().properties.apiKey

@@ -23,7 +23,7 @@ jobs:
     outputs:
       functionAppName: ${{ steps.deploy.outputs.functionAppName }}
       apiAppName: ${{ steps.deploy.outputs.apiAppName }}
-      apiUrl: ${{ steps.deploy.outputs.apiUrl }}
+      frontendDeploySecret: ${{ steps.deploy.outputs.frontendDeploySecret }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -216,7 +216,7 @@ jobs:
       - name: Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
-            azure_static_web_apps_api_token: ${{ secrets.SAS_DEPLOYMENT_TOKEN }}
+            azure_static_web_apps_api_token: ${{ needs.infrastructure.outputs.frontendDeploySecret }}
             action: upload
             app_location: ./app/frontend
 

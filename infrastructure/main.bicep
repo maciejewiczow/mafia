@@ -53,4 +53,4 @@ module staticWebApp 'frontend.bicep' = {
 output functionAppName string = functions.outputs.appName
 output apiAppName string = api.outputs.appServiceName
 output appUrl string = staticWebApp.outputs.appUrl
-output apiUrl string = '${api.outputs.appServiceUrl}/api'
+output frontendDeploySecret string = staticWebApp.outputs.deploySecret
