@@ -194,6 +194,8 @@ namespace MafiaGameAPI
 
             services.AddScoped<IValidationHelper, ValidationHelper>();
 
+            services.AddApplicationInsightsTelemetry();
+
             services.AddScoped<IMongoClient>(m =>
             {
                 ConventionRegistry.Register("CamelCase", new ConventionPack { new CamelCaseElementNameConvention() }, type => true);
