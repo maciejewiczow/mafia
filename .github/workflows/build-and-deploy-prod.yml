@@ -9,7 +9,6 @@ permissions:
   id-token: write
   contents: read
 
-
 concurrency:
   cancel-in-progress: true
   group: production-deploy
@@ -43,7 +42,7 @@ jobs:
           resourceGroupName: Mafia
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           template: ./infrastructure/main.bicep
-          parameters: swaPassword=${{ secrets.SWA_PASSWORD }}
+          parameters: swaPassword=${{ secrets.SWA_PASSWORD }} mongoDbConnectionString="${{ secrets.MONGO_CONNECTION_STRING }}""
           failOnStdErr: false
       - name: Update repo website
         uses: fjogeleit/http-request-action@v1

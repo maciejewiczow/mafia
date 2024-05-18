@@ -52,19 +52,24 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
 
 resource appServiceConfig 'Microsoft.Web/sites/config@2023-12-01' = {
   parent: appService
-  name: 'appsettings'
+  name: 'web'
   properties: {
-    TenantId: azureTenantId
-    AccessToken__LifeSpan: accessTokenLifeSpan
-    AccessToken__Signature: guid(resourceGroup().id, deployment().name, 'access-token')
-    RefreshToken__Signature: guid(resourceGroup().id, deployment().name, 'refresh-token')
-    TurnFunction__BaseAddress: turnFunctionUrl
-    TurnFunction__FunctionKey: ''
-    TurnFunction__CallbackTokenSignature: guid(resourceGroup().id, deployment().name, 'turn-function-token')
-    TurnFunction__CallbackUrl: 'https://${appService.properties.defaultHostName}/api/TurnCallback'
-    ConnectionStrings__Mongo__Base: mongoDbConnectionString
-    APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsKey
-    APPLICATIONINSIGHTS_CONNECTION_STRING: appInsigtsConnnectionString
+    appSettings: [
+      { name: 'TenantId', value: azureTenantId }
+      { name: 'AccessToken__LifeSpan', value: accessTokenLifeSpan }
+      { name: 'AccessToken__Signature', value: guid(resourceGroup().id, deployment().name, 'access-token') }
+      { name: 'RefreshToken__Signature', value: guid(resourceGroup().id, deployment().name, 'refresh-token') }
+      { name: 'TurnFunction__BaseAddress', value: turnFunctionUrl }
+      { name: 'TurnFunction__FunctionKey', value: '' }
+      {
+        name: 'TurnFunction__CallbackTokenSignature'
+        value: guid(resourceGroup().id, deployment().name, 'turn-function-token')
+      }
+      { name: 'TurnFunction__CallbackUrl', value: 'https://${appService.properties.defaultHostName}/api/TurnCallback' }
+      { name: 'ConnectionStrings__Mongo__Base', value: mongoDbConnectionString }
+      { name: 'APPINSIGHTS_INSTRUMENTATIONKEY', value: appInsightsKey }
+      { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsigtsConnnectionString }
+    ]
   }
 }
 
