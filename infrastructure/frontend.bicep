@@ -3,11 +3,18 @@ param location string = resourceGroup().location
 @secure()
 param password string
 param apiResourceId string
+param appInsightsId string
+param appInsightsInstrumentationKey string
+param appInsightsConnectionString string
 
 resource frontend 'Microsoft.Web/staticSites@2023-12-01' = {
   name: name
   location: location
-  tags: null
+  tags: {
+    'hidden-link: /app-insights-resource-id': appInsightsId
+    'hidden-link: /app-insights-instrumentation-key': appInsightsInstrumentationKey
+    'hidden-link: /app-insights-conn-string': appInsightsConnectionString
+  }
   sku: {
     name: 'Standard'
     size: 'Standard'

@@ -44,6 +44,9 @@ module staticWebApp 'frontend.bicep' = {
     name: 'mafia-swa'
     password: swaPassword
     apiResourceId: api.outputs.appServiceId
+    appInsightsConnectionString: applicationInsights.properties.ConnectionString
+    appInsightsId: applicationInsights.id
+    appInsightsInstrumentationKey: applicationInsights.properties.InstrumentationKey
   }
   dependsOn: [
     api
