@@ -48,12 +48,21 @@ const changeTurn: ActivityHandler = async (
     context,
 ) => {
     context.log('Calling the change turn endpoint', callbackUrl);
-    await fetch(callbackUrl, {
+    const response = await fetch(callbackUrl, {
         method: 'POST',
         headers: {
             Authorization: `Bearer ${callbackToken}`,
         },
     });
+
+    if (!response.ok) {
+        context.error(
+            'Got an error response back',
+            response.status,
+            response.statusText,
+            await response.text(),
+        );
+    }
 };
 df.app.activity(changeTurnActivityName, { handler: changeTurn });
 
