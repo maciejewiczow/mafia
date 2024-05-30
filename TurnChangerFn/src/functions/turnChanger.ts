@@ -36,14 +36,6 @@ const turnChangerOrchestrator: OrchestrationHandler = function* (
 
     const turnEnd = dayjs(turnEndStr);
 
-    if (turnEnd.isBefore(dayjs())) {
-        context.log(
-            'Exiting because turn end is in the past',
-            turnEnd.toISOString(),
-        );
-        return;
-    }
-
     context.log('Waiting until the turn ends', turnEnd.toISOString());
     yield context.df.createTimer(turnEnd.toDate());
     context.log('Turn ended, calling the chage turn activity');
