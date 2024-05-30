@@ -22,12 +22,14 @@ namespace MafiaGameAPI.Controllers
 
         [HttpPost]
         [Authorize(Policy = nameof(TokenType.TurnCallbackToken))]
-        public async Task ChangeTurn()
+        public async Task<string> ChangeTurn()
         {
             var gameRoomId = User.Claims.First(claim => claim.Type == "roomId").Value;
             var stateId = User.Claims.First(claim => claim.Type == "stateId").Value;
 
             await gameService.ChangeTurn(gameRoomId, stateId);
+
+            return "OK";
         }
     }
 }

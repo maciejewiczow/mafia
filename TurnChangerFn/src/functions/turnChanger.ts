@@ -55,12 +55,14 @@ const changeTurn: ActivityHandler = async (
         },
     });
 
-    if (!response.ok) {
+    const text = await response.text();
+
+    if (!response.ok || text !== 'OK') {
         context.error(
-            'Got an error response back',
+            'Got an abnormal response back',
             response.status,
             response.statusText,
-            await response.text(),
+            text,
         );
     }
 };
