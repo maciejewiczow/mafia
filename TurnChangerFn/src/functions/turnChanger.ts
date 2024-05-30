@@ -37,18 +37,25 @@ const turnChangerOrchestrator: OrchestrationHandler = function* (
     const turnEnd = dayjs(turnEndStr);
 
     if (turnEnd.isBefore(dayjs())) {
+        context.log(
+            'Exiting because turn end is in the past',
+            turnEnd.toISOString(),
+        );
         return;
     }
 
+    context.log('Waiting until the turn ends', turnEnd.toISOString());
     yield context.df.createTimer(turnEnd.toDate());
+    context.log('Turn ended, calling the chage turn activity');
     yield context.df.callActivity(changeTurnActivityName, data);
 };
 df.app.orchestration(orchestratorName, turnChangerOrchestrator);
 
-const changeTurn: ActivityHandler = async ({
-    callbackToken,
-    callbackUrl,
-}: Omit<Data, 'turnEnd'>) => {
+const changeTurn: ActivityHandler = async (
+    { callbackToken, callbackUrl }: Omit<Data, 'turnEnd'>,
+    context,
+) => {
+    context.log('Calling the change turn endpoint', callbackUrl);
     await fetch(callbackUrl, {
         method: 'POST',
         headers: {
