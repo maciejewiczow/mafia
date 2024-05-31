@@ -65,7 +65,7 @@ resource appServiceConfig 'Microsoft.Web/sites/config@2023-12-01' = {
         name: 'TurnFunction__CallbackTokenSignature'
         value: guid(resourceGroup().id, deployment().name, 'turn-function-token')
       }
-      { name: 'TurnFunction__CallbackUrl', value: '' }
+      { name: 'TurnFunction__CallbackUrl', value: 'https://${appService.properties.defaultHostName}/api/TurnCallback' }
       { name: 'ConnectionStrings__Mongo__Base', value: mongoDbConnectionString }
       { name: 'APPINSIGHTS_INSTRUMENTATIONKEY', value: appInsightsKey }
       { name: 'APPLICATIONINSIGHTS_CONNECTION_STRING', value: appInsigtsConnnectionString }
