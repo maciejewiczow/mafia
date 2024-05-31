@@ -220,9 +220,9 @@ jobs:
             azure_static_web_apps_api_token: ${{ needs.infrastructure.outputs.frontendDeploySecret }}
             action: upload
             app_location: ./app/frontend
-      # - name: Change appsetting to include callback url
-      #   uses: azure/cli@v2
-      #   with:
-      #     inlineScript: |
-      #       az webapp config appsettings set -g Mafia -n ${{ needs.infrastructure.outputs.apiAppName }} --settings TurnFunction__CallbackUrl="${{ needs.infrastructure.outputs.frontendUrl }}/api/TurnCallback"
+      - name: Change appsetting to include callback url
+        uses: azure/cli@v2
+        with:
+          inlineScript: |
+            az webapp config appsettings set -g Mafia -n ${{ needs.infrastructure.outputs.apiAppName }} --settings TurnFunction__CallbackUrl="${{ needs.infrastructure.outputs.frontendUrl }}/api/TurnCallback"
 
