@@ -3,6 +3,7 @@ param location string = resourceGroup().location
 @secure()
 param password string
 param apiResourceId string
+param functionsResourceId string
 param appInsightsId string
 param appInsightsInstrumentationKey string
 param appInsightsConnectionString string
@@ -38,6 +39,14 @@ resource frontend 'Microsoft.Web/staticSites@2023-12-01' = {
     name: 'my-backend'
     properties: {
       backendResourceId: apiResourceId
+      region: location
+    }
+  }
+
+  resource functions 'linkedBackends@2023-12-01' = {
+    name: 'functions-backend'
+    properties: {
+      backendResourceId: functionsResourceId
       region: location
     }
   }

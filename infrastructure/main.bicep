@@ -47,6 +47,7 @@ module staticWebApp 'frontend.bicep' = {
     appInsightsConnectionString: applicationInsights.properties.ConnectionString
     appInsightsId: applicationInsights.id
     appInsightsInstrumentationKey: applicationInsights.properties.InstrumentationKey
+    functionsResourceId: functions.outputs.resourceId
   }
   dependsOn: [
     api

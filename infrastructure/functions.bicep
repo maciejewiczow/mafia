@@ -94,3 +94,4 @@ resource functionApp 'Microsoft.Web/sites@2023-12-01' = {
 
 output url string = 'https://${functionApp.properties.defaultHostName}/api'
 output appName string = functionApp.name
+output resourceId string = functionApp.id
