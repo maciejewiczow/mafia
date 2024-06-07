@@ -9,7 +9,7 @@ import { getCurrentUserSuccess } from './User/actions';
 import userWatchers from './User/sagas';
 import { AsyncRetT } from './utils';
 
-const spawnAll = (sagasExport: { [key: string]: Saga }) => Object.values(sagasExport).map(saga => spawn(saga));
+const spawnAll = (sagasExport: Record<string, Saga>) => Object.values(sagasExport).map(saga => spawn(saga));
 
 function* initSaga() {
     const token: AsyncRetT<typeof getAccessToken> = yield call(getAccessToken);

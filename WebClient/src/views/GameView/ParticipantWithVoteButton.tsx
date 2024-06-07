@@ -1,13 +1,12 @@
 import React, { useMemo } from 'react';
 import Button from 'react-bootstrap/Button';
 import { FaGhost, FaUserSecret } from 'react-icons/fa';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { PhaseEnum, RoleEnum } from 'api';
-import { Dispatch } from 'redux';
 import { invokeVote } from 'store/GameChat/Game/actions';
-import { GameAction } from 'store/GameChat/Game/constants';
 import { ParticipantWithNameAndRole } from 'store/GameChat/Game/selectors';
 import * as gameSelectors from 'store/GameChat/Game/selectors';
+import { useAppDispatch } from 'store/hooks';
 import * as roomSelectors from 'store/Rooms/selectors';
 import * as userSelectors from 'store/User/selectors';
 import { Badge, Participant, ParticipantName } from './parts';
@@ -23,7 +22,7 @@ export const ParticipantWithVoteButton: React.FC<ParticipantProps> = ({
     participant: user,
     phase,
 }) => {
-    const dispatch = useDispatch<Dispatch<GameAction>>();
+    const dispatch = useAppDispatch();
     const currentUser = useSelector(userSelectors.currentUser);
     const currentUserRoles = useSelector(
         gameSelectors.userRoles(currentUser?.id || ''),

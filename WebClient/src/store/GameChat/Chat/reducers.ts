@@ -15,7 +15,7 @@ export const chatsReducer: Reducer<ChatsState, ChatAction | GameChatAction> = (
     action,
 ) => {
     switch (action.type) {
-        case ChatActionType.recieveMessages:
+        case ChatActionType.receiveMessages:
             return produce(state, draft => {
                 for (const message of action.messages) {
                     const insertMe: MessageInStore = {

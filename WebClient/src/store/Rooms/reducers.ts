@@ -42,20 +42,24 @@ export const roomsReducer: Reducer<
 
         case GameChatActionType.memberConnected:
             return produce(state, draft => {
-                if (!draft.currentRoom?.participants.includes(action.user.id))
-                    {draft.currentRoom?.participants.push(action.user.id);}
+                if (!draft.currentRoom?.participants.includes(action.user.id)) {
+                    draft.currentRoom?.participants.push(action.user.id);
+                }
 
                 if (
-                    (draft.currentRoom?.participantsWithNames.filter(
+                    !draft.currentRoom?.participantsWithNames.some(
                         u => u.id === action.user.id,
-                    ).length ?? 1) === 0
-                )
-                    {draft.currentRoom?.participantsWithNames.push(action.user);}
+                    )
+                ) {
+                    draft.currentRoom?.participantsWithNames.push(action.user);
+                }
             });
 
         case GameChatActionType.memberDisconnected:
             return produce(state, draft => {
-                if (!draft.currentRoom) {return;}
+                if (!draft.currentRoom) {
+                    return;
+                }
 
                 draft.currentRoom.participants =
                     draft.currentRoom.participants.filter(
@@ -69,7 +73,9 @@ export const roomsReducer: Reducer<
 
         case GameActionType.invokeStartGameSuccess:
             return produce(state, draft => {
-                if (!draft.currentRoom) {return;}
+                if (!draft.currentRoom) {
+                    return;
+                }
 
                 draft.currentRoom.hasGameStarted = true;
                 draft.currentRoom.currentGameState = action.result;
@@ -77,7 +83,9 @@ export const roomsReducer: Reducer<
 
         case GameActionType.gameStarted:
             return produce(state, draft => {
-                if (!draft.currentRoom) {return;}
+                if (!draft.currentRoom) {
+                    return;
+                }
 
                 draft.currentRoom.hasGameStarted = true;
                 draft.currentRoom.hasGameEnded = false;
@@ -85,7 +93,9 @@ export const roomsReducer: Reducer<
 
         case GameActionType.gameEnded:
             return produce(state, draft => {
-                if (!draft.currentRoom) {return;}
+                if (!draft.currentRoom) {
+                    return;
+                }
 
                 draft.currentRoom.hasGameEnded = true;
                 draft.currentRoom.hasGameStarted = false;
@@ -94,7 +104,9 @@ export const roomsReducer: Reducer<
 
         case RoomsActionType.updateRoomSettings:
             return produce(state, draft => {
-                if (!draft.currentRoom) {return;}
+                if (!draft.currentRoom) {
+                    return;
+                }
 
                 Object.assign(draft.currentRoom.gameOptions, action.options);
             });

@@ -4,7 +4,7 @@ import axios, {
     AxiosResponse,
     InternalAxiosRequestConfig,
 } from 'axios';
-import { set } from 'lodash';
+import set from 'lodash/set';
 import { CreateUserResponse, TokenResponse } from './responses';
 
 const accessTokenKey = 'at';

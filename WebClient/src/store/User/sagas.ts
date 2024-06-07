@@ -25,7 +25,7 @@ function* createUserWorker({
     } catch (e) {
         console.error('User creation failed', e);
         if (e instanceof Error) {
-            toast.error(`Błąd rządania: ${e.message}`);
+            toast.error(`Błąd żądania: ${e.message}`);
         }
     }
 }

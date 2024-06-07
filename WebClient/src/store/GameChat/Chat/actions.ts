@@ -19,9 +19,9 @@ export const sendMessage = (
     ],
 });
 
-export const messageRecieved = (
+export const messageReceived = (
     messages: Message[],
-): PickAction<ChatAction, ChatActionType.recieveMessages> => ({
-    type: ChatActionType.recieveMessages,
+): PickAction<ChatAction, ChatActionType.receiveMessages> => ({
+    type: ChatActionType.receiveMessages,
     messages,
 });

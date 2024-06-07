@@ -98,7 +98,7 @@ export function* getCurrentRoomWorker() {
     } catch (error) {
         console.log('Current room request failed with error: ', error);
         if (error instanceof Error) {
-            toast.error(`Błąd rządania: ${error.message}`);
+            toast.error(`Błąd żądania: ${error.message}`);
         }
     }
 }

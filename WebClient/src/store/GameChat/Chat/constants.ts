@@ -3,12 +3,12 @@ import { InvokeAction } from 'store/utils';
 
 export enum ChatActionType {
     sendMessage = 'chat/MESSAGE_SEND',
-    recieveMessages = 'chat/MESSAGE_RECIEVE',
+    receiveMessages = 'chat/MESSAGE_RECEIVE',
 }
 
 export type ChatAction =
     | {
-          type: ChatActionType.recieveMessages;
+          type: ChatActionType.receiveMessages;
           messages: Message[];
       }
     | InvokeAction<
