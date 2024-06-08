@@ -18,10 +18,7 @@ namespace MafiaGameAPI.Helpers
 
         public async Task<bool> IsUserAutorizedToStartGame(string roomId, string userId)
         {
-            var ownerId = await _gameRoomsRepository.GetRoomOwner(roomId);
-
-            if (userId.Equals(ownerId)) return true;
-            else return false;
+            return userId.Equals(await _gameRoomsRepository.GetRoomOwner(roomId));
         }
 
         public bool IsMessageValid(string userId, GameRoom room, ChatTypeEnum chatType, string content)

@@ -74,42 +74,6 @@ namespace MafiaGameAPI.Services
             return false;
         }
 
-        private async Task<List<UserState>> AssignPlayersToRoles(String roomId)
-        {
-            List<UserState> userStates = new List<UserState>();
-            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
-
-            int mafiosoCount = room.GameOptions.MafiosoCount;
-            int currentMafiosoCount = 0;
-
-            List<String> users = room.Participants;
-            Random random = new Random();
-
-            int usersCount = users.Count;
-            if (usersCount <= 2 * mafiosoCount)
-            {
-                throw new HubException("Too few citizens to start the game");
-            }
-
-            foreach (var user in users)
-            {
-                UserState userState = new UserState() { UserId = user };
-                if (random.NextDouble() > (double)(mafiosoCount - currentMafiosoCount) / usersCount)
-                {
-                    userState.Role = RoleEnum.Citizen;
-                }
-                else
-                {
-                    userState.Role = RoleEnum.Mafioso;
-                    currentMafiosoCount++;
-                }
-                userStates.Add(userState);
-                usersCount--;
-            }
-
-            return userStates;
-        }
-
         public async Task<GameState> StartGame(String roomId, String userId)
         {
             if (!await _validationHelper.IsUserAutorizedToStartGame(roomId, userId))
@@ -118,23 +82,12 @@ namespace MafiaGameAPI.Services
             }
 
             var room = await _gameRoomsRepository.GetRoomById(roomId);
-            var votingStartDate = DateTime.Now;
 
-            GameState state = new GameNightState(room)
-            {
-                Id = IdentifiersHelper.CreateGuidString(),
-                UserStates = await AssignPlayersToRoles(roomId),
-                VoteState = new List<VoteState>(),
-                VotingStart = votingStartDate,
-                VotingEnd = votingStartDate.Add(room.GameOptions.PhaseDuration)
-            };
+            room.CurrentGameState.ChangePhase();
+            await _gameRepository.ChangePhase(roomId, room.CurrentGameState);
+            await RunPhase(roomId, room.GameOptions.PhaseDuration, room.CurrentGameState.Id);
 
-            await RunPhase(roomId, room.GameOptions.PhaseDuration, state.Id);
-
-            state.ChangePhase();
-            await _gameRepository.ChangePhase(roomId, state);
-
-            return state;
+            return room.CurrentGameState;
         }
 
         private async Task ChangePhase(String roomId, GameState newState)

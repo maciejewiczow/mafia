@@ -21,7 +21,12 @@ namespace MafiaGameAPI.Hubs
         private readonly IGameService _gameService;
         private readonly IChatRepository _chatRepository;
 
-        public GameChatHub(IChatService chatService, IGameRoomsService gameRoomsService, IGameService gameService,  IChatRepository chatRepository)
+        public GameChatHub(
+            IChatService chatService,
+            IGameRoomsService gameRoomsService,
+            IGameService gameService,
+            IChatRepository chatRepository
+        )
         {
             _chatService = chatService;
             _gameRoomsService = gameRoomsService;
