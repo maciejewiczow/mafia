@@ -50,15 +50,15 @@ namespace MafiaGameAPI.Services
         {
             var room = await _gameRoomsRepository.GetRoomById(roomId);
             var currentState = room.CurrentGameState;
-            int mafiosoCount = currentState.UserStates.Count(u => u.Role.HasFlag(RoleEnum.Mafioso) && !u.Role.HasFlag(RoleEnum.Ghost));
-            int citizenCount = currentState.UserStates.Count(u => u.Role.HasFlag(RoleEnum.Citizen) && !u.Role.HasFlag(RoleEnum.Ghost));
+            var mafiosoCount = currentState.UserStates.Count(u => u.Role.HasFlag(RoleEnum.Mafioso) && !u.Role.HasFlag(RoleEnum.Ghost));
+            var citizenCount = currentState.UserStates.Count(u => u.Role.HasFlag(RoleEnum.Citizen) && !u.Role.HasFlag(RoleEnum.Ghost));
 
             var groupName = IdentifiersHelper.GenerateRoomGroupName(roomId);
 
             if (mafiosoCount == citizenCount)
             {
                 currentState.ChangePhase();
-                await _gameRepository.ChangePhase(roomId, currentState);
+                await _gameRepository.SaveGameState(roomId, currentState);
                 await _context.Clients.Group(groupName).GameEndedAsync(RoleEnum.Mafioso.ToString());
                 return true;
             }
@@ -66,7 +66,7 @@ namespace MafiaGameAPI.Services
             if (mafiosoCount == 0)
             {
                 currentState.ChangePhase();
-                await _gameRepository.ChangePhase(roomId, currentState);
+                await _gameRepository.SaveGameState(roomId, currentState);
                 await _context.Clients.Group(groupName).GameEndedAsync(RoleEnum.Citizen.ToString());
                 return true;
             }
@@ -84,22 +84,22 @@ namespace MafiaGameAPI.Services
             var room = await _gameRoomsRepository.GetRoomById(roomId);
 
             room.CurrentGameState.ChangePhase();
-            await _gameRepository.ChangePhase(roomId, room.CurrentGameState);
-            await RunPhase(roomId, room.GameOptions.PhaseDuration, room.CurrentGameState.Id);
+            await _gameRepository.SaveGameState(roomId, room.CurrentGameState);
+            await StartPhaseCountdown(roomId, room.GameOptions.PhaseDuration, room.CurrentGameState.Id);
 
             return room.CurrentGameState;
         }
 
         private async Task ChangePhase(String roomId, GameState newState)
         {
-            GameOptions options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
-            await _gameRepository.ChangePhase(roomId, newState);
+            var options = _gameRoomsRepository.GetOptionsByRoomId(roomId);
+            await _gameRepository.SaveGameState(roomId, newState);
 
             if (!await HasGameEnded(roomId))
             {
                 await _context.Clients.Group(IdentifiersHelper.GenerateRoomGroupName(roomId)).UpdateGameStateAsync(newState);
 
-                await RunPhase(roomId, options.PhaseDuration, newState.Id);
+                await StartPhaseCountdown(roomId, options.PhaseDuration, newState.Id);
             }
         }
 
@@ -130,7 +130,7 @@ namespace MafiaGameAPI.Services
 
         private async Task<GameState> VotingAction(String roomId)
         {
-            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+            var room = await _gameRoomsRepository.GetRoomById(roomId);
             if (room.CurrentGameState.VoteState.Count != 0)
             {
                 var votedUserId = room.CurrentGameState.VoteState
@@ -151,7 +151,7 @@ namespace MafiaGameAPI.Services
             return room.CurrentGameState;
         }
 
-        private async Task RunPhase(String roomId, TimeSpan phaseDuration, String stateId)
+        private async Task StartPhaseCountdown(String roomId, TimeSpan phaseDuration, String stateId)
         {
             using var client = clientFactory.CreateClient("TurnFunction");
 
@@ -173,7 +173,7 @@ namespace MafiaGameAPI.Services
 
         public async Task ChangeTurn(String roomId, String stateId)
         {
-            GameRoom room = await _gameRoomsRepository.GetRoomById(roomId);
+            var room = await _gameRoomsRepository.GetRoomById(roomId);
 
             if (stateId.Equals(room.CurrentGameState.Id) && !await HasGameEnded(roomId))
             {

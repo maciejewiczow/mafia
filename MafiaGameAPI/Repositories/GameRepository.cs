@@ -18,7 +18,7 @@ namespace MafiaGameAPI.Repositories
             _usersCollection = mongoClient.GetDatabase("mafia").GetCollection<User>("users");
         }
 
-        public async Task ChangePhase(String roomId, GameState state)
+        public async Task SaveGameState(String roomId, GameState state)
         {
             var objectRoomId = ObjectId.Parse(roomId);
 

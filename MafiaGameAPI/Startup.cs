@@ -109,12 +109,6 @@ namespace MafiaGameAPI
                     opts.TokenValidationParameters.IssuerSigningKey.KeyId = "CallbackTokenKey";
                 });
 
-            services.AddHttpClient<HttpClient>("TurnFunction", client =>
-            {
-                client.BaseAddress = new Uri(Configuration.GetValue<String>("TurnFunction:BaseAddress"));
-                client.DefaultRequestHeaders.Add("x-functions-key", Configuration.GetValue<String>("TurnFunction:FunctionKey"));
-            });
-
             services.AddAuthorization(opts =>
             {
                 opts.DefaultPolicy = new AuthorizationPolicyBuilder()
@@ -140,6 +134,12 @@ namespace MafiaGameAPI
                         .RequireClaim("type", TokenType.TurnCallbackToken.ToString())
                         .Build()
                 );
+            });
+
+            services.AddHttpClient<HttpClient>("TurnFunction", client =>
+            {
+                client.BaseAddress = new Uri(Configuration.GetValue<String>("TurnFunction:BaseAddress"));
+                client.DefaultRequestHeaders.Add("x-functions-key", Configuration.GetValue<String>("TurnFunction:FunctionKey"));
             });
 
             if (_env.IsDevelopment())

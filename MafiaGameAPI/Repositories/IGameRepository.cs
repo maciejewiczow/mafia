@@ -6,7 +6,7 @@ namespace MafiaGameAPI.Repositories
 {
     public interface IGameRepository
     {
-        Task ChangePhase(String roomId, GameState state);
+        Task SaveGameState(String roomId, GameState state);
         Task<VoteState> Vote(String roomId, VoteState vote);
         Task<GameState> GetCurrentState(String roomId);
     }
